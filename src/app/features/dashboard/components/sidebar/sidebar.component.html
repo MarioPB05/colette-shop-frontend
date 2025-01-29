@@ -1,7 +1,21 @@
+<style>
+  :host ::ng-deep .p-menu {
+    @apply bg-brawl-dark-slate px-4 pb-8 flex flex-col justify-between;
+  }
+
+  :host ::ng-deep .p-menu-item-link {
+    @apply text-white;
+  }
+
+  .p-menu-item-link-active {
+    @apply bg-[#EFC60A] text-black;
+  }
+</style>
+
 <p-menu [model]="items" class="flex justify-center" styleClass="w-full md:w-60">
   <ng-template #start>
-        <span class="w-full inline-flex items-center justify-center gap-1 px-2 py-2">
-            <img class="h-[80px]" src="/logo.svg">
+        <span class="w-full inline-flex items-center justify-center gap-1 px-2 pt-4">
+            <img class="h-[80px] p-2" src="/logo.svg">
         </span>
   </ng-template>
 
@@ -10,25 +24,21 @@
   </ng-template>
 
   <ng-template #item let-item>
-    <a pRipple class="flex items-center p-menu-item-link">
-      <span [class]="item.icon"></span>
-      <span class="ml-2">{{ item.label }}</span>
+    <a [routerLink]="item.route" routerLinkActive="p-menu-item-link-active mb-2" pRipple class="flex items-center p-menu-item-link group rounded">
+      <span class="transition-all group-hover:text-black" [class]="item.icon"></span>
+      <span class="ml-2 transition-all group-hover:text-black">{{ item.label }}</span>
       <p-badge *ngIf="item.badge" class="ml-auto" [value]="item.badge"/>
-      <span *ngIf="item.shortcut"
-            class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">
-                {{ item.shortcut }}
-            </span>
     </a>
   </ng-template>
 
   <ng-template #end>
     <button pRipple
-            class="relative overflow-hidden w-full border-0 bg-transparent flex items-start p-2 pl-4 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-none cursor-pointer transition-colors duration-200">
-      <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" class="mr-2"
-                shape="circle"/>
+            class="relative overflow-hidden w-full border-0 bg-transparent flex items-center p-2 pl-4 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-none cursor-pointer transition-colors duration-200">
+      <p-avatar image="https://cdn.brawlify.com/brawlers/borderless/16000079.png" class="mr-4"
+                shape="square" size="large"/>
       <span class="inline-flex flex-col">
-                <span class="font-bold">Amy Elsner</span>
-                <span class="text-sm">Admin</span>
+                <span class="font-bold text-white">Amy Elsner</span>
+                <span class="text-sm text-[#12BEFC]">#DA84ASD3</span>
             </span>
     </button>
   </ng-template>
