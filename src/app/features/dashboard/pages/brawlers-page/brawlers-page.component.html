@@ -1,0 +1,18 @@
+<p-table [value]="brawlers" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" [tableStyle]="{ 'min-width': '50rem' }">
+  <ng-template #header>
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Quantity</th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-brawler>
+    <tr>
+      <td><img [src]="brawler.pinImage" alt="brawler_image"> </td>
+      <td>{{ brawler.name }}</td>
+      <td><span [ngClass]="getBadgeClass(brawler.rarity)" class="px-4 py-1 rounded-full">{{ brawler.rarity }}</span></td>
+      <td>{{ brawler.numPeople }}</td>
+    </tr>
+  </ng-template>
+</p-table>
