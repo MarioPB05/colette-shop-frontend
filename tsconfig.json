@@ -17,12 +17,16 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "paths": {
-      "@features/*": ["./src/app/features/*"],
-      "@core/*": ["./src/app/core/*"],
-      "@shared/*": ["./src/app/shared/*"],
-      "@dashboard/*": ["./src/app/features/dashboard/*"]
+      "@interceptors/*": ["app/core/interceptors/*"],
+      "@models/*": ["app/core/models/*"],
+      "@guards/*": ["app/core/guards/*"],
+      "@features/*": ["app/features/*"],
+      "@shared/*": ["app/shared/*"],
+      "@core/*": ["app/core/*"],
+      "@dashboard/*": ["/app/features/dashboard/*"],
+      "@" : ["app/"],
     }
   },
   "angularCompilerOptions": {
