@@ -1,18 +1,61 @@
-<p-table [value]="brawlers" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" [tableStyle]="{ 'min-width': '50rem' }">
-  <ng-template #header>
+<div class="flex justify-between mb-4 align-middle">
+  <h1 class="text-2xl font-bold ">Brawlers</h1>
+  <p-iconfield>
+    <p-inputicon styleClass="pi pi-search"/>
+    <input
+      type="text"
+      id="search"
+      pInputText
+      placeholder="Buscar por nombre"
+      (input)="filterBrawlersForName($event)"
+    />
+  </p-iconfield>
+</div>
+<p-table #dt2
+         [value]="brawlers"
+         dataKey="id"
+         [paginator]="true"
+         [rows]="10"
+         [rowsPerPageOptions]="[5, 10, 20]"
+>
+  <ng-template pTemplate="header">
     <tr>
-      <th>Code</th>
-      <th>Name</th>
-      <th>Category</th>
-      <th>Quantity</th>
+      <th pSortableColumn="name">Nombre
+        <p-sortIcon field="name"/>
+      </th>
+      <th pSortableColumn="num_people">Nº de personas
+        <p-sortIcon field="num_people"/>
+      </th>
+      <th pSortableColumn="num_favourite">Nº en favoritos
+        <p-sortIcon field="num_favourite"/>
+      </th>
+      <th pSortableColumn="rarity">Rareza
+        <p-sortIcon field="rarity"/>
+      </th>
     </tr>
   </ng-template>
-  <ng-template #body let-brawler>
+
+  <ng-template pTemplate="body" let-brawler>
     <tr>
-      <td><img [src]="brawler.pinImage" alt="brawler_image"> </td>
-      <td>{{ brawler.name }}</td>
-      <td><span [ngClass]="getBadgeClass(brawler.rarity)" class="px-4 py-1 rounded-full">{{ brawler.rarity }}</span></td>
-      <td>{{ brawler.numPeople }}</td>
+      <td>
+        <div class="flex align-middle">
+          <img [src]="brawler.pin_image" alt="brawler_image" width="25" class="mr-2">
+          {{ brawler.name }}
+        </div>
+      </td>
+      <td>{{ brawler.num_people }}</td>
+      <td>{{ brawler.num_favourite }}</td>
+      <td>
+        <span class="px-4 py-1 rounded-full bg-[#F3F3F3] flex items-center w-max">
+          <span [ngClass]="[getBadgeClass(brawler.rarity)]"
+                class="rounded-full size-3 inline-block mr-2"></span>{{ brawler.rarity }}
+        </span>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="5">No hay brawlers.</td>
     </tr>
   </ng-template>
 </p-table>
