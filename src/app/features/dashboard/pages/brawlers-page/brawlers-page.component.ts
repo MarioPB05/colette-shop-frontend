@@ -1,17 +1,24 @@
 import {Component, inject} from '@angular/core';
 import {TableModule} from 'primeng/table';
-import {BrawlerServiceService} from '@dashboard/services/brawler-service.service';
+import {BrawlerService} from '@dashboard/services/brawler.service';
 import {TableBrawlerResponse} from '@core/models/brawler.model';
-import {Badge} from 'primeng/badge';
-import colors from 'tailwindcss/colors';
 import {NgClass} from '@angular/common';
+import {InputText} from 'primeng/inputtext';
+import {FormsModule} from '@angular/forms';
+import {IconField} from 'primeng/iconfield';
+import {InputIcon} from 'primeng/inputicon';
+import {AnimateOnScroll} from 'primeng/animateonscroll';
 
 @Component({
   selector: 'app-brawlers-page',
   imports: [
     TableModule,
-    Badge,
-    NgClass
+    NgClass,
+    InputText,
+    FormsModule,
+    IconField,
+    InputIcon,
+    AnimateOnScroll
   ],
   templateUrl: './brawlers-page.component.html',
   styles: ``
@@ -19,13 +26,16 @@ import {NgClass} from '@angular/common';
 export class BrawlersPageComponent {
 
   protected brawlers: TableBrawlerResponse[] = [];
-  brawlerServiceService = inject(BrawlerServiceService);
+  private brawlersFilter: TableBrawlerResponse[] = [];
+  private brawlersOriginal: TableBrawlerResponse[] = [];
+  brawlerServiceService = inject(BrawlerService);
 
   ngOnInit(): void {
     this.brawlerServiceService.getAllBrawlers().subscribe({
       next: brawlers => {
         for (const brawler of brawlers) {
           this.brawlers.push(brawler);
+          this.brawlersOriginal.push(brawler);
         }
       },
       error: err => {
@@ -33,6 +43,12 @@ export class BrawlersPageComponent {
       }
     });
   }
+
+  filterBrawlersForName(event: any): void {
+    this.brawlersFilter = this.brawlersOriginal.filter(brawler => brawler.name.toLowerCase().includes(event.target.value.toLowerCase()));
+    this.brawlers = this.brawlersFilter;
+  }
+
 
   getBadgeClass(rarity: string): string {
     switch (rarity) {
@@ -53,5 +69,4 @@ export class BrawlersPageComponent {
     }
   }
 
-  protected readonly colors = colors;
 }
