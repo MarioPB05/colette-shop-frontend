@@ -25,6 +25,7 @@
       "@features/*": ["app/features/*"],
       "@shared/*": ["app/shared/*"],
       "@core/*": ["app/core/*"],
+      "@dashboard/*": ["/app/features/dashboard/*"],
       "@" : ["app/"],
     }
   },
