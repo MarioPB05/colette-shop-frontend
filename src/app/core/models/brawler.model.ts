@@ -1,8 +1,8 @@
 export interface TableBrawlerResponse {
-  id?: number;
-  name?: string;
-  numPeople?: number;
-  numFavourite?: number;
-  pinImage?: string;
-  rarity?: string;
+  id: number;
+  name: string;
+  num_people: number;
+  num_favourite: number;
+  pin_image: string;
+  rarity: string;
 }
