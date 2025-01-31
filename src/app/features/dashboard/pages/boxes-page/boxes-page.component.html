@@ -1,0 +1,24 @@
+<div class="flex justify-between mb-6">
+  <h1 class="text-2xl font-bold">Cajas</h1>
+  <p-button label="Crear Caja" icon="pi pi-plus" />
+</div>
+
+<p-contextMenu #cm [model]="items" (onHide)="selectedBox = null" />
+<p-table [value]="boxes" [tableStyle]="{ 'min-width': '50rem' }" [(contextMenuSelection)]="selectedBox" [contextMenu]="cm" dataKey="id">
+  <ng-template #header>
+    <tr>
+      <th>Nombre</th>
+      <th>Precio</th>
+      <th>Cantidad</th>
+      <th>Tipo</th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-box>
+    <tr [pContextMenuRow]="box">
+      <td>{{ box.name }}</td>
+      <td>{{ box.price }} €</td>
+      <td>{{ box.quantity === -1 ? 'Sin límite' : box.quantity  }}</td>
+      <td>{{ box.type }}</td>
+    </tr>
+  </ng-template>
+</p-table>
