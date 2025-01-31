@@ -1,0 +1,35 @@
+<style>
+  :host ::ng-deep .p-progressspinner-circle {
+    stroke: white !important;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  svg {
+    overflow: visible;
+  }
+
+  #skull-outside {
+    animation: spin 2s linear infinite;
+    transform-origin: center;
+  }
+</style>
+
+@if(loading$ | async) {
+  <div class="relative w-screen h-screen">
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-6">
+      <img src="/logo.svg" width="150" />
+      <svg width="150" height="150" viewBox="0 0 307 267" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path id="skull-outside" fill-rule="evenodd" clip-rule="evenodd" d="M77 265.5L58 188L0 133L58 78L77 0L154 23L230 0.5L249 78L307 133L249 189L231 266.5L154.5 243.5L77 265.5ZM152.5 224C201.377 224 241 184.377 241 135.5C241 86.6228 201.377 47 152.5 47C103.623 47 64 86.6228 64 135.5C64 184.377 103.623 224 152.5 224Z" fill="white"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M116 201V186C104.667 179.5 82 161.8 82 143C82 119.5 94 69 157.5 69C201 69 221 112 221 143C221 167.8 198.667 182 187.5 186V201H116ZM120 172C132.15 172 142 162.15 142 150C142 137.85 132.15 128 120 128C107.85 128 98 137.85 98 150C98 162.15 107.85 172 120 172ZM184 172C196.15 172 206 162.15 206 150C206 137.85 196.15 128 184 128C171.85 128 162 137.85 162 150C162 162.15 171.85 172 184 172ZM138.782 119.557C136.842 117.593 133.676 117.573 131.711 119.513C129.747 121.454 129.727 124.62 131.668 126.584L139.397 134.411C141.338 136.376 144.503 136.395 146.468 134.455C148.433 132.514 148.453 129.349 146.512 127.384L138.782 119.557ZM142 175L152 158L162 175H142ZM172.468 119.513C170.503 117.573 167.338 117.593 165.397 119.557L157.668 127.384C155.727 129.349 155.747 132.514 157.711 134.455C159.676 136.395 162.842 136.376 164.782 134.411L172.512 126.584C174.453 124.62 174.433 121.454 172.468 119.513Z" fill="white"/>
+      </svg>
+    </div>
+  </div>
+}
