@@ -3,6 +3,7 @@ import {NgModule} from '@angular/core';
 import {DashboardPageComponent} from '@dashboard/pages/dashboard-page.component';
 import {StatsPageComponent} from '@dashboard/pages/stats-page/stats-page.component';
 import {BrawlersPageComponent} from '@dashboard/pages/brawlers-page/brawlers-page.component';
+import {BoxesPageComponent} from '@dashboard/pages/boxes-page/boxes-page.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
       {
         path: 'brawlers',
         component: BrawlersPageComponent
+      },
+      {
+        path: 'boxes',
+        component: BoxesPageComponent
       },
       {
         path: '',
