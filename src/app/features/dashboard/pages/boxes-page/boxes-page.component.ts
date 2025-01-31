@@ -5,7 +5,6 @@ import {BoxService} from '@dashboard/services/box.service';
 import {Button} from 'primeng/button';
 import {MenuItem} from 'primeng/api';
 import {ContextMenuModule} from 'primeng/contextmenu';
-import {Card} from 'primeng/card';
 
 @Component({
   selector: 'app-boxes-page',
