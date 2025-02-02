@@ -5,13 +5,15 @@ import {BoxService} from '@dashboard/services/box.service';
 import {Button} from 'primeng/button';
 import {MenuItem} from 'primeng/api';
 import {ContextMenuModule} from 'primeng/contextmenu';
+import {Menu} from 'primeng/menu';
 
 @Component({
   selector: 'app-boxes-page',
   imports: [
     TableModule,
     ContextMenuModule,
-    Button
+    Button,
+    Menu
   ],
   templateUrl: './boxes-page.component.html',
   styles: ``
