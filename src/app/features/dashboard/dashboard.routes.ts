@@ -20,11 +20,11 @@ const routes: Routes = [
         component: BrawlersPageComponent
       },
       {
-        path: 'user',
+        path: 'users',
         component: UserPageComponent
       },
       {
-        path: 'order',
+        path: 'orders',
         component: OrderPageComponent
       },
       {
