@@ -8,7 +8,6 @@ import {NgClass} from '@angular/common';
 import {UserService} from '@dashboard/services/user.service';
 import {TableUserResponse} from '@core/models/user.model';
 import {ContextMenu} from 'primeng/contextmenu';
-import {Toast} from 'primeng/toast';
 
 @Component({
   selector: 'app-user-page',
@@ -19,8 +18,7 @@ import {Toast} from 'primeng/toast';
     PrimeTemplate,
     TableModule,
     NgClass,
-    ContextMenu,
-    Toast
+    ContextMenu
   ],
   templateUrl: './user-page.component.html',
   styles: ``

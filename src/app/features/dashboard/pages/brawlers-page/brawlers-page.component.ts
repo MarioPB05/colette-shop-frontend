@@ -7,7 +7,6 @@ import {InputText} from 'primeng/inputtext';
 import {FormsModule} from '@angular/forms';
 import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
-import {AnimateOnScroll} from 'primeng/animateonscroll';
 
 @Component({
   selector: 'app-brawlers-page',
@@ -17,8 +16,7 @@ import {AnimateOnScroll} from 'primeng/animateonscroll';
     InputText,
     FormsModule,
     IconField,
-    InputIcon,
-    AnimateOnScroll
+    InputIcon
   ],
   templateUrl: './brawlers-page.component.html',
   styles: ``
