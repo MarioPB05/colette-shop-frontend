@@ -11,6 +11,7 @@
       <th>Precio</th>
       <th>Cantidad</th>
       <th>Tipo</th>
+      <th style="text-align: center; width: 4rem"></th>
     </tr>
   </ng-template>
   <ng-template #body let-box>
@@ -19,6 +20,11 @@
       <td>{{ box.price }} €</td>
       <td>{{ box.quantity === -1 ? 'Sin límite' : box.quantity  }}</td>
       <td>{{ box.type }}</td>
+      <td style="text-align: center;">
+        <p-button severity="secondary" label="Acciones" iconPos="right" (click)="menu.toggle($event)" icon="pi pi-angle-down"/>
+      </td>
     </tr>
   </ng-template>
 </p-table>
+
+<p-menu #menu [model]="items" [popup]="true" />
