@@ -1,0 +1,65 @@
+<div class="flex justify-between mb-4 align-middle">
+  <h1 class="text-2xl font-bold ">Usuarios</h1>
+  <p-iconfield>
+    <p-inputicon styleClass="pi pi-search"/>
+    <input
+      type="text"
+      id="search"
+      pInputText
+      placeholder="Buscar por nombre"
+      (input)="filterUserForName($event)"
+    />
+  </p-iconfield>
+</div>
+<p-context-menu #cm [model]="items" (onHide)="selectedUser = null " />
+<p-table #dt2
+         [value]="users"
+         dataKey="id"
+         [paginator]="true"
+         [rows]="10"
+         [rowsPerPageOptions]="[5, 10, 20]"
+         [(contextMenuSelection)]="selectedUser"
+         [contextMenu]="cm"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="username">Nombre de usuario
+        <p-sortIcon field="username"/>
+      </th>
+      <th pSortableColumn="email">Email
+        <p-sortIcon field="email"/>
+      </th>
+      <th pSortableColumn="gems">Gemas
+        <p-sortIcon field="gems"/>
+      </th>
+      <th pSortableColumn="enabled">Estado
+        <p-sortIcon field="enabled"/>
+      </th>
+      <th style="text-align: center; width: 4rem"></th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-user>
+    <tr [pContextMenuRow]="user">
+      <td>{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.gems }}</td>
+      <td>
+        <span class="px-4 py-1 rounded-full bg-[#F3F3F3] flex items-center w-max">
+          <span [ngClass]="[getBadgeClass(user.enabled)]"
+                class="rounded-full size-3 inline-block mr-2"></span> {{ getBadgeText(user.enabled) }}
+        </span>
+      </td>
+      <td style="text-align: center">
+        <p-button severity="secondary" label="Acciones" iconPos="right" (click)="menu.toggle($event)" icon="pi pi-angle-down" />
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="5">No hay usuarios.</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-menu #menu [model]="items" [popup]="true"/>

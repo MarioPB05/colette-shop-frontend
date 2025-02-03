@@ -4,6 +4,8 @@ import {DashboardPageComponent} from '@dashboard/pages/dashboard-page.component'
 import {StatsPageComponent} from '@dashboard/pages/stats-page/stats-page.component';
 import {BoxesPageComponent} from '@dashboard/pages/boxes-page/boxes-page.component';
 import {BrawlersPageComponent} from '@dashboard/pages/brawlers-page/brawlers-page.component';
+import {UserPageComponent} from '@dashboard/pages/users-page/user-page.component';
+import {OrderPageComponent} from '@dashboard/pages/orders-page/order-page.component';
 
 @NgModule({
   declarations: [],
@@ -11,6 +13,8 @@ import {BrawlersPageComponent} from '@dashboard/pages/brawlers-page/brawlers-pag
     DashboardPageComponent,
     StatsPageComponent,
     BrawlersPageComponent,
+    UserPageComponent,
+    OrderPageComponent,
     BoxesPageComponent,
     DashboardRoutesModule,
   ]

@@ -6,7 +6,7 @@ import {TableBrawlerResponse} from '@core/models/brawler.model';
 @Injectable({
   providedIn: 'root'
 })
-export class BrawlerServiceService {
+export class BrawlerService {
 
   private apiUrl = '/api/brawlers';
 

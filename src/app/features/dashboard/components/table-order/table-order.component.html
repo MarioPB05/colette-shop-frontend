@@ -1,0 +1,73 @@
+<div class="flex justify-between mb-4 align-middle">
+  <h1 class="text-2xl font-bold ">Pedidos</h1>
+  <p-iconfield>
+    <p-inputicon styleClass="pi pi-search"/>
+    <input
+      type="text"
+      id="search"
+      pInputText
+      placeholder="Buscar por numero de factura"
+      (input)="filterOrderForInvoiceNumber($event)"
+    />
+  </p-iconfield>
+</div>
+<p-table #dt2
+         [value]="orders"
+         dataKey="id"
+         [paginator]="true"
+         [rows]="10"
+         [rowsPerPageOptions]="[5, 10, 20]"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="invoice_number">Número de factura
+        <p-sortIcon field="invoice_number"/>
+      </th>
+      <th pSortableColumn="purchase_date">Fecha de compra
+        <p-sortIcon field="purchase_date"/>
+      </th>
+      <th pSortableColumn="total_price">Total
+        <p-sortIcon field="total_price"/>
+      </th>
+      <th pSortableColumn="state">Estado
+        <p-sortIcon field="state"/>
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-order>
+    <tr>
+      <td>
+        <div class="flex align-middle">
+          <img [src]="order.user_image" alt="user_image" width="50" class="mr-2 border-4 border-black">
+          <div class="flex flex-col">
+          <span class="font-bold">{{ order.username }}</span>
+          <span class="mr-2"> Nº{{ order.invoice_number }}</span>
+          </div>
+        </div>
+      </td>
+      <td>{{ order.purchase_date | date: 'dd/MM/yyyy HH:mm' }}</td>
+      <td>
+        @if (order.discount > 0) {
+          <span class="text-brawl-purple" pTooltip=" Se descuentan {{ numberFormat(order.discount) }} y
+            el precio total es {{ numberFormat(order.total_price) }}" tooltipPosition="top">
+            {{ numberFormat(order.total_with_discount) }}
+          </span>
+        }@else {
+          {{ numberFormat(order.total_price) }}
+        }
+      </td>
+      <td>
+        <span class="px-4 py-1 rounded-full bg-[#F3F3F3] flex items-center w-max">
+          <span [ngClass]="[getBadgeClass(order.state)]"
+                class="rounded-full size-3 inline-block mr-2"></span>{{ order.state }}
+        </span>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="5">No hay pedidos.</td>
+    </tr>
+  </ng-template>
+</p-table>
