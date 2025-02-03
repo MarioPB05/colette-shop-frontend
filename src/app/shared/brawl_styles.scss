@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
 
+
 * {
   font-family: "Lilita One", serif;
   font-weight: 400;
@@ -21,3 +22,157 @@
 .text-border-lg {
   -webkit-text-stroke: 1.5px black;
 }
+
+/*------------------- Estilos de los checkboxes -------------------*/
+.brawl-checkbox-container {
+  display: block;
+  position: relative;
+  padding-left: 40px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Estilización del checkbox oculto */
+.brawl-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Estilo de la casilla */
+.brawl-checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 0.6rem;
+
+  @apply bg-brawl-dark-slate border-2 border-brawl-dark-slate;
+}
+
+/* Cuando el checkbox está marcado, cambiar el color */
+.brawl-checkbox:checked + .brawl-checkmark {
+  @apply bg-brawl-orange;
+}
+
+/* Agregar el icono de check */
+.brawl-checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 9px;
+  top: 0px;
+  width: 10px;
+  height: 20px;
+  border: solid white;
+  border-width: 0 5px 5px 0;
+  transform: rotate(45deg);
+}
+
+/* Mostrar el check cuando el checkbox está marcado */
+.brawl-checkbox:checked + .brawl-checkmark:after {
+  display: block;
+}
+
+/*------------------- Estilos de los sliders -------------------*/
+
+:host ::ng-deep .brawl-range-slider .p-slider-handle {
+  background: transparent;
+  width: 25px;
+  height: 110%;
+  border-radius: 0;
+  top: 30%;
+}
+
+:host ::ng-deep .brawl-range-slider .p-slider-range {
+  @apply bg-brawl-green;
+}
+
+:host ::ng-deep .brawl-range-slider .p-slider-handle::before {
+  background-size: 110%;
+  content: "";
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  padding: 0;
+}
+
+:host ::ng-deep .brawl-range-slider .p-slider-handle[data-pc-section="startHandler"]::before,
+:host ::ng-deep .brawl-range-slider .p-slider-handle[data-pc-section="startHandler"]:hover::before {
+  background: url('/slider-left-arrow.png') no-repeat center center / contain;
+}
+
+:host ::ng-deep .brawl-range-slider .p-slider-handle[data-pc-section="endHandler"]::before,
+:host ::ng-deep .brawl-range-slider .p-slider-handle[data-pc-section="endHandler"]:hover::before {
+  background: url('/slider-right-arrow.png') no-repeat center center / contain;
+}
+
+
+:host ::ng-deep .brawl-range-slider .p-slider-handle:hover {
+  background: transparent!important;
+}
+
+//:host ::ng-deep .brawl-range-slider .p-slider-handle:hover::before {
+//  background: transparent!important;
+//}
+
+:host ::ng-deep .brawl-range-slider{
+  @apply bg-brawl-dark-slate;
+  border-radius: 0.5rem;
+  height: 30px!important;
+}
+
+/*------------------- Formas geométricas -------------------*/
+.parallelogram_shape-sm {
+  clip-path: polygon(2.5% 0%, 100% 0%, 97.5% 100%, 0% 100%);
+}
+
+.parallelogram_shape-md {
+  clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+}
+
+.parallelogram_shape-lg {
+  clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+}
+
+.shoe_shape {
+  clip-path: polygon(0% 0%, 90% 0%, 100% 100%, 0% 100%);
+}
+
+.irregular_rectangle_shape {
+  clip-path: polygon(0% 15%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+/*------------------- moving skulls background -------------------*/
+.moving-skulls-background {
+  overflow: hidden;
+  background-image: url('/brawl-stars-skull.png');
+  background-size: 15%;
+  background-repeat: repeat;
+  animation: scrollBackground 100s linear infinite;
+  opacity: 0.05;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.spotlight {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+  z-index: 2;
+}
+
+@keyframes scrollBackground {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% -100%;
+  }
+}
+
