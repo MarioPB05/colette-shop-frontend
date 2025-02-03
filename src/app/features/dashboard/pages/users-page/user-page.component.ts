@@ -8,6 +8,8 @@ import {NgClass} from '@angular/common';
 import {UserService} from '@dashboard/services/user.service';
 import {TableUserResponse} from '@core/models/user.model';
 import {ContextMenu} from 'primeng/contextmenu';
+import {Button} from 'primeng/button';
+import {Menu} from 'primeng/menu';
 
 @Component({
   selector: 'app-user-page',
@@ -18,7 +20,9 @@ import {ContextMenu} from 'primeng/contextmenu';
     PrimeTemplate,
     TableModule,
     NgClass,
-    ContextMenu
+    ContextMenu,
+    Button,
+    Menu
   ],
   templateUrl: './user-page.component.html',
   styles: ``
@@ -47,11 +51,11 @@ export class UserPageComponent {
     });
 
     this.items = [
-      { label: 'View', icon: 'pi pi-fw pi-search', command(event: MenuItemCommandEvent) {
+      { label: 'Ver detalles', icon: 'pi pi-fw pi-search', command(event: MenuItemCommandEvent) {
           console.log(event.item);
         }
       },
-      { label: 'Delete', icon: 'pi pi-fw pi-times', command(event: MenuItemCommandEvent) {
+      { label: 'Deshabilitar', icon: 'pi pi-fw pi-times', command(event: MenuItemCommandEvent) {
           console.log(event.item);
         }}
     ]
