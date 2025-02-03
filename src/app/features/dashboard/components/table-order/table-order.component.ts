@@ -4,7 +4,7 @@ import {InputIcon} from "primeng/inputicon";
 import {InputText} from "primeng/inputtext";
 import {PrimeTemplate} from "primeng/api";
 import {TableModule} from "primeng/table";
-import {CurrencyPipe, DatePipe, NgClass} from '@angular/common';
+import {DatePipe, NgClass} from '@angular/common';
 import {TableOrderResponse} from '@core/models/order.model';
 import {OrderService} from '@dashboard/services/order.service';
 import {Tooltip} from 'primeng/tooltip';
@@ -19,7 +19,6 @@ import {Tooltip} from 'primeng/tooltip';
     TableModule,
     NgClass,
     DatePipe,
-    CurrencyPipe,
     Tooltip
   ],
   templateUrl: './table-order.component.html',
@@ -70,13 +69,4 @@ export class TableOrderComponent implements OnInit {
     return new Intl.NumberFormat('es-ES', {style: 'currency', currency: 'EUR'}).format(value);
   }
 
-  isInside(id: number): string {
-    if (this.orders[id].discount === 0) {
-      return '';
-    } else {
-      return this.numberFormat(this.orders[id].total_price).toString();
-    }
-  }
-
-  protected readonly isFinite = isFinite;
 }
