@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
 import {InputText} from 'primeng/inputtext';
@@ -27,7 +27,7 @@ import {Menu} from 'primeng/menu';
   templateUrl: './user-page.component.html',
   styles: ``
 })
-export class UserPageComponent {
+export class UserPageComponent  implements OnInit {
   protected users: TableUserResponse[] = [];
   private userFilter: TableUserResponse[] = [];
   private userOriginal: TableUserResponse[] = [];

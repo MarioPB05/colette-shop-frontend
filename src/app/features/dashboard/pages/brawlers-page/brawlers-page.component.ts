@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {TableModule} from 'primeng/table';
 import {BrawlerService} from '@dashboard/services/brawler.service';
 import {TableBrawlerResponse} from '@core/models/brawler.model';
@@ -21,7 +21,7 @@ import {InputIcon} from 'primeng/inputicon';
   templateUrl: './brawlers-page.component.html',
   styles: ``
 })
-export class BrawlersPageComponent {
+export class BrawlersPageComponent implements OnInit {
 
   protected brawlers: TableBrawlerResponse[] = [];
   private brawlersFilter: TableBrawlerResponse[] = [];

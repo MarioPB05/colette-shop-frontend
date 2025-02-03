@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {IconField} from "primeng/iconfield";
 import {InputIcon} from "primeng/inputicon";
 import {InputText} from "primeng/inputtext";
@@ -25,7 +25,7 @@ import {Tooltip} from 'primeng/tooltip';
   templateUrl: './table-order.component.html',
   styles: ``
 })
-export class TableOrderComponent {
+export class TableOrderComponent implements OnInit {
   protected orders: TableOrderResponse[] = [];
   private orderFilter: TableOrderResponse[] = [];
   private orderOriginal: TableOrderResponse[] = [];
