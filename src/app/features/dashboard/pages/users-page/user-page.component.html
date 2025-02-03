@@ -23,9 +23,6 @@
 >
   <ng-template pTemplate="header">
     <tr>
-      <th pSortableColumn="name">Nombre
-        <p-sortIcon field="name"/>
-      </th>
       <th pSortableColumn="username">Nombre de usuario
         <p-sortIcon field="username"/>
       </th>
@@ -38,12 +35,12 @@
       <th pSortableColumn="enabled">Estado
         <p-sortIcon field="enabled"/>
       </th>
+      <th style="text-align: center; width: 4rem"></th>
     </tr>
   </ng-template>
 
   <ng-template pTemplate="body" let-user>
     <tr [pContextMenuRow]="user">
-      <td>{{ user.name }}</td>
       <td>{{ user.username }}</td>
       <td>{{ user.email }}</td>
       <td>{{ user.gems }}</td>
@@ -53,6 +50,9 @@
                 class="rounded-full size-3 inline-block mr-2"></span> {{ getBadgeText(user.enabled) }}
         </span>
       </td>
+      <td style="text-align: center">
+        <p-button severity="secondary" label="Acciones" iconPos="right" (click)="menu.toggle($event)" icon="pi pi-angle-down" />
+      </td>
     </tr>
   </ng-template>
   <ng-template #emptymessage>
@@ -61,4 +61,5 @@
     </tr>
   </ng-template>
 </p-table>
-<!--<p-toast />-->
+
+<p-menu #menu [model]="items" [popup]="true"/>
