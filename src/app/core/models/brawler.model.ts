@@ -6,3 +6,10 @@ export interface TableBrawlerResponse {
   pin_image: string;
   rarity: string;
 }
+
+export interface ListBrawlerResponse {
+  id: number;
+  name: string;
+  image: string;
+  rarity: string;
+}
