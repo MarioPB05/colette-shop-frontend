@@ -16,4 +16,8 @@ export class BoxService {
     return this.http.get<TableBoxResponse[]>(`${this.apiUrl}/`)
   }
 
+  removeBox(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`)
+  }
+
 }
