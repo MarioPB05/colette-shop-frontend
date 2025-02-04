@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {BrawlHeaderComponent} from '@shared/components/brawl-header/brawl-header.component';
 import {BoxBuyCardComponent} from '@features/catalog/components/box-buy-card/box-buy-card.component';
 import {Slider} from 'primeng/slider';
@@ -6,6 +6,7 @@ import {FormsModule} from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import {BoxShopResponse} from '@models/box.model';
 import {NgForOf} from '@angular/common';
+import {BoxService} from '@features/catalog/box.service';
 
 @Component({
   selector: 'app-shop-page',
@@ -14,61 +15,76 @@ import {NgForOf} from '@angular/common';
   styleUrl: './../../../../shared/brawl_styles.scss',
   standalone: true
 })
-export class CatalogPageComponent {
+export class CatalogPageComponent implements OnInit {
   rangeValues: number[] = [20, 30];
-  boxList: BoxShopResponse[] = [
+  onlyFavorites: boolean = false;
+  boxTypeFilter: string = '';
+
+  allBoxes: BoxShopResponse[] = [
     {
       id: 1,
-      name: 'Box 1',
-      price: 20,
+      name: 'Box name',
+      price: 1.56,
       type: 'Caja',
-      boxesLeft: 10,
-      favoriteBrawlersInBox: 5,
-      pinned: true,
+      boxesLeft: 4,
+      favoriteBrawlersInBox: 3,
+      pinned: false,
       popular: true
     },
     {
       id: 2,
-      name: 'Box 2',
-      price: 30.56,
+      name: 'Box name 2',
+      price: 5,
       type: 'Caja grande',
-      boxesLeft: 4,
+      boxesLeft: 3,
       favoriteBrawlersInBox: 0,
-      pinned: false,
-      popular: true
-    },
-    {
-      id: 3,
-      name: 'Box 3',
-      price: 40.99,
-      type: 'Caja',
-      boxesLeft: 28,
-      favoriteBrawlersInBox: 3,
       pinned: false,
       popular: false
     },
     {
-      id: 4,
-      name: 'Box 4',
-      price: 50,
+      id: 3,
+      name: 'Box name 3',
+      price: 10,
       type: 'Megacaja',
-      boxesLeft: 1,
-      favoriteBrawlersInBox: 0,
+      boxesLeft: 2,
+      favoriteBrawlersInBox: 1,
       pinned: true,
       popular: false
     },
     {
-      id: 5,
-      name: 'Box 5',
-      price: 60.99,
+      id: 4,
+      name: 'Box name 4',
+      price: 20,
       type: 'Omegacaja',
-      boxesLeft: 10,
-      favoriteBrawlersInBox: 5,
-      pinned: false,
-      popular: false
-    },
+      boxesLeft: 1,
+      favoriteBrawlersInBox: 0,
+      pinned: true,
+      popular: true
+    }
   ];
+  boxList: BoxShopResponse[] = [];
 
+  constructor(private boxService: BoxService) {}
+
+  ngOnInit() {
+    // this.boxService.getShopBoxes().subscribe((boxes: BoxShopResponse[]) => {
+    //   this.boxList = boxes;
+    // });
+
+    this.boxList = this.allBoxes;
+    this.boxList = this.boxList.sort((a, b) => a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1);
+  }
+
+  filterBoxes() {
+    let filterBoxes = this.allBoxes.filter((box) => {
+      return (!this.onlyFavorites || box.favoriteBrawlersInBox > 0)
+        && (this.boxTypeFilter === '' || box.type === this.boxTypeFilter)
+        && (box.price >= this.rangeValues[0] && box.price <= this.rangeValues[1]);
+    });
+
+    filterBoxes = filterBoxes.sort((a, b) => a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1);
+    this.boxList = [...filterBoxes];
+  }
 
   extractOnlyNumbers(str: string): number {
     const cleanedStr = str.replace(/(?<=\d)[.,](?=\d{3}(?:[.,]|$))/g, "");
