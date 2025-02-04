@@ -7,6 +7,7 @@ import {BrawlersPageComponent} from '@dashboard/pages/brawlers-page/brawlers-pag
 import {UserPageComponent} from '@dashboard/pages/users-page/user-page.component';
 import {OrderPageComponent} from '@dashboard/pages/orders-page/order-page.component';
 import {BoxEditorPageComponent} from '@dashboard/pages/box-editor-page/box-editor-page.component';
+import {UserDetailsPageComponent} from '@dashboard/pages/user-details-page/user-details-page.component';
 
 @NgModule({
   declarations: [],
@@ -18,6 +19,7 @@ import {BoxEditorPageComponent} from '@dashboard/pages/box-editor-page/box-edito
     OrderPageComponent,
     BoxesPageComponent,
     BoxEditorPageComponent,
+    UserDetailsPageComponent,
     DashboardRoutesModule,
   ]
 })

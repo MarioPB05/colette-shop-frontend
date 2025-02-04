@@ -7,6 +7,7 @@ import {UserPageComponent} from '@dashboard/pages/users-page/user-page.component
 import {OrderPageComponent} from '@dashboard/pages/orders-page/order-page.component';
 import {BoxesPageComponent} from '@dashboard/pages/boxes-page/boxes-page.component';
 import {BoxEditorPageComponent} from '@dashboard/pages/box-editor-page/box-editor-page.component';
+import {UserDetailsPageComponent} from '@dashboard/pages/user-details-page/user-details-page.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,10 @@ const routes: Routes = [
       {
         path: 'users',
         component: UserPageComponent
+      },
+      {
+        path: 'user/:brawlTag',
+        component: UserDetailsPageComponent
       },
       {
         path: 'orders',

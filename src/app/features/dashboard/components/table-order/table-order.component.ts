@@ -2,12 +2,15 @@ import {Component, inject, OnInit} from '@angular/core';
 import {IconField} from "primeng/iconfield";
 import {InputIcon} from "primeng/inputicon";
 import {InputText} from "primeng/inputtext";
-import {PrimeTemplate} from "primeng/api";
+import {MenuItem, MenuItemCommandEvent, PrimeTemplate} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {DatePipe, NgClass} from '@angular/common';
 import {TableOrderResponse} from '@core/models/order.model';
 import {OrderService} from '@dashboard/services/order.service';
 import {Tooltip} from 'primeng/tooltip';
+import {ContextMenu} from 'primeng/contextmenu';
+import {Menu} from 'primeng/menu';
+import {Button} from 'primeng/button';
 
 @Component({
   selector: 'app-table-order',
@@ -19,7 +22,10 @@ import {Tooltip} from 'primeng/tooltip';
     TableModule,
     NgClass,
     DatePipe,
-    Tooltip
+    Tooltip,
+    ContextMenu,
+    Menu,
+    Button
   ],
   templateUrl: './table-order.component.html',
   styles: ``
@@ -29,6 +35,9 @@ export class TableOrderComponent implements OnInit {
   private orderFilter: TableOrderResponse[] = [];
   private orderOriginal: TableOrderResponse[] = [];
   orderService = inject(OrderService);
+  protected selectedOrder: TableOrderResponse | null | undefined;
+
+  items!: MenuItem[];
 
   ngOnInit(): void {
     this.orderService.getAllOrder().subscribe({
@@ -42,6 +51,17 @@ export class TableOrderComponent implements OnInit {
         console.error('Error al cargar los pedidos:', err);
       }
     });
+
+    this.items = [
+      { label: 'Ver detalles', icon: 'pi pi-fw pi-search', command(event: MenuItemCommandEvent) {
+          console.log(event.item);
+        }
+      },
+      { label: 'Deshabilitar', icon: 'pi pi-fw pi-times', command(event: MenuItemCommandEvent) {
+          console.log(event.item);
+        }}
+    ]
+
   }
 
   filterOrderForInvoiceNumber(event: any): void {

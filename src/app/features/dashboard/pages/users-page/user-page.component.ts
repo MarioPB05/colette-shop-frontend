@@ -1,4 +1,5 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
 import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
 import {InputText} from 'primeng/inputtext';
@@ -28,38 +29,29 @@ import {Menu} from 'primeng/menu';
   styles: ``
 })
 export class UserPageComponent  implements OnInit {
+
   protected users: TableUserResponse[] = [];
   private userFilter: TableUserResponse[] = [];
   private userOriginal: TableUserResponse[] = [];
-  protected selectedUser : TableUserResponse | null | undefined;
+  protected selectedUser!: TableUserResponse | null;
 
   items!: MenuItem[];
 
+  @ViewChild('menu') menu!: Menu;
+
   userService = inject(UserService);
+  router = inject(Router);
 
   ngOnInit(): void {
     this.userService.getAllUser().subscribe({
       next: users => {
-        for (const user of users) {
-          this.users.push(user);
-          this.userOriginal.push(user);
-        }
+        this.users = users;
+        this.userOriginal = users;
       },
       error: err => {
         console.error('Error al cargar los usuarios:', err);
       }
     });
-
-    this.items = [
-      { label: 'Ver detalles', icon: 'pi pi-fw pi-search', command(event: MenuItemCommandEvent) {
-          console.log(event.item);
-        }
-      },
-      { label: 'Deshabilitar', icon: 'pi pi-fw pi-times', command(event: MenuItemCommandEvent) {
-          console.log(event.item);
-        }}
-    ]
-
   }
 
   filterUserForName(event: any): void {
@@ -88,4 +80,60 @@ export class UserPageComponent  implements OnInit {
         return '';
     }
   }
+
+  openActionsMenu(event: Event, user: TableUserResponse): void {
+    this.menu.toggle(event);
+    this.selectedUser = user;
+
+    this.items = [
+      {
+        label: 'Ver detalles',
+        icon: 'pi pi-fw pi-search',
+        command: () => this.router.navigate([`/dashboard/users/${user.brawlTag}`])
+      }
+    ];
+
+    if (this.selectedUser.enabled) {
+      this.items.push({
+        label: 'Deshabilitar',
+        icon: 'pi pi-fw pi-times',
+        command: () => this.disableUser(this.selectedUser)
+      });
+    } else {
+      this.items.push({
+        label: 'Habilitar',
+        icon: 'pi pi-fw pi-check',
+        command: () => this.enableUser(this.selectedUser)
+      });
+    }
+  }
+
+  disableUser(user: TableUserResponse | null): void {
+    if (!user) return;
+    this.userService.disableUser(user.id).subscribe({
+      next: () => {
+        user.enabled = false;
+        this.userOriginal = this.userOriginal.map(u => u.id === user.id ? user : u);
+        this.users = this.userOriginal;
+      },
+      error: err => {
+        console.error('Error al deshabilitar el usuario:', err);
+      }
+    });
+  }
+
+  enableUser(user: TableUserResponse | null): void {
+    if (!user) return;
+    this.userService.enableUser(user.id).subscribe({
+      next: () => {
+        user.enabled = true;
+        this.userOriginal = this.userOriginal.map(u => u.id === user.id ? user : u);
+        this.users = this.userOriginal;
+      },
+      error: err => {
+        console.error('Error al habilitar el usuario:', err);
+      }
+    });
+  }
+
 }

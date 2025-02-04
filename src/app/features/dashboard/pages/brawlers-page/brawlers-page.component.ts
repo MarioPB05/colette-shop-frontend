@@ -31,10 +31,8 @@ export class BrawlersPageComponent implements OnInit {
   ngOnInit(): void {
     this.brawlerServiceService.getAllBrawlers().subscribe({
       next: brawlers => {
-        for (const brawler of brawlers) {
-          this.brawlers.push(brawler);
-          this.brawlersOriginal.push(brawler);
-        }
+        this.brawlers = brawlers;
+        this.brawlersOriginal = brawlers;
       },
       error: err => {
         console.error('Error al cargar los brawlers:', err);
@@ -46,7 +44,6 @@ export class BrawlersPageComponent implements OnInit {
     this.brawlersFilter = this.brawlersOriginal.filter(brawler => brawler.name.toLowerCase().includes(event.target.value.toLowerCase()));
     this.brawlers = this.brawlersFilter;
   }
-
 
   getBadgeClass(rarity: string): string {
     switch (rarity) {
