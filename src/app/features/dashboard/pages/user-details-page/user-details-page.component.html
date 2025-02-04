@@ -1,7 +1,70 @@
-<!--<div class="flex align-middle">-->
-<!--  <img [src]="user.avatar" alt="user_image" width="50" class="mr-2 border-4 border-black">-->
-<!--  <div class="flex flex-col">-->
-<!--    <span class="font-bold">{{ user.username }}</span>-->
-<!--    <span class="mr-2"> Nº{{ user.brawlTag }}</span>-->
-<!--  </div>-->
-<!--</div>-->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+
+  .font-brawl {
+    font-family: "Lilita One", serif;
+    font-weight: 400;
+    font-style: normal;
+
+    text-shadow: 0.5px 1.5px 0px black;
+
+
+    @apply text-brawl-gold;
+  }
+
+  .font-brawl-little {
+    font-family: "Lilita One", serif;
+    font-weight: 400;
+    font-style: normal;
+
+    text-shadow: 0.5px 1.5px 0px black;
+
+
+    @apply text-brawl-light-blue;
+  }
+
+  .text-border-lg {
+    -webkit-text-stroke: 0.5px black;
+  }
+
+</style>
+
+<div class="flex items-center gap-2">
+  <img [src]="user.avatar" alt="user_image" width="100" class="mr-2 border-4 border-black">
+  <div class="flex flex-col gap-2">
+    <h1 class="font-brawl text-border-lg text-4xl">{{ user.username }}</h1>
+    <span class="mr-2 font-brawl-little text-2xl text-border-lg">#{{ user.brawlTag }}</span>
+  </div>
+</div>
+
+<div class="mt-10 rounded-md shadow-md">
+  <div class="text-xl font-bold border-b-2 rounded-t-md px-3 py-1 bg-gray-50">
+    Datos personales
+  </div>
+  <div class="flex flex-wrap justify-around py-3">
+    <div class="flex flex-col">
+      <span class="font-bold">Nombre:</span>
+      <span>{{ user.name }}</span>
+    </div>
+    <div class="flex flex-col">
+      <span class="font-bold">Apellidos:</span>
+      <span>{{ user.surname }}</span>
+    </div>
+    <div class="flex flex-col">
+      <span class="font-bold">Email:</span>
+      <span>{{ user.email }}</span>
+    </div>
+    <div class="flex flex-col">
+      <span class="font-bold">DNI:</span>
+      <span>{{ user.dni }}</span>
+    </div>
+    <div class="flex flex-col">
+      <span class="font-bold">Fecha de nacimiento:</span>
+      <span>{{ user.birthdate | date: 'dd/MM/yyyy' }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="mt-10">
+<app-table-order></app-table-order>
+</div>
