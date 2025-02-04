@@ -1,0 +1,43 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+
+  * {
+    font-family: "Lilita One", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .text-shadow {
+    text-shadow: 0.5px 1.5px 0px black;
+  }
+
+  .text-border-sm {
+    -webkit-text-stroke: 0.5px black;
+  }
+
+  .text-border-lg {
+    -webkit-text-stroke: 1.5px black;
+  }
+
+  .custom-gradient {
+    position: relative;
+    background: radial-gradient(50% 50% at 50% 50%, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
+  }
+
+  .custom-btn {
+    @apply bg-brawl-gold py-2 px-14 rounded-lg w-full hover:scale-110 transition-transform duration-300;
+    @apply text-white text-shadow text-border-sm text-2xl text-nowrap;
+  }
+</style>
+
+<div class="bg-[url(/images/backgrounds/auth-bg.png)] bg-no-repeat bg-cover w-screen h-screen flex justify-center items-center relative">
+  <h1 class="text-9xl text-center text-brawl-gold text-shadow text-border-lg custom-gradient">
+    Colette's <br>
+    <span class="text-white">SHOP</span>
+  </h1>
+
+  <div class="absolute bottom-10 flex gap-6">
+    <button class="custom-btn">INICIAR SESIÓN</button>
+    <button class="custom-btn">REGISTRARSE</button>
+  </div>
+</div>
