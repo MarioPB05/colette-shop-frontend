@@ -11,12 +11,15 @@
     />
   </p-iconfield>
 </div>
+<p-context-menu #cm [model]="items" (onHide)="selectedOrder = null " />
 <p-table #dt2
          [value]="orders"
          dataKey="id"
          [paginator]="true"
          [rows]="10"
          [rowsPerPageOptions]="[5, 10, 20]"
+         [(contextMenuSelection)]="selectedOrder"
+         [contextMenu]="cm"
 >
   <ng-template pTemplate="header">
     <tr>
@@ -32,11 +35,12 @@
       <th pSortableColumn="state">Estado
         <p-sortIcon field="state"/>
       </th>
+      <th style="text-align: center; width: 4rem"></th>
     </tr>
   </ng-template>
 
   <ng-template pTemplate="body" let-order>
-    <tr>
+    <tr [pContextMenuRow]="order">
       <td>
         <div class="flex align-middle">
           <img [src]="order.user_image" alt="user_image" width="50" class="mr-2 border-4 border-black">
@@ -63,6 +67,9 @@
                 class="rounded-full size-3 inline-block mr-2"></span>{{ order.state }}
         </span>
       </td>
+      <td style="text-align: center">
+        <p-button severity="secondary" label="Acciones" iconPos="right" (click)="menu.toggle($event)" icon="pi pi-angle-down" />
+      </td>
     </tr>
   </ng-template>
   <ng-template #emptymessage>
@@ -71,3 +78,5 @@
     </tr>
   </ng-template>
 </p-table>
+
+<p-menu #menu [model]="items" [popup]="true"/>
