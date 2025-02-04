@@ -1,14 +1,14 @@
 <div class="z-10 relative w-64  flex flex-col rounded-lg border-gray-800 border-2 ">
   <span class="bg-brawl-black {{ box.boxesLeft < 5 ? 'text-red-500' : 'text-brawl-light-gray'}} text-xs text-center relative p-0.5 ">
     <i class="pi pi-thumbtack  absolute text-brawl-light-gray left-1 {{ !box.pinned ? 'hidden' : '' }}"  style="font-size: 0.8rem"></i>
-    Quedan {{ box.boxesLeft }} unidades
+    {{ box.boxesLeft === 1 ? 'Queda' : 'Quedan' }} {{ box.boxesLeft }} {{ box.boxesLeft === 1 ? 'unidad' : 'unidades' }}
   </span>
   <div class="grid relative grid-rows-[auto_1fr] h-64">
     <span class="bg-brawl-blue border-b border-brawl-dark-slate text-xl p-2 text-brawl-white text-center text-shadow text-border-sm">
       {{ box.name }}
     </span>
     <div class="flex justify-center items-center bg-gradient-radial to-[#1375FF] from-[#3DE2FB]">
-      <img src="/boxes/common_box.png" alt="Caja común" class="w-32 h-32 z-10">
+      <img src="/images/boxes/{{ imageByBoxType[box.type] }}" alt="Caja común" class="w-32 h-32 z-10">
     </div>
     <div class="bg-brawl-red {{ box.popular ? '' : 'hidden' }} bottom-0 left-0 text-sm shoe_shape p-1 ps-2 pe-4 text-shadow text-border-sm absolute text-brawl-white">
       POPULAR

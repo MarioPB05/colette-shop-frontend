@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {BoxShopResponse} from '@models/box.model';
 
 @Component({
@@ -8,8 +8,22 @@ import {BoxShopResponse} from '@models/box.model';
   styleUrls: ['./../../../../shared/brawl_styles.scss', "./../../../../../styles.scss"],
   standalone: true
 })
+
 export class BoxBuyCardComponent {
-  box : BoxShopResponse = {
+  gradientByBoxType = {
+    "Caja": "linear-gradient(90deg, #FFD700 0%, #FFA500 100%)",
+    "Caja grande": "linear-gradient(90deg, #FF6347 0%, #FF0000 100%)",
+    "Megacaja": "linear-gradient(90deg, #FFD700 0%, #FFA500 100%)"
+  };
+
+  imageByBoxType : {[key: string]: string} = {
+    "Caja": "common-box.png",
+    "Caja grande": "big-box.png",
+    "Megacaja": "megabox.png",
+    "Omegacaja": "omegabox.png"
+  }
+
+  @Input() box : BoxShopResponse = {
     id: 1,
     name: 'Box name',
     price: 100,
@@ -18,5 +32,5 @@ export class BoxBuyCardComponent {
     favoriteBrawlersInBox: 3,
     pinned: true,
     popular: true
-  }
+  };
 }
