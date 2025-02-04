@@ -41,7 +41,7 @@
     <div class="moving-skulls-background"></div>
 
     <div class="flex p-10 gap-10 flex-wrap">
-      <app-box-buy-card></app-box-buy-card>
+      <app-box-buy-card *ngFor="let item of boxList" [box]="item"></app-box-buy-card>
     </div>
   </div>
 </div>
