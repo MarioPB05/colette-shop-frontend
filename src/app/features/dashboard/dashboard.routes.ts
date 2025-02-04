@@ -27,7 +27,7 @@ const routes: Routes = [
         component: UserPageComponent
       },
       {
-        path: 'user/:brawlTag',
+        path: 'users/:brawlTag',
         component: UserDetailsPageComponent
       },
       {
