@@ -9,7 +9,7 @@ import {routes} from '../../../../app.routes';
   templateUrl: './user-details-page.component.html',
   styles: ``
 })
-export class UserDetailsPageComponent implements OnInit {
+export class UserDetailsPageComponent {
 
   // protected user!: ShowUserResponse;
   // private userId!: string;
@@ -20,6 +20,5 @@ export class UserDetailsPageComponent implements OnInit {
   //
   // ngOnInit() {
   //   this.brawlTag = this.router.url.split('/').pop() || '';
-  }
 
 }
