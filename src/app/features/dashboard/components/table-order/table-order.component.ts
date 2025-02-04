@@ -11,6 +11,7 @@ import {Tooltip} from 'primeng/tooltip';
 import {ContextMenu} from 'primeng/contextmenu';
 import {Menu} from 'primeng/menu';
 import {Button} from 'primeng/button';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-table-order',
@@ -36,11 +37,18 @@ export class TableOrderComponent implements OnInit {
   private orderOriginal: TableOrderResponse[] = [];
   orderService = inject(OrderService);
   protected selectedOrder: TableOrderResponse | null | undefined;
+  brawlTag: string = '';
 
   items!: MenuItem[];
 
+  constructor(private route: ActivatedRoute) {
+  }
+
   ngOnInit(): void {
-    this.orderService.getAllOrder().subscribe({
+
+    this.brawlTag = this.route.snapshot.paramMap.get('brawlTag')!;
+
+    this.orderService.getAllOrder(this.brawlTag).subscribe({
       next: brawlers => {
         for (const brawler of brawlers) {
           this.orders.push(brawler);
