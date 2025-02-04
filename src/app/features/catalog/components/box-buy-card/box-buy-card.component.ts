@@ -10,11 +10,19 @@ import {BoxShopResponse} from '@models/box.model';
 })
 
 export class BoxBuyCardComponent {
-  gradientByBoxType = {
-    "Caja": "linear-gradient(90deg, #FFD700 0%, #FFA500 100%)",
-    "Caja grande": "linear-gradient(90deg, #FF6347 0%, #FF0000 100%)",
-    "Megacaja": "linear-gradient(90deg, #FFD700 0%, #FFA500 100%)"
+  gradientByBoxType : {[key: string]: string} = {
+    "Caja": "from-[#3DE2FB] to-[#1375FF]",
+    "Caja grande": "from-[#fbb9ff] to-[#f230ff]",
+    "Megacaja": "from-[#FFFFFF] to-[#FFD700]",
+    "Omegacaja": "from-[#ffed7b] to-[#ff1616]"
   };
+
+  headerByBoxType : {[key: string]: string} = {
+    "Caja": "bg-[#1375FF]",
+    "Caja grande": "bg-[#f230ff]",
+    "Megacaja": "bg-[#FFD700]",
+    "Omegacaja": "bg-[#ff1616]"
+  }
 
   imageByBoxType : {[key: string]: string} = {
     "Caja": "common-box.png",
