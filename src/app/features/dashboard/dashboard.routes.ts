@@ -6,6 +6,7 @@ import {BrawlersPageComponent} from '@dashboard/pages/brawlers-page/brawlers-pag
 import {UserPageComponent} from '@dashboard/pages/users-page/user-page.component';
 import {OrderPageComponent} from '@dashboard/pages/orders-page/order-page.component';
 import {BoxesPageComponent} from '@dashboard/pages/boxes-page/boxes-page.component';
+import {BoxEditorPageComponent} from '@dashboard/pages/box-editor-page/box-editor-page.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,14 @@ const routes: Routes = [
       {
         path: 'boxes',
         component: BoxesPageComponent
+      },
+      {
+        path: 'box/create',
+        component: BoxEditorPageComponent
+      },
+      {
+        path: 'box/:id/edit',
+        component: BoxEditorPageComponent
       },
       {
         path: '',
