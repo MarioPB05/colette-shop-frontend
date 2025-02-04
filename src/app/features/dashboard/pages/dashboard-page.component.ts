@@ -5,8 +5,9 @@ import {Card} from "primeng/card";
 import {Observable, Subscription} from 'rxjs';
 import {LoadingService} from '@core/services/loading.service';
 import {SpeedDial} from 'primeng/speeddial';
-import {MenuItem} from 'primeng/api';
+import {ConfirmationService, MenuItem, MessageService} from 'primeng/api';
 import {Button} from 'primeng/button';
+import {Toast} from 'primeng/toast';
 
 export const DashboardMenuItems: MenuItem[] = [
   {
@@ -46,7 +47,9 @@ export const DashboardMenuItems: MenuItem[] = [
     Button,
     RouterLinkActive,
     RouterLink,
+    Toast,
   ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './dashboard-page.component.html'
 })
 export class DashboardPageComponent implements OnDestroy {
