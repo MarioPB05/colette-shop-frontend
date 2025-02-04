@@ -23,6 +23,11 @@
   -webkit-text-stroke: 1.5px black;
 }
 
+/*------------------- Botones -------------------*/
+.brawl-button {
+  @apply bg-brawl-gold p-1 px-3 rounded-lg w-full text-shadow text-border-sm;
+}
+
 /*------------------- Estilos de los checkboxes -------------------*/
 .brawl-checkbox-container {
   display: block;
