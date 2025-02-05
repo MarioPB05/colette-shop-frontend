@@ -4,15 +4,18 @@ import {BoxBuyCardComponent} from '@features/catalog/components/box-buy-card/box
 import {Slider} from 'primeng/slider';
 import {FormsModule} from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
-import {BoxShopResponse} from '@models/box.model';
+import {BoxShopResponse, DailyBoxShopResponse} from '@models/box.model';
 import {NgForOf, NgIf} from '@angular/common';
 import {BoxService} from '@features/catalog/box.service';
 import {Tooltip} from 'primeng/tooltip';
 import {FaviconService} from '@core/services/favicon.service';
+import {
+  BoxFreeDailyBuyCardComponent
+} from '@features/catalog/components/box-free-daily-buy-card/box-free-daily-buy-card.component';
 
 @Component({
   selector: 'app-shop-page',
-  imports: [BrawlHeaderComponent, Slider, FormsModule, InputNumberModule, BoxBuyCardComponent, NgForOf, NgIf, Tooltip],
+  imports: [BrawlHeaderComponent, Slider, FormsModule, InputNumberModule, BoxBuyCardComponent, NgForOf, NgIf, Tooltip, BoxFreeDailyBuyCardComponent],
   templateUrl: './catalog-page.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss'],
   standalone: true
@@ -70,6 +73,17 @@ export class CatalogPageComponent implements OnInit {
       pinned: true,
       popular: false
     }
+  ];
+  dailyBoxes: DailyBoxShopResponse[] = [
+    {
+      id: 1,
+      name: 'Caja diaria',
+      type: 'Caja',
+      boxesLeft: 4,
+      favoriteBrawlersInBox: 3,
+      pinned: true,
+      repeatHours: 24
+    },
   ];
   boxList: BoxShopResponse[] = [];
 
