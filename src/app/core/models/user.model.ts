@@ -21,3 +21,8 @@ export interface ShowUserResponse {
   enabled: boolean;
   avatar: string;
 }
+
+export interface LoginUserRequest {
+  username: string;
+  password: string;
+}
