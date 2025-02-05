@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {TableBrawlerResponse} from '@core/models/brawler.model';
 import {ShowUserResponse, TableUserResponse} from '@core/models/user.model';
 
 @Injectable({
