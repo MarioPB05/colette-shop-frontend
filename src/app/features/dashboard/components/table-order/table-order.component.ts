@@ -2,7 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {IconField} from "primeng/iconfield";
 import {InputIcon} from "primeng/inputicon";
 import {InputText} from "primeng/inputtext";
-import {MenuItem, MenuItemCommandEvent, PrimeTemplate} from "primeng/api";
+import {MenuItem, MenuItemCommandEvent, MessageService, PrimeTemplate} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {DatePipe, NgClass} from '@angular/common';
 import {TableOrderResponse} from '@core/models/order.model';
@@ -35,9 +35,11 @@ export class TableOrderComponent implements OnInit {
   protected orders: TableOrderResponse[] = [];
   private orderFilter: TableOrderResponse[] = [];
   private orderOriginal: TableOrderResponse[] = [];
-  orderService = inject(OrderService);
   protected selectedOrder: TableOrderResponse | null | undefined;
-  brawlTag: string = '';
+  private brawlTag: string = '';
+
+  private orderService = inject(OrderService);
+  private messageService: MessageService = inject(MessageService);
 
   items!: MenuItem[];
 
@@ -55,9 +57,9 @@ export class TableOrderComponent implements OnInit {
           this.orderOriginal.push(brawler);
         }
       },
-      error: err => {
-        console.error('Error al cargar los pedidos:', err);
-      }
+     error: () => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo cargar los pedidos'});
+     }
     });
 
     this.items = [

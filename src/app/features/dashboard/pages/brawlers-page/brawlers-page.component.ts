@@ -7,6 +7,7 @@ import {InputText} from 'primeng/inputtext';
 import {FormsModule} from '@angular/forms';
 import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-brawlers-page',
@@ -26,7 +27,9 @@ export class BrawlersPageComponent implements OnInit {
   protected brawlers: TableBrawlerResponse[] = [];
   private brawlersFilter: TableBrawlerResponse[] = [];
   private brawlersOriginal: TableBrawlerResponse[] = [];
-  brawlerServiceService = inject(BrawlerService);
+
+  private brawlerServiceService = inject(BrawlerService);
+  private messageService: MessageService = inject(MessageService);
 
   ngOnInit(): void {
     this.brawlerServiceService.getAllBrawlers().subscribe({
@@ -34,8 +37,8 @@ export class BrawlersPageComponent implements OnInit {
         this.brawlers = brawlers;
         this.brawlersOriginal = brawlers;
       },
-      error: err => {
-        console.error('Error al cargar los brawlers:', err);
+      error: () => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo cargar los brawlers'});
       }
     });
   }
