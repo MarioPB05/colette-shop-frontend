@@ -8,6 +8,7 @@ import {BoxShopResponse} from '@models/box.model';
 import {NgForOf, NgIf} from '@angular/common';
 import {BoxService} from '@features/catalog/box.service';
 import {Tooltip} from 'primeng/tooltip';
+import {FaviconService} from '@core/services/favicon.service';
 
 @Component({
   selector: 'app-shop-page',
@@ -74,7 +75,7 @@ export class CatalogPageComponent implements OnInit {
   lastClickX: number = 0;
   lastClickY: number = 0;
 
-  constructor(private boxService: BoxService, private elementRef: ElementRef) {
+  constructor(private boxService: BoxService, private elementRef: ElementRef, private faviconService: FaviconService) {
     document.addEventListener('click', (event) => {
       this.lastClickX = event.clientX;
       this.lastClickY = event.clientY;
@@ -82,6 +83,7 @@ export class CatalogPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.faviconService.changeFavicon('/shop-favicon.png')
     // this.boxService.getShopBoxes().subscribe((boxes: BoxShopResponse[]) => {
     //   this.boxList = boxes;
     // });
