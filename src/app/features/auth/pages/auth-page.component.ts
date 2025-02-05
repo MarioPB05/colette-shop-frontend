@@ -5,7 +5,7 @@ import {InputText} from 'primeng/inputtext';
 import {FloatLabel} from 'primeng/floatlabel';
 import {AuthService} from '@features/auth/services/auth.service';
 import {FormsModule} from '@angular/forms';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {MessageService} from 'primeng/api';
 
 @Component({
@@ -16,7 +16,8 @@ import {MessageService} from 'primeng/api';
     Card,
     InputText,
     FloatLabel,
-    FormsModule
+    FormsModule,
+    RouterLink
   ],
   templateUrl: './auth-page.component.html',
   styleUrls: ['../../../shared/brawl_styles.scss', 'auth-page.styles.scss']
