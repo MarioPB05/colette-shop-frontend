@@ -12,7 +12,7 @@ export class OrderService {
 
   constructor(private http: HttpClient) {}
 
-  getAllOrder(): Observable<TableOrderResponse[]> {
-    return this.http.get<TableOrderResponse[]>(`${this.apiUrl}/`);
+  getAllOrder(brawlTag:string): Observable<TableOrderResponse[]> {
+    return this.http.get<TableOrderResponse[]>(`${this.apiUrl}/${brawlTag}`);
   }
 }

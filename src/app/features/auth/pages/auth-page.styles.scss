@@ -1,0 +1,89 @@
+.custom-gradient {
+  position: relative;
+  background: radial-gradient(50% 50% at 50% 50%, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.btn-yellow, .btn-yellow-hover {
+  @apply bg-brawl-gold py-2 px-14 rounded-lg w-full;
+  @apply text-white text-2xl text-nowrap;
+}
+
+.btn-yellow-hover {
+  @apply hover:scale-110 transition-transform duration-300;
+}
+
+h1 {
+  @apply text-brawl-gold;
+}
+
+h2 {
+  @apply text-black;
+}
+
+::ng-deep .p-drawer {
+  @apply bg-brawl-dark-blue border-none;
+}
+
+@keyframes growText {
+  from {
+    font-size: 4rem;
+  }
+  to {
+    font-size: 8rem;
+  }
+}
+
+@keyframes shrinkText {
+  from {
+    font-size: 8rem;
+  }
+  to {
+    font-size: 4rem;
+  }
+}
+
+.text-grow {
+  animation: growText 0.5s ease-in-out forwards;
+}
+
+.text-shrink {
+  animation: shrinkText 0.5s ease-in-out forwards;
+}
+
+@keyframes slideDownDisappear {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+}
+
+@keyframes slideUpAppear {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.button-hide {
+  animation: slideDownDisappear 0.5s ease-in-out forwards;
+}
+
+.button-show {
+  animation: slideUpAppear 0.5s ease-in-out forwards;
+}
+
+i, input {
+  @apply text-black;
+}
+
+.btn-link {
+  @apply text-black;
+}

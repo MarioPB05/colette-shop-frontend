@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
 import {InputText} from 'primeng/inputtext';
-import {MenuItem, MenuItemCommandEvent, PrimeTemplate} from 'primeng/api';
+import {MenuItem, PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {NgClass} from '@angular/common';
 import {UserService} from '@dashboard/services/user.service';
