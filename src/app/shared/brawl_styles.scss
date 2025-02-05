@@ -205,3 +205,32 @@
     transform: translate(-100%, -100%);
   }
 }
+
+/*------------------- Animacion de gradientes -------------------*/
+
+.gradientAnimation-slow {
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+}
+
+.gradientAnimation-medium {
+  background-size: 400% 400%;
+  animation: gradientAnimation 10s ease infinite;
+}
+
+.gradientAnimation-fast {
+  background-size: 400% 400%;
+  animation: gradientAnimation 5s ease infinite;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
