@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {BoxShopResponse} from '@models/box.model';
 
 @Component({
@@ -41,4 +41,10 @@ export class BoxBuyCardComponent {
     pinned: true,
     popular: true
   };
+
+  @Output() addToCart = new EventEmitter<BoxShopResponse>();
+
+  addBoxToCart() {
+    this.addToCart.emit(this.box);
+  }
 }

@@ -17,3 +17,13 @@ export interface BoxShopResponse {
   pinned: boolean;
   popular: boolean;
 }
+
+export interface DailyBoxShopResponse {
+  id: number;
+  name: string;
+  type: string;
+  boxesLeft: number;
+  favoriteBrawlersInBox: number;
+  pinned: boolean;
+  repeatHours: number;
+}
