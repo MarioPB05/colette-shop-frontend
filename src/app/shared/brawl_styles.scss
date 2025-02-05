@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
 
-.brawl-font {
+.brawl-font, .brawl-font *:not(i) {
   font-family: "Lilita One", serif;
   font-weight: 400;
   font-style: normal;
@@ -152,6 +152,7 @@
 
 /*------------------- moving skulls background -------------------*/
 .moving-skulls-background {
+  user-select: none;
   overflow: hidden;
   background-image: url('/brawl-stars-skull.png');
   background-size: 15%;
@@ -180,3 +181,27 @@
   }
 }
 
+/*------------------- Animacion de añadir al carrito -------------------*/
+
+.add-to-cart-animation {
+  position: fixed;
+  z-index: 1000;
+  animation: moveToCorner 1s ease-in-out forwards;
+  display: none;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes moveToCorner {
+  50% {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 0;
+    left: 96%;
+    top: 96%;
+    transform: translate(-100%, -100%);
+  }
+}
