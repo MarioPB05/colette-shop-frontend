@@ -4,9 +4,9 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import {providePrimeNG} from 'primeng/config';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
-import Aura from '@primeng/themes/aura';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {loadingInterceptor} from '@core/interceptors/loading.interceptor';
+import {BrawlTheme} from './brawl.theme';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,7 +16,10 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: Aura
+        preset: BrawlTheme,
+        options: {
+          darkModeSelector: 'none'
+        }
       }
     })
   ]
