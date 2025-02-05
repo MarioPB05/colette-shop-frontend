@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
 import {InputText} from 'primeng/inputtext';
-import {MenuItem, PrimeTemplate} from 'primeng/api';
+import {MenuItem, MessageService, PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {NgClass} from '@angular/common';
 import {UserService} from '@dashboard/services/user.service';
@@ -39,8 +39,9 @@ export class UserPageComponent  implements OnInit {
 
   @ViewChild('menu') menu!: Menu;
 
-  userService = inject(UserService);
-  router = inject(Router);
+  private messageService: MessageService = inject(MessageService);
+  private userService = inject(UserService);
+  private router = inject(Router);
 
   ngOnInit(): void {
     this.userService.getAllUser().subscribe({
@@ -48,8 +49,8 @@ export class UserPageComponent  implements OnInit {
         this.users = users;
         this.userOriginal = users;
       },
-      error: err => {
-        console.error('Error al cargar los usuarios:', err);
+      error: () => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo cargar los usuarios'});
       }
     });
   }
