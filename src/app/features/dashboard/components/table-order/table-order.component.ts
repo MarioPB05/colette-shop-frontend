@@ -46,7 +46,7 @@ export class TableOrderComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.brawlTag = this.route.snapshot.paramMap.get('brawlTag')!;
+    this.brawlTag = this.route.snapshot.paramMap.get('brawlTag')! ?? 'all';
 
     this.orderService.getAllOrder(this.brawlTag).subscribe({
       next: brawlers => {
