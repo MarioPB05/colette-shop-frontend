@@ -31,9 +31,9 @@
   <div class="bg-brawl-blue p-8 justify-center flex flex-wrap border-b-2 border-brawl-navy items-center px-16 lg:justify-between gap-x-5 gap-y-10 md:gap-y-5">
     <h1 class="text-2xl text-white text-shadow text-center w-full lg:w-auto text-border-sm font-bold">FILTROS</h1>
     <div class="flex items-center gap-5 flex-col xs:flex-row justify-center">
-      <p-input-number [(ngModel)]="rangeValues[0]" mode="currency" (change)="filterBoxes()" (keyup)="minPriceChange($event)" currency="EUR" locale="de-DE" min="0" max="50" inputStyleClass="w-24" />
+      <p-input-number [(ngModel)]="rangeValues[0]" mode="currency" (keyup)="minPriceChange($event)" currency="EUR" locale="de-DE" min="0" max="50" inputStyleClass="w-24" />
       <p-slider [(ngModel)]="rangeValues" [range]="true" (onChange)="filterBoxes()" min="0" max="50" styleClass="h-32 sm:w-56 w-32 brawl-range-slider" />
-      <p-input-number [(ngModel)]="rangeValues[1]" (change)="filterBoxes()" (keyup)="maxPriceChange($event)" mode="currency" currency="EUR" locale="de-DE" min="0" max="50" inputStyleClass="w-24" />
+      <p-input-number [(ngModel)]="rangeValues[1]" (keyup)="maxPriceChange($event)" mode="currency" currency="EUR" locale="de-DE" min="0" max="50" inputStyleClass="w-24" />
     </div>
 
     <div class="bg-brawl-black select-none h-9 parallelogram_shape-sm flex items-center justify-center w-56 cursor-pointer text-center text-brawl-white" (click)="onBoxTypeClick()">

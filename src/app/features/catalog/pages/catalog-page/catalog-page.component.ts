@@ -129,8 +129,6 @@ export class CatalogPageComponent implements OnInit {
   }
 
   addBoxToCart(box: BoxShopResponse) {
-
-
     setTimeout(() => {
       this.addToCartAnimation();
     }, 1);
@@ -188,6 +186,7 @@ export class CatalogPageComponent implements OnInit {
     }
 
     this.rangeValues = [...this.rangeValues];
+    this.filterBoxes();
   }
 
   maxPriceChange($event: KeyboardEvent) {
@@ -204,5 +203,6 @@ export class CatalogPageComponent implements OnInit {
     }
 
     this.rangeValues = [...this.rangeValues];
+    this.filterBoxes();
   }
 }
