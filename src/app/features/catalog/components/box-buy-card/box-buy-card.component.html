@@ -1,13 +1,13 @@
 <div class="z-10 relative w-64 brawl-font  flex flex-col rounded-lg border-gray-800 border-2 ">
-  <span class="bg-brawl-black {{ box.boxesLeft < 5 ? 'text-red-500' : 'text-brawl-light-gray'}} text-xs text-center relative p-0.5 ">
+  <span class="bg-brawl-black {{ box.boxesLeft < 5 && box.boxesLeft != -1 ? 'text-red-500' : 'text-brawl-light-gray'}} text-xs text-center relative p-0.5 ">
     <i class="pi pi-thumbtack  absolute text-brawl-light-gray left-1 {{ !box.pinned ? 'hidden' : '' }}"  style="font-size: 0.8rem"></i>
-    {{ box.boxesLeft === 1 ? 'Queda' : 'Quedan' }} {{ box.boxesLeft }} {{ box.boxesLeft === 1 ? 'unidad' : 'unidades' }}
+    {{ box.boxesLeft === 1 ? 'Queda' : 'Quedan' }} {{ box.boxesLeft == -1 ? 'infinitas' : box.boxesLeft }} {{ box.boxesLeft === 1 ? 'unidad' : 'unidades' }}
   </span>
   <div class="grid relative grid-rows-[auto_1fr] h-64">
-    <span class="{{ headerByBoxType[box.type] }} border-b border-brawl-dark-slate text-xl p-2 text-brawl-white text-center text-shadow text-border-sm">
+    <span class="{{ headerByBoxType[box.type] }} border-b border-brawl-dark-slate {{ box.name.length > 30 ? 'text-md' : 'text-xl' }} p-2 text-brawl-white text-center text-shadow text-border-sm">
       {{ box.name }}
     </span>
-    <div class="flex justify-center items-center bg-gradient-radial {{ gradientByBoxType[box.type] }}">
+    <div class="flex justify-center items-center bg-gradient-radial {{ box.name.length > 30 ? 'pb-5' : '' }} {{ gradientByBoxType[box.type] }}">
       <img src="/images/boxes/{{ imageByBoxType[box.type] }}" alt="Caja común" class="w-32 h-32 z-10 hover:scale-110 transition-all hover:rotate-12">
     </div>
     <div class="bg-brawl-red {{ box.popular ? '' : 'hidden' }} bottom-0 left-0 text-sm shoe_shape p-1 ps-2 pe-4 text-shadow text-border-sm absolute text-brawl-white">
@@ -15,12 +15,12 @@
     </div>
     <div class="bg-gradient-to-b from-brawl-purple via-brawl-purple to-brawl-pink {{ box.favoriteBrawlersInBox > 0 ? '' : 'hidden' }} irregular_rectangle_shape text-xs text-brawl-white text-shadow text-border-sm absolute bottom-0 right-0 p-1 px-3 pt-1.5">
       <span class="text-xl mr-0.5">{{box.favoriteBrawlersInBox}}</span>
-      FAVORITOS
+      {{ box.favoriteBrawlersInBox === 1 ? 'FAVORITO' : 'FAVORITOS' }}
     </div>
   </div>
   <div class="bg-brawl-dark-slate text-brawl-white flex justify-center items-center p-3 px-6">
-    <button class="brawl-button group hover:text-base hover:p-2 text-2xl">
-      <span class="group-hover:hidden">€{{ box.price }}</span>
+    <button class="brawl-button group hover:text-base hover:p-2 text-2xl" (click)="addBoxToCart()">
+      <span class="group-hover:hidden">€{{ box.price.toLocaleString("es-ES") }}</span>
       <span class="group-hover:block hidden">AÑADIR AL CARRITO</span>
     </button>
   </div>
