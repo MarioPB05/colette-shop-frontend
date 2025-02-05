@@ -22,6 +22,7 @@ export class CatalogPageComponent implements OnInit {
   filteredBoxTypes: string[] = ['Todos', ...this.boxTypes];
 
   itemsInCart: BoxShopResponse[] = [];
+  gems: number = 0;
 
   rangeValues: number[] = [0, 50];
   onlyFavorites: boolean = false;
