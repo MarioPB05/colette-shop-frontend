@@ -1,70 +1,85 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import {BrawlHeaderComponent} from '@shared/components/brawl-header/brawl-header.component';
 import {BoxBuyCardComponent} from '@features/catalog/components/box-buy-card/box-buy-card.component';
 import {Slider} from 'primeng/slider';
 import {FormsModule} from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import {BoxShopResponse} from '@models/box.model';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {BoxService} from '@features/catalog/box.service';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-shop-page',
-  imports: [BrawlHeaderComponent, Slider, FormsModule, InputNumberModule, BoxBuyCardComponent, NgForOf],
+  imports: [BrawlHeaderComponent, Slider, FormsModule, InputNumberModule, BoxBuyCardComponent, NgForOf, NgIf, Tooltip],
   templateUrl: './catalog-page.component.html',
-  styleUrl: './../../../../shared/brawl_styles.scss',
+  styleUrls: ['./../../../../shared/brawl_styles.scss'],
   standalone: true
 })
 export class CatalogPageComponent implements OnInit {
-  rangeValues: number[] = [20, 30];
-  onlyFavorites: boolean = false;
-  boxTypeFilter: string = '';
+  boxTypes: string[] = ['Caja', 'Caja grande', 'Megacaja', 'Omegacaja'];
+  filteredBoxTypes: string[] = ['Todos', ...this.boxTypes];
 
+  itemsInCart: BoxShopResponse[] = [];
+
+  rangeValues: number[] = [0, 50];
+  onlyFavorites: boolean = false;
+  boxTypeFilter: number = 0;
+
+  boxesLoaded: boolean = false;
   allBoxes: BoxShopResponse[] = [
     {
       id: 1,
-      name: 'Box name',
-      price: 1.56,
+      name: 'Caja con todos los brawlers',
+      price: 5.55,
       type: 'Caja',
-      boxesLeft: 4,
-      favoriteBrawlersInBox: 3,
+      boxesLeft: -1,
+      favoriteBrawlersInBox: 5,
       pinned: false,
       popular: true
     },
     {
       id: 2,
-      name: 'Box name 2',
-      price: 5,
+      name: 'Caja solo animales',
+      price: 8.99,
       type: 'Caja grande',
-      boxesLeft: 3,
+      boxesLeft: -1,
       favoriteBrawlersInBox: 0,
       pinned: false,
       popular: false
     },
     {
       id: 3,
-      name: 'Box name 3',
-      price: 10,
+      name: 'Caja solo legendarios',
+      price: 15.55,
       type: 'Megacaja',
-      boxesLeft: 2,
-      favoriteBrawlersInBox: 1,
+      boxesLeft: 5,
+      favoriteBrawlersInBox: 2,
       pinned: true,
       popular: false
     },
     {
       id: 4,
-      name: 'Box name 4',
-      price: 20,
+      name: 'Caja de los dioses',
+      price: 33.69,
       type: 'Omegacaja',
       boxesLeft: 1,
-      favoriteBrawlersInBox: 0,
+      favoriteBrawlersInBox: 1,
       pinned: true,
-      popular: true
+      popular: false
     }
   ];
   boxList: BoxShopResponse[] = [];
 
-  constructor(private boxService: BoxService) {}
+  lastClickX: number = 0;
+  lastClickY: number = 0;
+
+  constructor(private boxService: BoxService, private elementRef: ElementRef) {
+    document.addEventListener('click', (event) => {
+      this.lastClickX = event.clientX;
+      this.lastClickY = event.clientY;
+    });
+  }
 
   ngOnInit() {
     // this.boxService.getShopBoxes().subscribe((boxes: BoxShopResponse[]) => {
@@ -73,17 +88,76 @@ export class CatalogPageComponent implements OnInit {
 
     this.boxList = this.allBoxes;
     this.boxList = this.boxList.sort((a, b) => a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1);
+    this.filterBoxes();
+    this.boxesLoaded = true;
+  }
+
+  addToCartAnimation() {
+    // Obtener la imagen de plantilla
+    const template = this.elementRef.nativeElement.querySelector('#add-to-cart-animation-template');
+
+    if (!template) return;
+
+    // Crear una copia del icono
+    const clone = template.cloneNode(true) as HTMLImageElement;
+    clone.style.display = 'block';
+    clone.classList.add('animated-item');
+
+    // Usar la última posición del cursor
+    clone.style.left = `${this.lastClickX}px`;
+    clone.style.top = `${this.lastClickY}px`;
+
+    // Agregar el clon al body
+    document.body.appendChild(clone);
+
+    // Obtener la posición del carrito
+    const cartIcon = this.elementRef.nativeElement.querySelector('#cart-icon');
+    if (cartIcon) {
+      const cartRect = cartIcon.getBoundingClientRect();
+
+      // Calcular distancia al carrito
+      const deltaX = cartRect.left - this.lastClickX;
+      const deltaY = cartRect.top - this.lastClickY;
+
+      // Aplicar variables CSS para animación
+      clone.style.setProperty('--x', `${deltaX}px`);
+      clone.style.setProperty('--y', `${deltaY}px`);
+    }
+
+    // Eliminar la imagen después de la animación
+    clone.addEventListener('animationend', () => clone.remove());
+  }
+
+  addBoxToCart(box: BoxShopResponse) {
+
+
+    setTimeout(() => {
+      this.addToCartAnimation();
+    }, 1);
+
+    setTimeout(() => {
+      this.itemsInCart.push(box);
+    }, 900);
+
   }
 
   filterBoxes() {
     let filterBoxes = this.allBoxes.filter((box) => {
       return (!this.onlyFavorites || box.favoriteBrawlersInBox > 0)
-        && (this.boxTypeFilter === '' || box.type === this.boxTypeFilter)
+        && (this.boxTypeFilter === 0 || box.type === this.boxTypes[this.boxTypeFilter - 1])
         && (box.price >= this.rangeValues[0] && box.price <= this.rangeValues[1]);
     });
 
     filterBoxes = filterBoxes.sort((a, b) => a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1);
     this.boxList = [...filterBoxes];
+  }
+
+  onBoxTypeClick() {
+    this.boxTypeFilter += 1;
+    if (this.boxTypeFilter >= this.filteredBoxTypes.length) {
+      this.boxTypeFilter = 0;
+    }
+    this.filterBoxes();
   }
 
   extractOnlyNumbers(str: string): number {
