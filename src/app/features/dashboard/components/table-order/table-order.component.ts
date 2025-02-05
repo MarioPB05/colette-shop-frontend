@@ -1,0 +1,100 @@
+import {Component, inject, OnInit} from '@angular/core';
+import {IconField} from "primeng/iconfield";
+import {InputIcon} from "primeng/inputicon";
+import {InputText} from "primeng/inputtext";
+import {MenuItem, MenuItemCommandEvent, PrimeTemplate} from "primeng/api";
+import {TableModule} from "primeng/table";
+import {DatePipe, NgClass} from '@angular/common';
+import {TableOrderResponse} from '@core/models/order.model';
+import {OrderService} from '@dashboard/services/order.service';
+import {Tooltip} from 'primeng/tooltip';
+import {ContextMenu} from 'primeng/contextmenu';
+import {Menu} from 'primeng/menu';
+import {Button} from 'primeng/button';
+import {ActivatedRoute} from '@angular/router';
+
+@Component({
+  selector: 'app-table-order',
+  imports: [
+    IconField,
+    InputIcon,
+    InputText,
+    PrimeTemplate,
+    TableModule,
+    NgClass,
+    DatePipe,
+    Tooltip,
+    ContextMenu,
+    Menu,
+    Button
+  ],
+  templateUrl: './table-order.component.html',
+  styles: ``
+})
+export class TableOrderComponent implements OnInit {
+  protected orders: TableOrderResponse[] = [];
+  private orderFilter: TableOrderResponse[] = [];
+  private orderOriginal: TableOrderResponse[] = [];
+  orderService = inject(OrderService);
+  protected selectedOrder: TableOrderResponse | null | undefined;
+  brawlTag: string = '';
+
+  items!: MenuItem[];
+
+  constructor(private route: ActivatedRoute) {
+  }
+
+  ngOnInit(): void {
+
+    this.brawlTag = this.route.snapshot.paramMap.get('brawlTag')! ?? 'all';
+
+    this.orderService.getAllOrder(this.brawlTag).subscribe({
+      next: brawlers => {
+        for (const brawler of brawlers) {
+          this.orders.push(brawler);
+          this.orderOriginal.push(brawler);
+        }
+      },
+      error: err => {
+        console.error('Error al cargar los pedidos:', err);
+      }
+    });
+
+    this.items = [
+      { label: 'Ver detalles', icon: 'pi pi-fw pi-search', command(event: MenuItemCommandEvent) {
+          console.log(event.item);
+        }
+      },
+      { label: 'Deshabilitar', icon: 'pi pi-fw pi-times', command(event: MenuItemCommandEvent) {
+          console.log(event.item);
+        }}
+    ]
+
+  }
+
+  filterOrderForInvoiceNumber(event: any): void {
+    this.orderFilter = this.orderOriginal.filter(order => order.invoice_number.toLowerCase().includes(event.target.value.toLowerCase()));
+    this.orders = this.orderFilter;
+  }
+
+
+  getBadgeClass(state: string): string {
+    switch (state) {
+      case 'Pendiente':
+        return 'bg-[#b9eeff]';
+      case 'Pagado':
+        return 'bg-[#68fd58]';
+      case 'Devuelto':
+        return 'bg-[#5ab3ff]';
+      case 'Cancelado':
+        return 'bg-[#ff5a5a]';
+      default:
+        return '';
+    }
+  }
+
+  numberFormat(value: number): string {
+    return new Intl.NumberFormat('es-ES', {style: 'currency', currency: 'EUR'}).format(value);
+  }
+
+}
