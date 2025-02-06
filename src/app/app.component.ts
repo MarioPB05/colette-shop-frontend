@@ -10,6 +10,7 @@ import {ConfirmationService, MessageService} from 'primeng/api';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   providers: [ConfirmationService, MessageService],
+  standalone: true,
 })
 export class AppComponent {
 }

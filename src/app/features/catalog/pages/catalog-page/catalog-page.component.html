@@ -1,0 +1,78 @@
+<app-brawl-header></app-brawl-header>
+
+<div class="w-full bg-brawl-dark-blue brawl-font h-full min-h-screen flex flex-col">
+  <div class="relative">
+    <img src="/brawl-gift-shop.jpg" class="w-full h-52 object-cover opacity-70 border-b-4 border-slate-800" alt="Brawl Gift Shop">
+    <img src="/images/brawlers/16000039_model.png" class="absolute bottom-1 object-top left-5 w-32 h-44 object-cover" alt="Colette">
+    <div class="absolute left-32 bottom-10 w-[246px] h-[70px] lg:h-auto lg:w-auto object-top object-cover">
+      <img src="/speech_bubble.png" class="right-5  hidden xs:block w-full h-full lg:w-[1000px] lg:h-24" alt="Speech Bubble">
+      <span class="hidden lg:block object-top ps-20 absolute right-5 p-3 object-cover text-black font-bold top-0">
+        ¡HOLA, HOLA, PEPITO! ¡Soy Colette, tu NUEVA MEJOR AMIGA! Bienvenido a mi TIENDA, donde hay <span class="text-brawl-blue">CAJAS</span>, <span class="text-brawl-lime">BRAWLERS</span> y más <span class="text-brawl-blue">CAJAS</span>!
+        ¡Rápido, recoge tu recompensa diaria! O mejor aún… ¡COMPRA MÁS <span class="text-brawl-blue">CAJAS</span>! ¡Muchísimas! ¡Así tendras más <span class="text-brawl-lime">BRAWLERS</span> para tu <span class="text-brawl-pink">COLECCION</span>!
+        ¡Vamos, NO ME HAGAS ESPERAR! 💕
+      </span>
+
+      <span class=" hidden xs:block lg:hidden object-top ps-6 left-0 absolute right-5 p-3 object-cover text-black font-bold top-0">
+        HOLA, HOLA, PEPITO! Bienvenido a mi TIENDA 💕
+      </span>
+    </div>
+
+    <div class="absolute flex right-0 rounded-e-full top-0 m-5 text-brawl-white bg-brawl-black rounded">
+      <div class="relative p-1 ps-7 pe-4  text-lg ">
+        <span>{{ gems }}</span>
+        <img src="/images/resources/brawl-gem-icon.png" class="w-8 h-8 absolute -left-4 top-1/2 -translate-y-1/2" alt="Gemas">
+      </div>
+      <div class="brawl-button text-xl" tooltipPosition="bottom" pTooltip="Las gemas sirven para descontar dinero en tus proximas compras, se pueden conseguir comprando cajas">
+        ?
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-brawl-blue p-8 justify-center flex flex-wrap border-b-2 border-brawl-navy items-center px-16 lg:justify-between gap-x-5 gap-y-10 md:gap-y-5">
+    <h1 class="text-2xl text-white text-shadow text-center w-full lg:w-auto text-border-sm font-bold">FILTROS</h1>
+    <div class="flex items-center gap-5 flex-col xs:flex-row justify-center">
+      <p-input-number [(ngModel)]="rangeValues[0]" mode="currency" (keyup)="minPriceChange($event)" currency="EUR" locale="de-DE" min="0" max="50" inputStyleClass="w-24" />
+      <p-slider [(ngModel)]="rangeValues" [range]="true" (onChange)="filterBoxes()" min="0" max="50" styleClass="h-32 sm:w-56 w-32 brawl-range-slider" />
+      <p-input-number [(ngModel)]="rangeValues[1]" (keyup)="maxPriceChange($event)" mode="currency" currency="EUR" locale="de-DE" min="0" max="50" inputStyleClass="w-24" />
+    </div>
+
+    <div class="bg-brawl-black select-none h-9 parallelogram_shape-sm flex items-center justify-center w-56 cursor-pointer text-center text-brawl-white" (click)="onBoxTypeClick()">
+      {{ filteredBoxTypes[boxTypeFilter] }}
+    </div>
+
+      <label for="only-favorite-brawlers" class="brawl-checkbox-container text-brawl-white text-md inline-flex items-center">
+        <input type="checkbox" [(ngModel)]="onlyFavorites" (change)="filterBoxes()" class="brawl-checkbox" id="only-favorite-brawlers"/>
+        SOLO BRAWLERS FAVORITOS
+        <span class="brawl-checkmark"></span>
+      </label>
+  </div>
+
+  <div class="relative h-full flex-1">
+    <div class="moving-skulls-background"></div>
+
+    <div class="sm:p-10 p-2 pt-10 gap-10 grid justify-items-center grid-cols-[repeat(auto-fill,minmax(260px,1fr))]" *ngIf="boxesLoaded && boxList.length > 0">
+      <app-box-free-daily-buy-card *ngFor="let item of freeDailyBoxList" [box]="item" (addToCart)="addBoxToCart($event)"></app-box-free-daily-buy-card>
+      <app-box-buy-card *ngFor="let item of boxList" [box]="item" (addToCart)="addBoxToCart($event)"></app-box-buy-card>
+    </div>
+
+    <div class="text-brawl-white text-center text-2xl sm:p-10 p-2 pt-10" *ngIf="boxList.length === 0 && allBoxes.length > 0">
+      No hay cajas que cumplan con los filtros seleccionados
+    </div>
+
+    <div class="text-brawl-white text-center text-2xl sm:p-10 p-2 pt-10" *ngIf="!boxesLoaded">
+      Cargando cajas...
+    </div>
+
+    <div class="text-brawl-white text-center text-2xl sm:p-10 p-2 pt-10" *ngIf="allBoxes.length === 0 && boxesLoaded">
+      No hay cajas disponibles
+    </div>
+  </div>
+
+</div>
+
+<div class="fixed brawl-font z-20 py-4 cursor-pointer group px-7 gap-0.5 justify-center items-center bg-brawl-dark-slate flex flex-col bottom-0 right-0 m-5 rounded-full">
+  <i class="pi pi-shopping-cart text-brawl-light-gray group-hover:text-brawl-gold" style="font-size: 2rem"></i>
+  <span class="text-brawl-white text-lg">{{ itemsInCart.length }}</span>
+</div>
+
+<img src="/box-icon.png" class="add-to-cart-animation h-12" id="add-to-cart-animation-template" alt="Caja añadida al carrito" style="display: none">
