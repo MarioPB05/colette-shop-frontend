@@ -9,7 +9,8 @@ import {AsyncPipe} from '@angular/common';
   imports: [
     AsyncPipe
   ],
-  templateUrl: './loading.component.html'
+  templateUrl: './loading.component.html',
+  standalone: true
 })
 export class LoadingComponent implements OnInit {
   @HostBinding('class') class = 'absolute z-50 bg-brawl-blue overflow-hidden';
