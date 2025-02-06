@@ -1,9 +1,12 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {BoxShopResponse} from '@models/box.model';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-box-buy-card',
-  imports: [],
+  imports: [
+    NgIf
+  ],
   templateUrl: './box-buy-card.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss', "./../../../../../styles.scss"],
   standalone: true
@@ -45,6 +48,8 @@ export class BoxBuyCardComponent {
   @Output() addToCart = new EventEmitter<BoxShopResponse>();
 
   addBoxToCart() {
-    this.addToCart.emit(this.box);
+    if (this.box.boxesLeft != 0) {
+      this.addToCart.emit(this.box);
+    }
   }
 }
