@@ -6,12 +6,13 @@ import {FormsModule} from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import {BoxShopResponse, DailyBoxShopResponse} from '@models/box.model';
 import {NgForOf, NgIf} from '@angular/common';
-import {BoxService} from '@features/catalog/box.service';
+import {BoxService} from '@features/catalog/services/box.service';
 import {Tooltip} from 'primeng/tooltip';
 import {FaviconService} from '@core/services/favicon.service';
 import {
   BoxFreeDailyBuyCardComponent
 } from '@features/catalog/components/box-free-daily-buy-card/box-free-daily-buy-card.component';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-shop-page',
@@ -24,7 +25,8 @@ export class CatalogPageComponent implements OnInit {
   boxTypes: string[] = ['Caja', 'Caja grande', 'Megacaja', 'Omegacaja'];
   filteredBoxTypes: string[] = ['Todos', ...this.boxTypes];
 
-  itemsInCart: BoxShopResponse[] = [];
+  itemsInCart: (BoxShopResponse | DailyBoxShopResponse)[] = [
+  ];
   gems: number = 0;
 
   rangeValues: number[] = [0, 50];
@@ -32,65 +34,21 @@ export class CatalogPageComponent implements OnInit {
   boxTypeFilter: number = 0;
 
   boxesLoaded: boolean = false;
-  allBoxes: BoxShopResponse[] = [
-    {
-      id: 1,
-      name: 'Caja con todos los brawlers',
-      price: 5.55,
-      type: 'Caja',
-      boxesLeft: -1,
-      favoriteBrawlersInBox: 5,
-      pinned: false,
-      popular: true
-    },
-    {
-      id: 2,
-      name: 'Caja solo animales',
-      price: 8.99,
-      type: 'Caja grande',
-      boxesLeft: -1,
-      favoriteBrawlersInBox: 0,
-      pinned: false,
-      popular: false
-    },
-    {
-      id: 3,
-      name: 'Caja solo legendarios',
-      price: 15.55,
-      type: 'Megacaja',
-      boxesLeft: 5,
-      favoriteBrawlersInBox: 2,
-      pinned: true,
-      popular: false
-    },
-    {
-      id: 4,
-      name: 'Caja de los dioses',
-      price: 33.69,
-      type: 'Omegacaja',
-      boxesLeft: 1,
-      favoriteBrawlersInBox: 1,
-      pinned: true,
-      popular: false
-    }
-  ];
-  dailyBoxes: DailyBoxShopResponse[] = [
-    {
-      id: 1,
-      name: 'Caja diaria',
-      type: 'Caja',
-      boxesLeft: 4,
-      favoriteBrawlersInBox: 3,
-      pinned: true,
-      repeatHours: 24
-    },
-  ];
+  allBoxes: BoxShopResponse[] = [];
+  allDailyFreeBoxes: DailyBoxShopResponse[] = [];
+
   boxList: BoxShopResponse[] = [];
+  freeDailyBoxList: DailyBoxShopResponse[] = [];
 
   lastClickX: number = 0;
   lastClickY: number = 0;
 
-  constructor(private boxService: BoxService, private elementRef: ElementRef, private faviconService: FaviconService) {
+  constructor(
+    private boxService: BoxService,
+    private elementRef: ElementRef,
+    private faviconService: FaviconService,
+    private messageService: MessageService
+  ) {
     document.addEventListener('click', (event) => {
       this.lastClickX = event.clientX;
       this.lastClickY = event.clientY;
@@ -98,15 +56,49 @@ export class CatalogPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.faviconService.changeFavicon('/shop-favicon.png')
-    // this.boxService.getShopBoxes().subscribe((boxes: BoxShopResponse[]) => {
-    //   this.boxList = boxes;
-    // });
+    this.faviconService.changeFavicon('/shop-favicon.png');
 
-    this.boxList = this.allBoxes;
-    this.boxList = this.boxList.sort((a, b) => a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1);
-    this.filterBoxes();
-    this.boxesLoaded = true;
+    this.boxService.getBoxes().subscribe({
+      next: (boxes) => {
+        this.allBoxes = boxes.shopBoxes;
+        this.allDailyFreeBoxes = boxes.freeDailyBoxes;
+        this.boxList = this.allBoxes;
+        this.freeDailyBoxList = this.allDailyFreeBoxes;
+        this.boxList = this.boxList.sort((a, b) => a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1);
+        this.filterBoxes();
+        this.syncBoxesLeftWithCart();
+        this.boxesLoaded = true;
+      }, error: (error) => {
+        this.boxesLoaded = true;
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las cajas'});
+      }
+    });
+  }
+
+  syncBoxesLeftWithCart() {
+    const itemsInCartIds = this.itemsInCart.map((item) => item.id);
+    this.allBoxes.forEach((box) => {
+      box.boxesLeft -= itemsInCartIds.filter((id) => id === box.id).length;
+    });
+    this.boxList = [...this.allBoxes];
+
+    this.allDailyFreeBoxes.forEach((box) => {
+      box.claimed = itemsInCartIds.includes(box.id);
+    });
+    this.freeDailyBoxList = [...this.allDailyFreeBoxes];
+  }
+
+  checkIfThereAreBoxesLeft(box: BoxShopResponse) {
+    if (box.boxesLeft === -1) {
+      return true;
+    }
+
+    const itemsInCartIds = this.itemsInCart.map((item) => item.id);
+    return box.boxesLeft > itemsInCartIds.filter((id) => id === box.id).length;
+  }
+
+  checkIfBoxIsClaimed(box: DailyBoxShopResponse) {
+    return box.claimed;
   }
 
   addToCartAnimation() {
@@ -145,15 +137,28 @@ export class CatalogPageComponent implements OnInit {
     clone.addEventListener('animationend', () => clone.remove());
   }
 
-  addBoxToCart(box: BoxShopResponse) {
+  addBoxToCart(box: BoxShopResponse | DailyBoxShopResponse) {
+    if ('boxesLeft' in box && !this.checkIfThereAreBoxesLeft(box)) {
+      return;
+    }
+
+    if ('claimed' in box && this.checkIfBoxIsClaimed(box)) {
+      return;
+    }
+
     setTimeout(() => {
       this.addToCartAnimation();
     }, 1);
 
     setTimeout(() => {
       this.itemsInCart.push(box);
-    }, 900);
 
+      if ('boxesLeft' in box) {
+        box.boxesLeft -= 1;
+      }else if ('claimed' in box) {
+        box.claimed = true;
+      }
+    }, 900);
   }
 
   filterBoxes() {
@@ -163,8 +168,15 @@ export class CatalogPageComponent implements OnInit {
         && (box.price >= this.rangeValues[0] && box.price <= this.rangeValues[1]);
     });
 
+    let filterFreeBoxes = this.allDailyFreeBoxes.filter((box) => {
+      return (!this.onlyFavorites || box.favoriteBrawlersInBox > 0)
+        && (this.boxTypeFilter === 0 || box.type === this.boxTypes[this.boxTypeFilter - 1])
+        && this.rangeValues[0] === 0;
+    });
+
     filterBoxes = filterBoxes.sort((a, b) => a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1);
     this.boxList = [...filterBoxes];
+    this.freeDailyBoxList = [...filterFreeBoxes];
   }
 
   onBoxTypeClick() {
