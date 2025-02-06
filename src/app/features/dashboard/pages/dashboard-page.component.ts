@@ -7,6 +7,7 @@ import {LoadingService} from '@core/services/loading.service';
 import {SpeedDial} from 'primeng/speeddial';
 import {MenuItem} from 'primeng/api';
 import {Button} from 'primeng/button';
+import {FaviconService} from '@core/services/favicon.service';
 
 export const DashboardMenuItems: MenuItem[] = [
   {
@@ -55,7 +56,7 @@ export class DashboardPageComponent implements OnDestroy {
 
   items: MenuItem[] = DashboardMenuItems;
 
-  constructor(private loadingService: LoadingService, private renderer: Renderer2) {
+  constructor(private loadingService: LoadingService, private renderer: Renderer2, private faviconService: FaviconService) {
     this.loading$ = this.loadingService.loading$;
     this.subscription = this.loading$.subscribe((isLoading) => {
       if (isLoading) {
@@ -64,6 +65,7 @@ export class DashboardPageComponent implements OnDestroy {
         this.renderer.removeClass(document.body, 'overflow-hidden');
       }
     });
+    this.faviconService.changeFavicon('/shop-favicon.png');
   }
 
   ngOnDestroy() {

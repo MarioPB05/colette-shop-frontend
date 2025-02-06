@@ -5,8 +5,9 @@ import {InputText} from 'primeng/inputtext';
 import {FloatLabel} from 'primeng/floatlabel';
 import {AuthService} from '@features/auth/services/auth.service';
 import {FormsModule} from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
+import {Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
+import {FaviconService} from '@core/services/favicon.service';
 
 @Component({
   selector: 'app-auth-page',
@@ -16,8 +17,7 @@ import {MessageService} from 'primeng/api';
     Card,
     InputText,
     FloatLabel,
-    FormsModule,
-    RouterLink
+    FormsModule
   ],
   templateUrl: './auth-page.component.html',
   styleUrls: ['../../../shared/brawl_styles.scss', 'auth-page.styles.scss']
@@ -30,7 +30,9 @@ export class AuthPageComponent {
   username: string = '';
   password: string = '';
 
-  constructor(private authService: AuthService, private router: Router, private messageService: MessageService,) {}
+  constructor(private authService: AuthService, private router: Router, private messageService: MessageService, private faviconService: FaviconService) {
+    this.faviconService.changeFavicon('/shop-favicon.png');
+  }
 
   cardVisible(): boolean {
     return this.loginVisible || this.registerVisible;

@@ -52,10 +52,8 @@ export class TableOrderComponent implements OnInit {
 
     this.orderService.getAllOrder(this.brawlTag).subscribe({
       next: brawlers => {
-        for (const brawler of brawlers) {
-          this.orders.push(brawler);
-          this.orderOriginal.push(brawler);
-        }
+        this.orders = brawlers;
+        this.orderOriginal = brawlers;
       },
      error: () => {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo cargar los pedidos'});
