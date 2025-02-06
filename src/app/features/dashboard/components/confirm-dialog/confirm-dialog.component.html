@@ -1,0 +1,13 @@
+<p-confirmDialog #cd>
+  <ng-template #headless let-message let-onAccept="onAccept" let-onReject="onReject">
+    <div class="flex flex-col items-center p-8 bg-surface-0 dark:bg-surface-900 rounded">
+      <i class="pi pi-exclamation-triangle !text-5xl" [ngClass]="iconTextColor"></i>
+      <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
+      <p class="mb-0 text-center">{{ message.message }}</p>
+      <div class="flex items-center gap-2 mt-6">
+        <p-button [label]="acceptButtonLabel" (onClick)="onAccept()" styleClass="w-32" [severity]="acceptButtonSeverity" />
+        <p-button [label]="rejectButtonLabel" [outlined]="true" (onClick)="onReject()" [severity]="rejectButtonSeverity" styleClass="w-32" />
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>

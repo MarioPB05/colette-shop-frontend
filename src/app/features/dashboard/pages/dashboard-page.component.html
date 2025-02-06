@@ -1,7 +1,30 @@
-<div class="flex items-center px-8 min-h-screen">
+<style>
+  .p-button-icon-active span {
+    @apply text-red-700 !important;
+  }
+</style>
+
+<div class="flex px-8 min-h-screen bg-[#EAEAEA]">
   <app-sidebar />
 
-  <div class="w-full min-h-screen flex items-center justify-center">
-    <router-outlet />
+  <div class="w-full min-h-screen flex justify-center xl:ml-[16rem]">
+    <p-card class="w-full py-10 p-4">
+        <router-outlet />
+    </p-card>
+  </div>
+
+  <div class="xl:hidden">
+    <p-speeddial className="bottom-3 right-3" [model]="items" [radius]="120" direction="up" [style]="{ position: 'absolute' }" [tooltipOptions]="{ tooltipPosition: 'left' }">
+      <ng-template #button let-toggleCallback="toggleCallback">
+        <p-button (click)="toggleCallback($event)" icon="pi pi-bars" />
+      </ng-template>
+      <ng-template #item let-item let-toggleCallback="toggleCallback">
+        <div class="mb-2">
+          <p-button [routerLink]="item.route" routerLinkActive="p-button-icon-active" [icon]="item.icon" [rounded]="true" [severity]="getSpeedDialButtonSeverity(item.route)" />
+        </div>
+      </ng-template>
+    </p-speeddial>
   </div>
 </div>
+
+<p-toast />

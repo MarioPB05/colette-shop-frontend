@@ -1,0 +1,59 @@
+<style>
+  .image-cover {
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  :host ::ng-deep .custom-inputnumber>.p-inputnumber-input {
+    @apply w-[60px] text-center text-sm mb-4;
+  }
+
+  :host ::ng-deep .custom-inputnumber-hidden>.p-inputnumber-input {
+    @apply hidden;
+  }
+</style>
+
+<h1 class="text-2xl font-bold">Nueva caja</h1>
+
+<div class="grid grid-cols-[auto_1fr] mt-4 gap-10">
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <label for="name">Nombre: </label>
+      <input pInputText id="name" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="price">Precio: </label>
+      <p-input-number id="price" mode="currency" currency="EUR" locale="es-ES" min="0" max="100" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="quantity">Cantidad: </label>
+      <p-input-number id="quantity" min="0" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="brawlerQuantity">Cantidad de brawlers: </label>
+      <p-input-number id="brawlerQuantity" min="0" [max]="maxBrawlersQuantity" />
+    </div>
+  </div>
+
+  <div class="px-10 flex flex-col">
+    <div *ngFor="let rarity of brawlersClassified">
+      <h2 class="text-sm text-brawl-dark-slate font-bold mb-2 mt-2">{{ rarity.label }}</h2>
+
+      <div class="flex flex-wrap gap-4">
+        <div class="flex flex-col gap-4" *ngFor="let brawler of rarity.brawlers">
+          <div (click)="toggleBrawler($event, brawler)" class="relative size-[60px] cursor-pointer"
+               [pTooltip]="brawler.name" tooltipPosition="bottom">
+            <div class="absolute size-full bg-black z-10 opacity-60 image-cover"></div>
+            <img [src]="brawler.image" [alt]="brawler.name" class="absolute border-4 border-black" />
+          </div>
+
+          <p-input-number [(ngModel)]="brawler.probability" min="0" max="100" mode="decimal" minFractionDigits="0"
+                          maxFractionDigits="2" [ngClass]="brawler.showProbability ? 'custom-inputnumber' : 'custom-inputnumber-hidden'"
+                          pTooltip="% Aparición" tooltipPosition="bottom"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
