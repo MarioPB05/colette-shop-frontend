@@ -1,0 +1,37 @@
+<div class="z-10 relative w-64 brawl-font h-full flex flex-col rounded-lg border-gray-800 border-2 ">
+  <span class="bg-brawl-black {{ box.boxesLeft < 5 && box.boxesLeft != -1 ? 'text-red-500' : 'text-brawl-light-gray'}} text-xs text-center relative p-0.5 ">
+    <i class="pi pi-thumbtack  absolute text-brawl-light-gray left-1 {{ !box.pinned ? 'hidden' : '' }}"  style="font-size: 0.8rem"></i>
+    {{ box.boxesLeft === 1 ? 'Queda' : 'Quedan' }} {{ box.boxesLeft == -1 ? 'infinitas' : box.boxesLeft }} {{ box.boxesLeft === 1 ? 'unidad' : 'unidades' }}
+  </span>
+  <div class="grid h-full relative grid-rows-[auto_1fr] min-h-64">
+    <span class="{{ headerByBoxType[box.type] }} border-b border-brawl-dark-slate {{ box.name.length > 30 ? 'text-md' : 'text-xl' }} p-2 text-brawl-white text-center text-shadow text-border-sm">
+      {{ box.name }}
+    </span>
+    <div class="flex justify-center h-full items-center bg-gradient-radial {{ box.name.length > 30 ? 'pb-5' : '' }} {{ gradientByBoxType[box.type] }}">
+      <img src="/images/boxes/{{ imageByBoxType[box.type] }}" alt="{{ box.type }}" class="w-32 h-32 z-10 hover:scale-110 transition-all hover:rotate-12">
+    </div>
+    <div class="bg-brawl-red {{ box.popular ? '' : 'hidden' }} bottom-0 left-0 text-sm shoe_shape p-1 ps-2 pe-4 text-shadow text-border-sm absolute text-brawl-white">
+      POPULAR
+    </div>
+    <div class="bg-gradient-to-b from-brawl-purple via-brawl-purple to-brawl-pink {{ box.favoriteBrawlersInBox > 0 ? '' : 'hidden' }} irregular_rectangle_shape text-xs text-brawl-white text-shadow text-border-sm absolute bottom-0 right-0 p-1 px-3 pt-1.5">
+      <span class="text-xl mr-0.5">{{box.favoriteBrawlersInBox}}</span>
+      {{ box.favoriteBrawlersInBox === 1 ? 'FAVORITO' : 'FAVORITOS' }}
+    </div>
+  </div>
+  <div class="bg-brawl-dark-slate text-brawl-white flex justify-center items-center p-3 px-6" *ngIf="box.price > 0 || box.boxesLeft === 0">
+    <button class="brawl-button group hover:text-base hover:p-2 text-2xl" (click)="addBoxToCart()" *ngIf="(box.boxesLeft > 0 || box.boxesLeft == -1) && box.price > 0">
+      <span class="group-hover:hidden">€{{ box.price.toLocaleString("es-ES") }}</span>
+      <span class="group-hover:block hidden">AÑADIR AL CARRITO</span>
+    </button>
+
+    <span class="text-brawl-light-gray py-1 text-shadow text-border-sm text-2xl" *ngIf="box.boxesLeft === 0">
+      AGOTADO
+    </span>
+  </div>
+
+  <div (click)="addBoxToCart()" class="bg-gradient-to-r group cursor-pointer gradientAnimation-medium from-brawl-green via-brawl-white to-brawl-lime text-shadow text-border-sm rounded-b-lg text-2xl text-brawl-white flex justify-center items-center p-3 px-6" *ngIf="(box.boxesLeft > 0 || box.boxesLeft == -1) && box.price == 0">
+      <span class="group-hover:scale-110 transition-all">
+        GRATIS
+      </span>
+  </div>
+</div>
