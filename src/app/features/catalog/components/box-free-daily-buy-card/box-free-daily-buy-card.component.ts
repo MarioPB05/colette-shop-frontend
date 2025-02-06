@@ -1,10 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {BoxShopResponse, DailyBoxShopResponse} from '@models/box.model';
-import {interval, repeat, take} from 'rxjs';
+import {Component, EventEmitter, input, Input, OnInit, Output} from '@angular/core';
+import {DailyBoxShopResponse} from '@models/box.model';
+import {interval, take} from 'rxjs';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-box-free-daily-buy-card',
-  imports: [],
+  imports: [
+    NgIf
+  ],
   templateUrl: './box-free-daily-buy-card.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss', "./../../../../../styles.scss"],
   standalone: true
@@ -35,17 +38,16 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
     id: 1,
     name: 'Box name',
     type: 'Box type',
-    boxesLeft: 4,
     favoriteBrawlersInBox: 3,
-    pinned: true,
-    repeatHours: 24
+    repeatHours: 24,
+    claimed: false
   };
 
   timeToNextBox: string = '0h 0m 0s';
-
   @Output() addToCart = new EventEmitter<DailyBoxShopResponse>();
 
   ngOnInit() {
+    this.calculateTimeToNextBox();
     interval(1000).pipe(take(1000))
     .subscribe(() => {
       this.calculateTimeToNextBox();

@@ -1,13 +1,12 @@
-<div class="z-10 relative w-64 brawl-font  flex flex-col rounded-lg border-gray-800 border-2 ">
+<div class="z-10 relative w-64 h-full brawl-font  flex flex-col rounded-lg border-gray-800 border-2 ">
   <span class="bg-brawl-black text-brawl-light-gray text-xs text-center relative p-0.5 ">
-    <i class="pi pi-thumbtack  absolute text-brawl-light-gray left-1 {{ !box.pinned ? 'hidden' : '' }}"  style="font-size: 0.8rem"></i>
     {{ timeToNextBox }}
   </span>
-  <div class="grid relative grid-rows-[auto_1fr] h-64">
+  <div class="grid h-full relative grid-rows-[auto_1fr] min-h-64">
     <span class="{{ headerByBoxType[box.type] }} border-b border-brawl-dark-slate {{ box.name.length > 30 ? 'text-md' : 'text-xl' }} p-2 text-brawl-white text-center text-shadow text-border-sm">
       {{ box.name }}
     </span>
-    <div class="flex justify-center items-center bg-gradient-radial {{ box.name.length > 30 ? 'pb-5' : '' }} {{ gradientByBoxType[box.type] }}">
+    <div class="flex justify-center h-full items-center bg-gradient-radial {{ box.name.length > 30 ? 'pb-5' : '' }} {{ gradientByBoxType[box.type] }}">
       <img src="/images/boxes/{{ imageByBoxType[box.type] }}" alt="{{ box.type }}" class="w-32 h-32 z-10 hover:scale-110 transition-all hover:rotate-12">
     </div>
     <div class="bg-gradient-to-b from-brawl-purple via-brawl-purple to-brawl-pink {{ box.favoriteBrawlersInBox > 0 ? '' : 'hidden' }} irregular_rectangle_shape text-xs text-brawl-white text-shadow text-border-sm absolute bottom-0 right-0 p-1 px-3 pt-1.5">
@@ -15,10 +14,13 @@
       {{ box.favoriteBrawlersInBox === 1 ? 'FAVORITO' : 'FAVORITOS' }}
     </div>
   </div>
-  <div class="bg-gradient-to-r group cursor-pointer gradientAnimation-medium from-brawl-green via-brawl-white to-brawl-lime text-shadow text-border-sm rounded-b-lg text-2xl text-brawl-white flex justify-center items-center p-3 px-6">
+  <div (click)="addBoxToCart()" class="bg-gradient-to-r group cursor-pointer gradientAnimation-medium from-brawl-green via-brawl-white to-brawl-lime text-shadow text-border-sm rounded-b-lg text-2xl text-brawl-white flex justify-center items-center p-3 px-6" *ngIf="!box.claimed">
     <span class="group-hover:scale-110 transition-all">
       GRATIS
     </span>
+  </div>
 
+  <div class="group cursor-pointer bg-brawl-dark-slate text-brawl-light-gray text-shadow text-border-sm rounded-b-lg text-2xl flex justify-center items-center p-3 px-6" *ngIf="box.claimed">
+      RECLAMADO
   </div>
 </div>
