@@ -1,5 +1,5 @@
 <div class="bg-[url(/images/backgrounds/auth-bg.png)] bg-no-repeat bg-cover w-screen h-screen flex flex-col gap-12 justify-center items-center relative overflow-hidden brawl-font">
-  <h1 class="text-9xl text-center text-shadow custom-gradient"
+  <h1 class="text-9xl text-center text-shadow spotlight"
       [ngClass]="{'text-grow': !cardVisible(), 'text-shrink': cardVisible(), 'text-border-lg': !cardVisible(), 'text-border-md': cardVisible()}">
     Colette's <br>
     <span class="text-white">SHOP</span>
@@ -27,7 +27,7 @@
         </p-floatlabel>
       </div>
 
-      <button (click)="login()" class="btn-yellow text-shadow text-border-sm mt-6">Entrar</button>
+      <button (click)="login()" [disabled]="loginSubmitted" class="btn-yellow text-shadow text-border-sm mt-6">Entrar</button>
       <button (click)="loginVisible = false" class="btn-link mt-4">Volver</button>
     </div>
   </p-card>
