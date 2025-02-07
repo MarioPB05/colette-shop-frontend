@@ -4,6 +4,7 @@ import {Card} from 'primeng/card';
 import {InputText} from 'primeng/inputtext';
 import {FloatLabel} from 'primeng/floatlabel';
 import {AuthService} from '@features/auth/services/auth.service';
+import {AuthService as GlobalAuthService} from '@core/services/auth.service';
 import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
@@ -28,16 +29,39 @@ export class AuthPageComponent {
   // Login form fields
   username: string = '';
   password: string = '';
+  loginSubmitted: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router, private messageService: MessageService,) {}
+  constructor(
+    private authService: AuthService,
+    private globalAuthService: GlobalAuthService,
+    private router: Router,
+    private messageService: MessageService
+  ) {}
 
   cardVisible(): boolean {
     return this.loginVisible || this.registerVisible;
   }
 
   login() {
+    this.loginSubmitted = true;
+
+    const loginError = () => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Usuario o contraseña incorrectos'
+      });
+    }
+
     this.authService.login({username: this.username, password: this.password}).subscribe({
-      next: () => {
+      next: (response) => {
+        if (!response.token) {
+          loginError();
+          return;
+        }
+
+        this.globalAuthService.setToken(response.token);
+
         this.router.navigate(['/']).then(() => {
           this.messageService.add({
             severity: 'success',
@@ -47,11 +71,10 @@ export class AuthPageComponent {
         });
       },
       error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Usuario o contraseña incorrectos'
-        });
+        loginError();
+      },
+      complete: () => {
+        this.loginSubmitted = false;
       }
     });
   }
