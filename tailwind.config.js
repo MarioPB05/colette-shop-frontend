@@ -19,6 +19,7 @@ module.exports = {
           'white': '#ffffff',      // bg-white
           'navy': '#19165B',       // bg-blue-900
           'dark-blue': '#0149B7', // bg-blue-800
+          'sea-blue': '#0066FF', // bg-blue-700
           'blue': '#0890FE',       // bg-blue-700
           'light-blue': '#12BEFC', // bg-blue-500
           'sky-blue': '#7ACBFF', // bg-sky-400
