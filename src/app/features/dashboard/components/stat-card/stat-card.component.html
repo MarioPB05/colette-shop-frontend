@@ -1,0 +1,18 @@
+<p-card>
+  <ng-template #title>
+    <div class="flex justify-between items-center">
+      <div>
+        <span class="text-sm text-gray-500 font-semibold">{{ statCard.title}}</span>
+      </div>
+      <div class="{{ statCard.color }} px-4 py-2 rounded-lg"> <!--bg-blue-200-->
+        <i [class]="statCard.icon"></i> <!--class="pi pi-shopping-bag text-blue-500"-->
+      </div>
+    </div>
+  </ng-template>
+  <p>
+    <span class="font-semibold">{{ statCard.principalValue }}</span>
+  </p>
+  <ng-template #footer>
+      <span class="text-sm text-gray-500"><span class="text-brawl-lime">{{ statCard.secondaryValue }}</span> el día de hoy</span>
+  </ng-template>
+</p-card>
