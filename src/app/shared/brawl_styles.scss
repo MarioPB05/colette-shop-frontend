@@ -10,6 +10,10 @@
   text-shadow: 0.5px 1.5px 0px black;
 }
 
+.text-border-xs {
+  -webkit-text-stroke: 0.3px black;
+}
+
 .text-border-sm {
   -webkit-text-stroke: 0.5px black;
 }
@@ -22,9 +26,23 @@
   -webkit-text-stroke: 1.5px black;
 }
 
+/*------------------- Corazon -------------------*/
+
+.brawl-heart {
+  @apply text-brawl-white bg-brawl-pink border-2 w-5 h-5 border-brawl-white flex justify-center pt-0.5 items-center rounded-full;
+}
+
+.brawl-heart>i {
+  font-size: 0.6rem;
+}
+
 /*------------------- Botones -------------------*/
 .brawl-button {
   @apply bg-brawl-gold p-1 px-3 rounded-lg w-full text-shadow text-border-sm;
+}
+
+.brawl-button:hover {
+  @apply bg-brawl-yellow;
 }
 
 /*------------------- Estilos de los checkboxes -------------------*/
@@ -168,8 +186,11 @@
 }
 
 .spotlight {
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
-  z-index: 2;
+  background: radial-gradient(50% 50% at 50% 50%, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.spotlight-blue {
+  background: radial-gradient(50% 50% at 50% 50%, #00B4FF 0%, rgba(0, 180, 255, 0) 100%);
 }
 
 @keyframes scrollBackground {
