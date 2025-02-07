@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import {CatalogPageComponent} from '@features/catalog/pages/catalog-page/catalog-page.component';
+import {BoxDetailPageComponent} from '@features/box-detail/pages/box-detail-page/box-detail-page.component';
 
 export const routes: Routes = [
   {
@@ -15,5 +16,9 @@ export const routes: Routes = [
   {
     path: 'shop',
     component: CatalogPageComponent
+  },
+  {
+    path: 'box/:id',
+    component: BoxDetailPageComponent
   }
 ];
