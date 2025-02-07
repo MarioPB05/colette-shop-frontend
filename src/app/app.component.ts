@@ -10,9 +10,8 @@ import {LoadingService} from '@core/services/loading.service';
   selector: 'app-root',
   imports: [RouterOutlet, LoadingComponent, Toast],
   templateUrl: './app.component.html',
-  standalone: true,
   styleUrl: './app.component.scss',
-  providers: [ConfirmationService, MessageService],
+  standalone: true,
 })
 export class AppComponent implements OnDestroy {
   loading$: Observable<boolean>;
