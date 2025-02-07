@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {LoginUserRequest} from '@models/user.model';
+import {HttpClient, HttpContext} from '@angular/common/http';
+import {AuthResponse, LoginUserRequest} from '@models/auth.model';
 import {Observable} from 'rxjs';
+import {SkipAuth} from '@interceptors/auth.interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,10 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(dto: LoginUserRequest): Observable<any> {
-    return this.http.post('/api/login_check', dto);
+  login(dto: LoginUserRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>('/api/login_check', dto, {
+      context: new HttpContext().set(SkipAuth, true)
+    });
   }
 
 }
