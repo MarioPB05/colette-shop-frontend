@@ -56,7 +56,7 @@ export class CatalogPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.faviconService.changeFavicon('/shop-favicon.png');
+    this.faviconService.changeFavicon('/images/favicon/shop-favicon.png');
 
     this.boxService.getBoxes().subscribe({
       next: (boxes) => {
