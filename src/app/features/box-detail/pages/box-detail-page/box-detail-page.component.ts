@@ -3,13 +3,17 @@ import {BrawlHeaderComponent} from '@shared/components/brawl-header/brawl-header
 import {FaviconService} from '@core/services/favicon.service';
 import {BrawlerProbabilityResponse} from '@models/brawler.model';
 import {NgForOf, NgIf} from '@angular/common';
+import {Tooltip} from 'primeng/tooltip';
+import {ReviewComponent} from '@features/box-detail/components/review/review.component';
 
 @Component({
   selector: 'app-box-detail-page',
   imports: [
     BrawlHeaderComponent,
     NgForOf,
-    NgIf
+    NgIf,
+    Tooltip,
+    ReviewComponent
   ],
   templateUrl: './box-detail-page.component.html',
   standalone: true,

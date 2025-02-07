@@ -48,7 +48,7 @@
           </div>
           <div class="flex gap-4 flex-wrap">
             <div class="text-center relative" *ngFor="let brawler of brawlersByRarity[rarity]">
-              <img src="{{brawler.image}}" alt="{{brawler.name}}" class="w-16 h-16 border-4 border-brawl-black">
+              <img src="{{brawler.image}}" [pTooltip]="brawler.name" alt="{{brawler.name}}" class="w-16 h-16 border-4 border-brawl-black">
               <span class="text-sm {{ brawler.probability < 10 ? 'text-brawl-light-gray' : brawler.probability > 90 ? 'text-brawl-gold' : 'text-brawl-white' }}">{{brawler.probability}}%</span>
               <div class="brawl-heart absolute -top-1 -left-1" *ngIf="brawler.userFavorite">
                 <i class="pi pi-heart-fill"></i>
@@ -60,14 +60,7 @@
 
       <h1 class="text-5xl mt-10 font-bold text-shadow text-border-sm">Opiniones</h1>
       <div>
-
-        <div class="border-2 rounded gap-0.5 border-brawl-navy p-4 bg-brawl-blue flex flex-col">
-          <span class="text-base text-shadow text-border-xs text-brawl-baby-blue">Trompi123</span>
-          <span class="text-lg text-shadow text-border-xs text-brawl-white">
-            Muy buena caja, me ha tocado un brawler legendario
-          </span>
-        </div>
-
+        <app-review></app-review>
       </div>
 
     </div>
