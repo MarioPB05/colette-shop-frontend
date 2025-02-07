@@ -23,6 +23,7 @@ module.exports = {
           'blue': '#0890FE',       // bg-blue-700
           'light-blue': '#12BEFC', // bg-blue-500
           'sky-blue': '#7ACBFF', // bg-sky-400
+          'baby-blue': '#ADDFFF', // bg-sky-200
           'purple': '#9908EA',     // bg-purple-500
           'pink': '#FB09C7',       // bg-pink-
           'red': '#FE0000',        // bg-red-600
