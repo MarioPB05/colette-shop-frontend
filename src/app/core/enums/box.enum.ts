@@ -1,14 +1,9 @@
 
-export enum BoxTypeEnum {
-  BOX = 'Caja',
-  BIG_BOX = 'Caja grande',
-  MEGABOX = 'Megacaja',
-  OMEGABOX = 'Omegacaja'
-}
+export const BoxTypes: string[] = ['Caja', 'Caja grande', 'Megacaja', 'Omegacaja'];
 
-export enum BoxTypeImageEnum {
-  'Caja' = 'common-box.png',
-  'Caja grande' = 'big-box.png',
-  'Megacaja' = 'megabox.png',
-  'Omegacaja' = 'omegabox.png'
+export const BoxTypeImages: {[key: string]: string} = {
+  'Caja': '/images/boxes/common-box.png',
+  'Caja grande': '/images/boxes/big-box.png',
+  'Megacaja': '/images/boxes/megabox.png',
+  'Omegacaja': '/images/boxes/omegabox.png'
 }
