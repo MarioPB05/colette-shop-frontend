@@ -14,6 +14,7 @@ import {
 } from '@features/catalog/components/box-free-daily-buy-card/box-free-daily-buy-card.component';
 import {MessageService} from 'primeng/api';
 import {CartBtnComponent} from '@shared/components/cart-btn/cart-btn.component';
+import {BoxTypes} from '@core/enums/box.enum';
 
 @Component({
   selector: 'app-shop-page',
@@ -23,8 +24,7 @@ import {CartBtnComponent} from '@shared/components/cart-btn/cart-btn.component';
   standalone: true
 })
 export class CatalogPageComponent implements OnInit {
-  boxTypes: string[] = ['Caja', 'Caja grande', 'Megacaja', 'Omegacaja'];
-  filteredBoxTypes: string[] = ['Todos', ...this.boxTypes];
+  filteredBoxTypes: string[] = ['Todos', ...BoxTypes];
 
   itemsInCart: (BoxShopResponse | DailyBoxShopResponse)[] = [];
   gems: number = 0;
@@ -164,13 +164,13 @@ export class CatalogPageComponent implements OnInit {
   filterBoxes() {
     let filterBoxes = this.allBoxes.filter((box) => {
       return (!this.onlyFavorites || box.favoriteBrawlersInBox > 0)
-        && (this.boxTypeFilter === 0 || box.type === this.boxTypes[this.boxTypeFilter - 1])
+        && (this.boxTypeFilter === 0 || box.type === BoxTypes[this.boxTypeFilter - 1])
         && (box.price >= this.rangeValues[0] && box.price <= this.rangeValues[1]);
     });
 
     let filterFreeBoxes = this.allDailyFreeBoxes.filter((box) => {
       return (!this.onlyFavorites || box.favoriteBrawlersInBox > 0)
-        && (this.boxTypeFilter === 0 || box.type === this.boxTypes[this.boxTypeFilter - 1])
+        && (this.boxTypeFilter === 0 || box.type === BoxTypes[this.boxTypeFilter - 1])
         && this.rangeValues[0] === 0;
     });
 
