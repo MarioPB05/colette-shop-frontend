@@ -2,11 +2,11 @@
 <div class="bg-brawl-sea-blue min-h-screen text-brawl-white brawl-font">
   <app-brawl-header></app-brawl-header>
 
-  <div class="grid grid-cols-2 p-10">
-    <div class="max-w-[700px] flex flex-col items-center gap-12">
+  <div class="grid lg:grid-cols-2 xs:p-10 p-5 gap-20">
+    <div class="flex lg:sticky h-max top-16 flex-col items-center gap-12">
       <div class="text-shadow text-border-sm flex items-center mb-6 justify-center gap-8">
         <button class="p-1 bg-brawl-gold rounded-lg hover:bg-brawl-yellow">
-          <img src="/left-arrow.png" alt="left-arrow" class="w-8 h-8">
+          <img src="/images/icons/left-arrow.png" alt="left-arrow" class="w-8 h-8">
         </button>
         <h1 class="text-2xl font-bold">DETALLES DE LA CAJA</h1>
       </div>
@@ -17,22 +17,23 @@
 
       <div class="flex flex-col justify-center gap-5 text-shadow text-border-xs">
         <h1 class="text-5xl text-border-sm font-bold text-center">
-          Caja común <h2 class="text-lg text-border-xs text-brawl-gold">10.00 €</h2>
+          {{ box.name }} <h2 class="text-lg text-border-xs text-brawl-gold">{{ box.price }} €</h2>
         </h1>
         <div class="text-center text-xl flex flex-col gap-2 justify-center">
           <span>
-            Quedan <span class="text-brawl-green">23</span> unidades
+            Quedan <span class="text-brawl-green">{{ box.boxesLeft }}</span> unidades
           </span>
 
           <span>
-            Contiene <span class="text-brawl-green">2</span> brawlers
+            Contiene <span class="text-brawl-green">{{ box.brawlerQuantity }}</span> brawlers
           </span>
 
           <span>
-            <span class="text-brawl-green">3.3</span> calificación promedio
+            <span class="text-brawl-green">{{ averageRating }}</span> calificación promedio
           </span>
+
+          <button class="brawl-button mt-5 text-2xl">Añadir al carrito</button>
         </div>
-
       </div>
 
     </div>
@@ -44,12 +45,12 @@
       <div class="flex flex-col gap-3">
         <div *ngFor="let rarity of rarities">
           <div class="bg-brawl-dark-slate my-5 h-1 flex items-center ps-5 text-shadow text-border-xs">
-            {{ rarity }}
+            {{ rarity.name }}
           </div>
           <div class="flex gap-4 flex-wrap">
-            <div class="text-center relative" *ngFor="let brawler of brawlersByRarity[rarity]">
-              <img src="{{brawler.image}}" [pTooltip]="brawler.name" alt="{{brawler.name}}" class="w-16 h-16 border-4 border-brawl-black">
-              <span class="text-sm {{ brawler.probability < 10 ? 'text-brawl-light-gray' : brawler.probability > 90 ? 'text-brawl-gold' : 'text-brawl-white' }}">{{brawler.probability}}%</span>
+            <div class="text-center relative" *ngFor="let brawler of brawlersByRarity[rarity.name]">
+              <img src="{{brawler.image}}" [pTooltip]="brawler.name" tooltipPosition="top" alt="{{brawler.name}}" class="w-16 h-16 border-4 border-brawl-black">
+              <span class="text-sm {{ brawler.probability < 10 ? 'text-red-300' : brawler.probability > 90 ? 'text-brawl-gold' : 'text-brawl-white' }}">{{brawler.probability}}%</span>
               <div class="brawl-heart absolute -top-1 -left-1" *ngIf="brawler.userFavorite">
                 <i class="pi pi-heart-fill"></i>
               </div>
@@ -59,10 +60,13 @@
       </div>
 
       <h1 class="text-5xl mt-10 font-bold text-shadow text-border-sm">Opiniones</h1>
-      <div>
-        <app-review></app-review>
+      <div class="flex flex-col gap-5 mb-5">
+        <app-review *ngFor="let review of reviews" [review]="review"></app-review>
+
+        <button class="brawl-button">VER MÁS</button>
       </div>
 
     </div>
   </div>
+  <app-cart-btn/>
 </div>
