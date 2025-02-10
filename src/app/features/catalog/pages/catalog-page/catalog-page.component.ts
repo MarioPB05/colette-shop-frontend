@@ -13,10 +13,11 @@ import {
   BoxFreeDailyBuyCardComponent
 } from '@features/catalog/components/box-free-daily-buy-card/box-free-daily-buy-card.component';
 import {MessageService} from 'primeng/api';
+import {CartBtnComponent} from '@shared/components/cart-btn/cart-btn.component';
 
 @Component({
   selector: 'app-shop-page',
-  imports: [BrawlHeaderComponent, Slider, FormsModule, InputNumberModule, BoxBuyCardComponent, NgForOf, NgIf, Tooltip, BoxFreeDailyBuyCardComponent],
+  imports: [BrawlHeaderComponent, Slider, FormsModule, InputNumberModule, BoxBuyCardComponent, NgForOf, NgIf, Tooltip, BoxFreeDailyBuyCardComponent, CartBtnComponent],
   templateUrl: './catalog-page.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss'],
   standalone: true
@@ -25,8 +26,7 @@ export class CatalogPageComponent implements OnInit {
   boxTypes: string[] = ['Caja', 'Caja grande', 'Megacaja', 'Omegacaja'];
   filteredBoxTypes: string[] = ['Todos', ...this.boxTypes];
 
-  itemsInCart: (BoxShopResponse | DailyBoxShopResponse)[] = [
-  ];
+  itemsInCart: (BoxShopResponse | DailyBoxShopResponse)[] = [];
   gems: number = 0;
 
   rangeValues: number[] = [0, 50];
