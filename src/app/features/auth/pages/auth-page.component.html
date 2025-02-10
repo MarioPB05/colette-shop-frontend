@@ -32,7 +32,11 @@
     </div>
   </p-card>
 
-  <div class="absolute bottom-10 flex gap-6" [ngClass]="{'button-hide': cardVisible(), 'button-show': !cardVisible()}">
+  <p-card *ngIf="registerVisible" class="min-w-full sm:min-w-[600px]">
+    <app-register-stepper (stepperClosed)="registerVisible = false" />
+  </p-card>
+
+  <div class="absolute bottom-10 flex flex-col md:flex-row gap-6" [ngClass]="{'button-hide': cardVisible(), 'button-show': !cardVisible()}">
     <button (click)="loginVisible = true" class="btn-yellow-hover text-shadow text-border-sm">
       INICIAR SESIÓN
     </button>

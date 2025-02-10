@@ -5,9 +5,10 @@ import {InputText} from 'primeng/inputtext';
 import {FloatLabel} from 'primeng/floatlabel';
 import {AuthService} from '@features/auth/services/auth.service';
 import {AuthService as GlobalAuthService} from '@core/services/auth.service';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
+import {RegisterStepperComponent} from '@features/auth/components/register-stepper/register-stepper.component';
 
 @Component({
   selector: 'app-auth-page',
@@ -17,7 +18,9 @@ import {MessageService} from 'primeng/api';
     Card,
     InputText,
     FloatLabel,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    RegisterStepperComponent
   ],
   templateUrl: './auth-page.component.html',
   styleUrls: ['../../../shared/brawl_styles.scss', 'auth-page.styles.scss']
@@ -30,6 +33,9 @@ export class AuthPageComponent {
   username: string = '';
   password: string = '';
   loginSubmitted: boolean = false;
+
+  // Register form fields
+  registerSubmitted: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -77,6 +83,10 @@ export class AuthPageComponent {
         this.loginSubmitted = false;
       }
     });
+  }
+
+  register() {
+
   }
 
 }
