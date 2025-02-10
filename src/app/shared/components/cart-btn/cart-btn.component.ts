@@ -5,6 +5,7 @@ import {Component} from '@angular/core';
   imports: [],
   templateUrl: './cart-btn.component.html',
   standalone: true,
+  styleUrl: '../../brawl_styles.scss'
 })
 export class CartBtnComponent {
   itemsInCart: number = 0;
