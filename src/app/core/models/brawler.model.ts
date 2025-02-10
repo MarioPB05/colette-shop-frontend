@@ -18,6 +18,7 @@ export interface BrawlerProbabilityResponse {
   id: number;
   name: string;
   image: string;
+  rarityId: number;
   rarity: string;
   userFavorite: boolean;
   probability: number;
