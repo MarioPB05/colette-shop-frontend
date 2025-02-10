@@ -1,4 +1,11 @@
 <div *ngIf="!loadingData">
+  <h1 class="text-2xl font-bold pb-2">Resumen del mes</h1>
+  <div class="flex flex-col md:flex-row justify-between gap-6 pb-6">
+    @for (statsCard of statCards; track statsCard.key) {
+      <app-stat-card [statCard]="statsCard"></app-stat-card>
+    }
+  </div>
+
   <p-tabs value="0">
     <p-tablist>
       <p-tab value="0">
@@ -16,11 +23,7 @@
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel value="0">
-        <div class="flex flex-col justify-around">
-          @for (statsCard of statCards; track statCards) {
-            <app-stat-card [statCard]="statsCard"></app-stat-card>
-          }
-        </div>
+        <p-chart type="line" [data]="data" [options]="" class="h-[30rem]" />
       </p-tabpanel>
       <p-tabpanel value="1">
         <p class="m-0">
