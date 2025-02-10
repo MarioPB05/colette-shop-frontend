@@ -27,3 +27,12 @@ export interface TableBoxResponse {
   type: string;
   pinned: boolean;
 }
+
+export interface BoxDetailResponse {
+  id: number;
+  name: string;
+  price: number;
+  type: string;
+  boxesLeft: number;
+  brawlerQuantity: number;
+}
