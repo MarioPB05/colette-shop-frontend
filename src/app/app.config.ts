@@ -7,12 +7,14 @@ import {provideAnimationsAsync} from '@angular/platform-browser/animations/async
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {loadingInterceptor} from '@core/interceptors/loading.interceptor';
 import {BrawlTheme} from './brawl.theme';
+import {authInterceptor} from '@interceptors/auth.interceptor';
+import {ConfirmationService, MessageService} from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([loadingInterceptor])),
+    provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor])),
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
@@ -21,6 +23,8 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: 'none'
         }
       }
-    })
+    }),
+    ConfirmationService,
+    MessageService
   ]
 };

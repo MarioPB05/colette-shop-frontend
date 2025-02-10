@@ -1,0 +1,41 @@
+<div class="bg-[url(/images/backgrounds/auth-bg.png)] bg-no-repeat bg-cover w-screen h-screen flex flex-col gap-12 justify-center items-center relative overflow-hidden brawl-font">
+  <h1 class="text-9xl text-center text-shadow spotlight"
+      [ngClass]="{'text-grow': !cardVisible(), 'text-shrink': cardVisible(), 'text-border-lg': !cardVisible(), 'text-border-md': cardVisible()}">
+    Colette's <br>
+    <span class="text-white">SHOP</span>
+  </h1>
+
+  <p-card *ngIf="loginVisible">
+    <div class="flex flex-col w-[300px]">
+      <h2 class="text-center text-2xl mb-6">Iniciar Sesión</h2>
+
+      <div class="flex items-center w-full gap-4 mb-4">
+        <i class="pi pi-user"></i>
+
+        <p-floatlabel variant="on" class="w-full">
+          <input pInputText id="username" autocomplete="off" class="w-full" [(ngModel)]="username" />
+          <label for="username">Nombre de Usuario</label>
+        </p-floatlabel>
+      </div>
+
+      <div class="flex items-center w-full gap-4 mb-4">
+        <i class="pi pi-lock"></i>
+
+        <p-floatlabel variant="on" class="w-full">
+          <input pInputText type="password" id="password" autocomplete="off" class="w-full" [(ngModel)]="password" />
+          <label for="password">Contraseña</label>
+        </p-floatlabel>
+      </div>
+
+      <button (click)="login()" [disabled]="loginSubmitted" class="btn-yellow text-shadow text-border-sm mt-6">Entrar</button>
+      <button (click)="loginVisible = false" class="btn-link mt-4">Volver</button>
+    </div>
+  </p-card>
+
+  <div class="absolute bottom-10 flex gap-6" [ngClass]="{'button-hide': cardVisible(), 'button-show': !cardVisible()}">
+    <button (click)="loginVisible = true" class="btn-yellow-hover text-shadow text-border-sm">
+      INICIAR SESIÓN
+    </button>
+    <button (click)="registerVisible = true" class="btn-yellow-hover custom-btn text-shadow text-border-sm">REGISTRARSE</button>
+  </div>
+</div>
