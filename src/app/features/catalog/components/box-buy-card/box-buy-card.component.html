@@ -8,7 +8,7 @@
       {{ box.name }}
     </span>
     <div class="flex justify-center h-full items-center bg-gradient-radial {{ box.name.length > 30 ? 'pb-5' : '' }} {{ gradientByBoxType[box.type] }}">
-      <img src="/images/boxes/{{ imageByBoxType[box.type] }}" alt="{{ box.type }}" class="w-32 h-32 z-10 hover:scale-110 transition-all hover:rotate-12">
+      <img src="{{ BoxTypeImages[box.type] }}" alt="{{ box.type }}" class="w-32 h-32 z-10 hover:scale-110 transition-all hover:rotate-12">
     </div>
     <div class="bg-brawl-red {{ box.popular ? '' : 'hidden' }} bottom-0 left-0 text-sm shoe_shape p-1 ps-2 pe-4 text-shadow text-border-sm absolute text-brawl-white">
       POPULAR

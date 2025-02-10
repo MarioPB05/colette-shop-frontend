@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {BoxShopResponse} from '@models/box.model';
 import {NgIf} from '@angular/common';
+import {BoxTypeImages} from '@core/enums/box.enum';
 
 @Component({
   selector: 'app-box-buy-card',
@@ -27,13 +28,6 @@ export class BoxBuyCardComponent {
     "Omegacaja": "bg-[#ff1616]"
   }
 
-  imageByBoxType : {[key: string]: string} = {
-    "Caja": "common-box.png",
-    "Caja grande": "big-box.png",
-    "Megacaja": "megabox.png",
-    "Omegacaja": "omegabox.png"
-  }
-
   @Input() box : BoxShopResponse = {
     id: 1,
     name: 'Box name',
@@ -52,4 +46,6 @@ export class BoxBuyCardComponent {
       this.addToCart.emit(this.box);
     }
   }
+
+  protected readonly BoxTypeImages = BoxTypeImages;
 }
