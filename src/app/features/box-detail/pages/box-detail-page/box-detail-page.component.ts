@@ -9,6 +9,12 @@ import {CartBtnComponent} from '@shared/components/cart-btn/cart-btn.component';
 import {ListRarityResponse} from '@models/rarity.model';
 import {BoxDetailResponse} from '@models/box.model';
 import {ReviewResponse} from '@models/review.model';
+import {ReviewService} from '@features/box-detail/services/review.service';
+import {forkJoin} from 'rxjs';
+import {BoxService} from '@features/box-detail/services/box.service';
+import {BrawlerService} from '@features/box-detail/services/brawler.service';
+import {ActivatedRoute} from '@angular/router';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-box-detail-page',
@@ -25,143 +31,57 @@ import {ReviewResponse} from '@models/review.model';
   styleUrls: ['./../../../../shared/brawl_styles.scss']
 })
 export class BoxDetailPageComponent implements OnInit {
+  boxId: number = 1;
   box: BoxDetailResponse = {
     id: 1,
-    name: 'Caja de inicio',
-    price: 30,
-    type: 'Normal',
-    boxesLeft: 100,
-    brawlerQuantity: 3
+    name: 'Cargando...',
+    price: 0,
+    type: 'Caja',
+    boxesLeft: 0,
+    brawlerQuantity: 0
   }
   rarities: ListRarityResponse[] = [];
-  brawlers: BrawlerProbabilityResponse[] = [
-    {
-      id: 16000000,
-      name: 'Shelly',
-      rarityId: 1,
-      rarity: 'Inicial',
-      image: '/images/brawlers/16000000_main.png',
-      probability: 98,
-      userFavorite: true
-    },
-    {
-      id: 16000001,
-      name: 'Colt',
-      rarityId: 2,
-      rarity: 'Común',
-      image: '/images/brawlers/16000001_main.png',
-      probability: 55,
-      userFavorite: false
-    },
-    {
-      id: 16000002,
-      name: 'Bull',
-      rarityId: 2,
-      rarity: 'Común',
-      image: '/images/brawlers/16000002_main.png',
-      probability: 30,
-      userFavorite: false
-    },
-    {
-      id: 16000003,
-      name: 'Brock',
-      rarityId: 4,
-      rarity: 'Super Raro',
-      image: '/images/brawlers/16000003_main.png',
-      probability: 10,
-      userFavorite: false
-    },
-    {
-      id: 16000004,
-      name: 'Rico',
-      rarityId: 3,
-      rarity: 'Raro',
-      image: '/images/brawlers/16000004_main.png',
-      probability: 5,
-      userFavorite: false
-    },
-    {
-      id: 16000005,
-      name: 'Spike',
-      rarityId: 6,
-      rarity: 'Legendario',
-      image: '/images/brawlers/16000005_main.png',
-      probability: 2,
-      userFavorite: false
-    },
-    {
-      id: 16000006,
-      name: 'Barley',
-      rarityId: 3,
-      rarity: 'Raro',
-      image: '/images/brawlers/16000006_main.png',
-      probability: 1,
-      userFavorite: true
-    },
-    {
-      id: 16000007,
-      name: 'Jessie',
-      rarityId: 3,
-      rarity: 'Raro',
-      image: '/images/brawlers/16000007_main.png',
-      probability: 0.5,
-      userFavorite: false
-    }
-  ];
-  reviews: ReviewResponse[] = [
-    {
-      id: 1,
-      idUser: 1,
-      username: 'Javier',
-      rating: 4,
-      comment: 'Muy buen producto, me encantó la calidad y el precio es muy bueno. Lo recomiendo mucho.',
-      post_date: '2025-01-01 12:00:00'
-    },
-    {
-      id: 2,
-      idUser: 2,
-      username: 'Carlos',
-      rating: 5,
-      comment: 'Excelente producto, muy buena calidad y precio. Lo recomiendo mucho.',
-      post_date: '2025-01-01 12:00:00'
-    },
-    {
-      id: 3,
-      idUser: 3,
-      username: 'Andrea',
-      rating: 3,
-      comment: 'Buen producto, la calidad es buena pero el precio es un poco alto. Lo recomiendo mucho.',
-      post_date: '2025-01-01 12:00:00'
-    },
-    {
-      id: 4,
-      idUser: 4,
-      username: 'Luis',
-      rating: 2,
-      comment: 'Malo producto, la calidad es mala y el precio es muy alto. No lo recomiendo mucho.',
-      post_date: '2025-01-01 12:00:00'
-    },
-    {
-      id: 5,
-      idUser: 5,
-      username: 'Sofía',
-      rating: 1,
-      comment: 'Pésimo producto, la calidad es pésima y el precio es muy alto. No lo recomiendo mucho.',
-      post_date: '2025-01-01 12:00:00'
-    }
-  ];
+  brawlers: BrawlerProbabilityResponse[] = [];
+  showReviews: ReviewResponse[] = [];
+  allReviews: ReviewResponse[] = [];
   averageRating = 0;
-
   brawlersByRarity: {[key: string]: BrawlerProbabilityResponse[]} = {};
 
-  constructor(private faviconService: FaviconService) {
-  }
+  constructor(private faviconService: FaviconService,
+              private reviewService: ReviewService,
+              private boxService: BoxService,
+              private brawlerService: BrawlerService,
+              private activatedRoute: ActivatedRoute,
+              private messageService: MessageService) {}
 
   ngOnInit() {
     this.faviconService.changeFavicon('/images/favicon/box-favicon.png');
-    this.getRarities();
-    this.putBrawlersByRarity();
-    this.averageRating = this.getAverageRating();
+    this.boxId = parseInt(this.activatedRoute.snapshot.paramMap.get('id') || '0');
+
+    if (this.boxId === 0) {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se ha encontrado la caja'});
+      return;
+    }
+
+    forkJoin({
+      box: this.boxService.getBoxDetails(this.boxId),
+      brawlers: this.brawlerService.getBrawlersProbabilityFromBox(this.boxId),
+      reviews: this.reviewService.getReviewsFromBox(this.boxId)
+    }).subscribe({ next: ({box, brawlers, reviews}) => {
+      this.box = box;
+      this.brawlers = brawlers;
+      this.allReviews = reviews;
+      this.getRarities();
+      this.putBrawlersByRarity();
+      this.averageRating = this.getAverageRating();
+      this.showReviews = this.allReviews.slice(0, 3);
+    }, error: (error) => {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los datos de la caja'});
+    }});
+  }
+
+  goHome() {
+    window.location.href = '/';
   }
 
   getRarities() {
@@ -182,7 +102,15 @@ export class BoxDetailPageComponent implements OnInit {
   }
 
   getAverageRating() {
-    const sum = this.reviews.reduce((acc, review) => acc + review.rating, 0);
-    return Math.round((sum / this.reviews.length) * 10) / 10;
+    const sum = this.allReviews.reduce((acc, review) => acc + review.rating, 0);
+    return Math.round((sum / this.allReviews.length) * 10) / 10;
+  }
+
+  showMoreReviews() {
+    if (this.showReviews.length + 3 < this.allReviews.length) {
+      this.showReviews = this.allReviews.slice(0, this.showReviews.length + 3);
+    }else {
+      this.showReviews = this.allReviews;
+    }
   }
 }
