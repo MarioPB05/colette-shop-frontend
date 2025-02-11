@@ -1,0 +1,24 @@
+<p-card styleClass="shadow-2xl border-3">
+  <ng-template #title>
+    <div class="flex justify-between items-center">
+      <div>
+        <span class="text-sm text-gray-500 font-semibold">{{ statCard.title}}</span>
+      </div>
+      <div class="{{ statCard.color }} px-4 py-2 rounded-lg">
+        <i [class]="statCard.icon"></i>
+      </div>
+    </div>
+  </ng-template>
+  <p>
+    <span class="font-semibold">{{ statCard.principalValue }} {{ statCard.unit }}</span>
+  </p>
+  <ng-template #footer>
+      <span class="text-sm text-gray-500 flex items-center gap-1 w-max pb-1" [pTooltip]="getAverageTooltip()" tooltipPosition="bottom">
+        <i [class]="getAverageIcon()"></i>
+        <span [ngClass]="{'text-brawl-lime': statCard.secondaryValue > 0, 'text-brawl-red': statCard.secondaryValue <= 0}">
+          {{ statCard.secondaryValue }}
+        </span>
+        el día de hoy
+      </span>
+  </ng-template>
+</p-card>
