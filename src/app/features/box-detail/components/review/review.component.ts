@@ -9,7 +9,7 @@ import {ReviewResponse} from '@models/review.model';
   styleUrls: ['./../../../../shared/brawl_styles.scss']
 })
 export class ReviewComponent {
-  @Input() review: ReviewResponse!;
+  @Input() review!: ReviewResponse;
 
   getStarImage(rating: number, index: number) {
     return rating >= index ? '/images/stars/star-full.svg' : '/images/stars/star-empty.svg';
