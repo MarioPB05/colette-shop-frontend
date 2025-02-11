@@ -139,7 +139,6 @@ export class StatsPageComponent implements OnInit {
             }
         }
 
-        console.log('Pepe')
 
 
         this.loadingData = false;
