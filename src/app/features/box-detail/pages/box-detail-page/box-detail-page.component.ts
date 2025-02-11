@@ -117,9 +117,10 @@ export class BoxDetailPageComponent implements OnInit {
   showMoreReviews() {
     if (this.showReviews.length + 3 < this.allReviews.length) {
       this.showReviews = this.allReviews.slice(0, this.showReviews.length + 3);
-    }else {
-      this.showReviews = this.allReviews;
+      return;
     }
+    
+    this.showReviews = this.allReviews;
   }
 
   onReviewHover(isLast: boolean, state: boolean) {
