@@ -49,7 +49,7 @@ export class BoxDetailPageComponent implements OnInit {
               private brawlerService: BrawlerService,
               private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
-              private  router: Router) {}
+              private router: Router) {}
 
   ngOnInit() {
     this.faviconService.changeFavicon('/images/favicon/box-favicon.png');
