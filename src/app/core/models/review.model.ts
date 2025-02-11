@@ -3,7 +3,7 @@ export interface ReviewResponse {
   id: number;
   rating: number;
   comment: string;
-  idUser: number;
+  user_id: number;
   username: string;
   post_date: string;
 }

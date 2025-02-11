@@ -11,7 +11,7 @@ import {ReviewResponse} from '@models/review.model';
 export class ReviewComponent {
   @Input() review: ReviewResponse = {
     id: 1,
-    idUser: 1,
+    user_id: 1,
     username: 'Javier',
     rating: 4,
     comment: 'Muy buen producto, me encantó la calidad y el precio es muy bueno. Lo recomiendo mucho.',

@@ -38,8 +38,8 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
     id: 1,
     name: 'Box name',
     type: 'Box type',
-    favoriteBrawlersInBox: 3,
-    repeatHours: 24,
+    favorite_brawlers_in_box: 3,
+    repeat_every_hours: 24,
     claimed: false
   };
 
@@ -59,7 +59,7 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
 
     const midnight = new Date(now.setHours(0, 0, 0, 0));
 
-    const nextBoxTime = new Date(midnight.getTime() + this.box.repeatHours * 60 * 60 * 1000);
+    const nextBoxTime = new Date(midnight.getTime() + this.box.repeat_every_hours * 60 * 60 * 1000);
 
     let diff = nextBoxTime.getTime() - new Date().getTime(); // Diferencia entre medianoche y la fecha calculada
 

@@ -37,8 +37,8 @@ export class BoxDetailPageComponent implements OnInit {
     name: 'Cargando...',
     price: 0,
     type: 'Caja',
-    boxesLeft: 0,
-    brawlerQuantity: 0
+    boxes_left: 0,
+    brawler_quantity: 0
   }
   rarities: ListRarityResponse[] = [];
   brawlers: BrawlerProbabilityResponse[] = [];
@@ -87,7 +87,7 @@ export class BoxDetailPageComponent implements OnInit {
   getRarities() {
     this.rarities = this.brawlers.map(brawler => {
       return {
-        id: brawler.rarityId,
+        id: brawler.rarity_id,
         name: brawler.rarity
       }
     });

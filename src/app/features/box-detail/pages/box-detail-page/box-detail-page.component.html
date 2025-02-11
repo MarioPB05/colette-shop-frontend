@@ -21,11 +21,11 @@
         </h1>
         <div class="text-center items-center text-xl flex flex-col gap-2 justify-center">
           <span>
-            Quedan <span class="text-brawl-green">{{ box.boxesLeft }}</span> unidades
+            Quedan <span class="text-brawl-green">{{ box.boxes_left }}</span> unidades
           </span>
 
           <span>
-            Contiene <span class="text-brawl-green">{{ box.brawlerQuantity }}</span> brawlers
+            Contiene <span class="text-brawl-green">{{ box.brawler_quantity }}</span> brawlers
           </span>
 
           <span>
@@ -51,7 +51,7 @@
             <div class="text-center relative" *ngFor="let brawler of brawlersByRarity[rarity.name]">
               <img src="{{brawler.image}}" [pTooltip]="brawler.name" tooltipPosition="top" alt="{{brawler.name}}" class="w-16 h-16 border-4 border-brawl-black">
               <span class="text-sm {{ brawler.probability < 10 ? 'text-red-300' : brawler.probability > 90 ? 'text-brawl-gold' : 'text-brawl-white' }}">{{brawler.probability}}%</span>
-              <div class="brawl-heart absolute -top-1 -left-1" *ngIf="brawler.userFavorite">
+              <div class="brawl-heart absolute -top-1 -left-1" *ngIf="brawler.user_favorite">
                 <i class="pi pi-heart-fill"></i>
               </div>
             </div>

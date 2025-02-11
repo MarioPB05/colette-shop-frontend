@@ -9,9 +9,9 @@
     <div class="flex justify-center h-full items-center bg-gradient-radial {{ box.name.length > 30 ? 'pb-5' : '' }} {{ gradientByBoxType[box.type] }}">
       <img src="/images/boxes/{{ imageByBoxType[box.type] }}" alt="{{ box.type }}" class="w-32 h-32 z-10 hover:scale-110 transition-all hover:rotate-12">
     </div>
-    <div class="bg-gradient-to-b from-brawl-purple via-brawl-purple to-brawl-pink {{ box.favoriteBrawlersInBox > 0 ? '' : 'hidden' }} irregular_rectangle_shape text-xs text-brawl-white text-shadow text-border-sm absolute bottom-0 right-0 p-1 px-3 pt-1.5">
-      <span class="text-xl mr-0.5">{{box.favoriteBrawlersInBox}}</span>
-      {{ box.favoriteBrawlersInBox === 1 ? 'FAVORITO' : 'FAVORITOS' }}
+    <div class="bg-gradient-to-b from-brawl-purple via-brawl-purple to-brawl-pink {{ box.favorite_brawlers_in_box > 0 ? '' : 'hidden' }} irregular_rectangle_shape text-xs text-brawl-white text-shadow text-border-sm absolute bottom-0 right-0 p-1 px-3 pt-1.5">
+      <span class="text-xl mr-0.5">{{box.favorite_brawlers_in_box}}</span>
+      {{ box.favorite_brawlers_in_box === 1 ? 'FAVORITO' : 'FAVORITOS' }}
     </div>
   </div>
   <div (click)="addBoxToCart()" class="bg-gradient-to-r group cursor-pointer gradientAnimation-medium from-brawl-green via-brawl-white to-brawl-lime text-shadow text-border-sm rounded-b-lg text-2xl text-brawl-white flex justify-center items-center p-3 px-6" *ngIf="!box.claimed">

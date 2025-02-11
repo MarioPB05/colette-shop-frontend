@@ -78,7 +78,7 @@ export class CatalogPageComponent implements OnInit {
   syncBoxesLeftWithCart() {
     const itemsInCartIds = this.itemsInCart.map((item) => item.id);
     this.allBoxes.forEach((box) => {
-      box.boxesLeft -= itemsInCartIds.filter((id) => id === box.id).length;
+      box.boxes_left -= itemsInCartIds.filter((id) => id === box.id).length;
     });
     this.boxList = [...this.allBoxes];
 
@@ -89,12 +89,12 @@ export class CatalogPageComponent implements OnInit {
   }
 
   checkIfThereAreBoxesLeft(box: BoxShopResponse) {
-    if (box.boxesLeft === -1) {
+    if (box.boxes_left === -1) {
       return true;
     }
 
     const itemsInCartIds = this.itemsInCart.map((item) => item.id);
-    return box.boxesLeft > itemsInCartIds.filter((id) => id === box.id).length;
+    return box.boxes_left > itemsInCartIds.filter((id) => id === box.id).length;
   }
 
   checkIfBoxIsClaimed(box: DailyBoxShopResponse) {
@@ -154,7 +154,7 @@ export class CatalogPageComponent implements OnInit {
       this.itemsInCart.push(box);
 
       if ('boxesLeft' in box) {
-        box.boxesLeft -= 1;
+        box.boxes_left -= 1;
       }else if ('claimed' in box) {
         box.claimed = true;
       }
@@ -163,13 +163,13 @@ export class CatalogPageComponent implements OnInit {
 
   filterBoxes() {
     let filterBoxes = this.allBoxes.filter((box) => {
-      return (!this.onlyFavorites || box.favoriteBrawlersInBox > 0)
+      return (!this.onlyFavorites || box.favorite_brawlers_in_box > 0)
         && (this.boxTypeFilter === 0 || box.type === BoxTypes[this.boxTypeFilter - 1])
         && (box.price >= this.rangeValues[0] && box.price <= this.rangeValues[1]);
     });
 
     let filterFreeBoxes = this.allDailyFreeBoxes.filter((box) => {
-      return (!this.onlyFavorites || box.favoriteBrawlersInBox > 0)
+      return (!this.onlyFavorites || box.favorite_brawlers_in_box > 0)
         && (this.boxTypeFilter === 0 || box.type === BoxTypes[this.boxTypeFilter - 1])
         && this.rangeValues[0] === 0;
     });

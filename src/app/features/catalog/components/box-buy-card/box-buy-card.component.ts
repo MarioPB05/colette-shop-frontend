@@ -33,8 +33,8 @@ export class BoxBuyCardComponent {
     name: 'Box name',
     price: 100,
     type: 'Box type',
-    boxesLeft: 4,
-    favoriteBrawlersInBox: 3,
+    boxes_left: 4,
+    favorite_brawlers_in_box: 3,
     pinned: true,
     popular: true
   };
@@ -42,7 +42,7 @@ export class BoxBuyCardComponent {
   @Output() addToCart = new EventEmitter<BoxShopResponse>();
 
   addBoxToCart() {
-    if (this.box.boxesLeft != 0) {
+    if (this.box.boxes_left != 0) {
       this.addToCart.emit(this.box);
     }
   }
