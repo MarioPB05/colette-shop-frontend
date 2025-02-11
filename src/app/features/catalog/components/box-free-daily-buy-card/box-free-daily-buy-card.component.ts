@@ -2,11 +2,14 @@ import {Component, EventEmitter, input, Input, OnInit, Output} from '@angular/co
 import {DailyBoxShopResponse} from '@models/box.model';
 import {interval, take} from 'rxjs';
 import {NgIf} from '@angular/common';
+import {Router} from '@angular/router';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-box-free-daily-buy-card',
   imports: [
-    NgIf
+    NgIf,
+    Tooltip
   ],
   templateUrl: './box-free-daily-buy-card.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss', "./../../../../../styles.scss"],
@@ -46,12 +49,18 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
   timeToNextBox: string = '0h 0m 0s';
   @Output() addToCart = new EventEmitter<DailyBoxShopResponse>();
 
+  constructor(private router: Router) {}
+
   ngOnInit() {
     this.calculateTimeToNextBox();
     interval(1000).pipe(take(1000))
     .subscribe(() => {
       this.calculateTimeToNextBox();
     });
+  }
+
+  goToBoxDetails() {
+    this.router.navigate([`/box/${this.box.id}`]);
   }
 
   calculateTimeToNextBox() {

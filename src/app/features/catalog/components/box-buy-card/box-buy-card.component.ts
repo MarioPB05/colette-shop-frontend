@@ -2,11 +2,14 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {BoxShopResponse} from '@models/box.model';
 import {NgIf} from '@angular/common';
 import {BoxTypeImages} from '@core/enums/box.enum';
+import {Router} from '@angular/router';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-box-buy-card',
   imports: [
-    NgIf
+    NgIf,
+    Tooltip
   ],
   templateUrl: './box-buy-card.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss', "./../../../../../styles.scss"],
@@ -41,10 +44,17 @@ export class BoxBuyCardComponent {
 
   @Output() addToCart = new EventEmitter<BoxShopResponse>();
 
+  constructor(private router: Router) {
+  }
+
   addBoxToCart() {
     if (this.box.boxes_left != 0) {
       this.addToCart.emit(this.box);
     }
+  }
+
+  goToBoxDetails() {
+    this.router.navigate([`/box/${this.box.id}`]);
   }
 
   protected readonly BoxTypeImages = BoxTypeImages;
