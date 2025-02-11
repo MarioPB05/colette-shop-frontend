@@ -15,6 +15,7 @@ import {BoxService} from '@features/box-detail/services/box.service';
 import {BrawlerService} from '@features/box-detail/services/brawler.service';
 import {ActivatedRoute} from '@angular/router';
 import {MessageService} from 'primeng/api';
+import {BoxTypeImages} from '@core/enums/box.enum';
 
 @Component({
   selector: 'app-box-detail-page',
@@ -48,6 +49,7 @@ export class BoxDetailPageComponent implements OnInit {
   averageRating = 0;
   brawlersByRarity: {[key: string]: BrawlerProbabilityResponse[]} = {};
   lastReviewIsHovered = false;
+  protected readonly BoxTypeImages = BoxTypeImages;
 
   constructor(private faviconService: FaviconService,
               private reviewService: ReviewService,
@@ -104,6 +106,10 @@ export class BoxDetailPageComponent implements OnInit {
   }
 
   getAverageRating() {
+    if (this.allReviews.length === 0) {
+      return 0;
+    }
+
     const sum = this.allReviews.reduce((acc, review) => acc + review.rating, 0);
     return Math.round((sum / this.allReviews.length) * 10) / 10;
   }
