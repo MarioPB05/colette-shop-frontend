@@ -27,7 +27,9 @@ export const routes: Routes = [
   },
   {
     path: 'box/:id',
-    component: BoxDetailPageComponent
+    component: BoxDetailPageComponent,
+    canActivate: [authGuard],
+    data: { role: 'authenticated' }
   },
   {
     path: 'auth',
