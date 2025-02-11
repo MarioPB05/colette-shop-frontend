@@ -141,10 +141,6 @@ export class StatsPageComponent implements OnInit {
 
         console.log('Pepe')
 
-        this.charts.forEach((chart) => {
-          console.log(chart);
-          // chart.refresh();
-        });
 
         this.loadingData = false;
       },
