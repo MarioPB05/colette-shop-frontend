@@ -35,4 +35,5 @@ export interface BoxDetailResponse {
   type: string;
   boxes_left: number;
   brawler_quantity: number;
+  is_daily: boolean;
 }

@@ -38,7 +38,8 @@ export class BoxDetailPageComponent implements OnInit {
     price: 0,
     type: 'Caja',
     boxes_left: 0,
-    brawler_quantity: 0
+    brawler_quantity: 0,
+    is_daily: false
   }
   rarities: ListRarityResponse[] = [];
   brawlers: BrawlerProbabilityResponse[] = [];
