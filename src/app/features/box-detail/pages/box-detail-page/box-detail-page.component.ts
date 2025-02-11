@@ -13,7 +13,7 @@ import {ReviewService} from '@features/box-detail/services/review.service';
 import {forkJoin} from 'rxjs';
 import {BoxService} from '@features/box-detail/services/box.service';
 import {BrawlerService} from '@features/box-detail/services/brawler.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {BoxTypeImages} from '@core/enums/box.enum';
 
@@ -33,15 +33,7 @@ import {BoxTypeImages} from '@core/enums/box.enum';
 })
 export class BoxDetailPageComponent implements OnInit {
   boxId: number = 1;
-  box: BoxDetailResponse = {
-    id: 1,
-    name: 'Cargando...',
-    price: 0,
-    type: 'Caja',
-    boxes_left: 0,
-    brawler_quantity: 0,
-    is_daily: false
-  }
+  box!: BoxDetailResponse;
   rarities: ListRarityResponse[] = [];
   brawlers: BrawlerProbabilityResponse[] = [];
   showReviews: ReviewResponse[] = [];
@@ -56,16 +48,12 @@ export class BoxDetailPageComponent implements OnInit {
               private boxService: BoxService,
               private brawlerService: BrawlerService,
               private activatedRoute: ActivatedRoute,
-              private messageService: MessageService) {}
+              private messageService: MessageService,
+              private  router: Router) {}
 
   ngOnInit() {
     this.faviconService.changeFavicon('/images/favicon/box-favicon.png');
     this.boxId = parseInt(this.activatedRoute.snapshot.paramMap.get('id') || '0');
-
-    if (this.boxId === 0) {
-      this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se ha encontrado la caja'});
-      return;
-    }
 
     forkJoin({
       box: this.boxService.getBoxDetails(this.boxId),
@@ -80,12 +68,14 @@ export class BoxDetailPageComponent implements OnInit {
       this.averageRating = this.getAverageRating();
       this.showReviews = this.allReviews.slice(0, 3);
     }, error: (error) => {
-      this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los datos de la caja'});
+      this.router.navigate(['/']).then(() => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los datos de la caja'});
+      });
     }});
   }
 
   goHome() {
-    window.location.href = '/';
+    this.router.navigate(['/']);
   }
 
   getRarities() {
@@ -119,7 +109,7 @@ export class BoxDetailPageComponent implements OnInit {
       this.showReviews = this.allReviews.slice(0, this.showReviews.length + 3);
       return;
     }
-    
+
     this.showReviews = this.allReviews;
   }
 
