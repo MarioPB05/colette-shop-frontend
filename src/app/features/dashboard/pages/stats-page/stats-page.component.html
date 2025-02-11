@@ -1,3 +1,9 @@
+<style>
+  ::ng-deep .p-tooltip-text {
+    text-align: center;
+  }
+</style>
+
 <div *ngIf="!loadingData">
   <h1 class="text-2xl font-bold pb-2">Resumen del mes</h1>
   <div class="flex flex-col md:flex-row justify-between gap-6 pb-6">
@@ -6,43 +12,21 @@
     }
   </div>
 
-  <p-tabs value="0">
+  <p-tabs value="boxes" *ngIf="!loadingData">
     <p-tablist>
-      <p-tab value="0">
-        <i class="pi pi-shopping-bag"></i>
-        <span>Pedidos</span>
-      </p-tab>
-      <p-tab value="1">
-        <i class="pi pi-box"></i>
-        <span>Cajas</span>
-      </p-tab>
-      <p-tab value="2">
-        <i class="pi pi-star"></i>
-        <span>Brawlers</span>
-      </p-tab>
+      @for (statCard of statCards; track statCard.key) {
+        <p-tab value="{{statCard.key}}">
+          <i class="pi {{statCard.tabIcon}}"></i>
+          <span>{{statCard.title}}</span>
+        </p-tab>
+      }
     </p-tablist>
     <p-tabpanels>
-      <p-tabpanel value="0">
-        <p-chart type="line" [data]="data" [options]="" class="h-[30rem]" />
-      </p-tabpanel>
-      <p-tabpanel value="1">
-        <p class="m-0">
-          Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem
-          aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-          Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni
-          dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius
-          modi.
-        </p>
-      </p-tabpanel>
-      <p-tabpanel value="2">
-        <p class="m-0">
-          At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti
-          atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique
-          sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum
-          facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil
-          impedit quo minus.
-        </p>
-      </p-tabpanel>
+      @for (stat of stats; track stat.key) {
+        <p-tabpanel value="{{stat.key}}">
+          <p-chart [type]="stat.type" [data]="stat" [options]="options" class="h-[30rem] my-chart"/>
+        </p-tabpanel>
+      }
     </p-tabpanels>
   </p-tabs>
 </div>
