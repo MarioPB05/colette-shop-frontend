@@ -40,20 +40,11 @@ export class CatalogPageComponent implements OnInit {
   boxList: BoxShopResponse[] = [];
   freeDailyBoxList: DailyBoxShopResponse[] = [];
 
-  lastClickX: number = 0;
-  lastClickY: number = 0;
-
   constructor(
     private boxService: BoxService,
-    private elementRef: ElementRef,
     private faviconService: FaviconService,
     private messageService: MessageService
-  ) {
-    document.addEventListener('click', (event) => {
-      this.lastClickX = event.clientX;
-      this.lastClickY = event.clientY;
-    });
-  }
+  ) {}
 
   ngOnInit() {
     this.faviconService.changeFavicon('/images/favicon/shop-favicon.png');
@@ -86,79 +77,6 @@ export class CatalogPageComponent implements OnInit {
       box.claimed = itemsInCartIds.includes(box.id);
     });
     this.freeDailyBoxList = [...this.allDailyFreeBoxes];
-  }
-
-  checkIfThereAreBoxesLeft(box: BoxShopResponse) {
-    if (box.boxes_left === -1) {
-      return true;
-    }
-
-    const itemsInCartIds = this.itemsInCart.map((item) => item.id);
-    return box.boxes_left > itemsInCartIds.filter((id) => id === box.id).length;
-  }
-
-  checkIfBoxIsClaimed(box: DailyBoxShopResponse) {
-    return box.claimed;
-  }
-
-  addToCartAnimation() {
-    // Obtener la imagen de plantilla
-    const template = this.elementRef.nativeElement.querySelector('#add-to-cart-animation-template');
-
-    if (!template) return;
-
-    // Crear una copia del icono
-    const clone = template.cloneNode(true) as HTMLImageElement;
-    clone.style.display = 'block';
-    clone.classList.add('animated-item');
-
-    // Usar la última posición del cursor
-    clone.style.left = `${this.lastClickX}px`;
-    clone.style.top = `${this.lastClickY}px`;
-
-    // Agregar el clon al body
-    document.body.appendChild(clone);
-
-    // Obtener la posición del carrito
-    const cartIcon = this.elementRef.nativeElement.querySelector('#cart-icon');
-    if (cartIcon) {
-      const cartRect = cartIcon.getBoundingClientRect();
-
-      // Calcular distancia al carrito
-      const deltaX = cartRect.left - this.lastClickX;
-      const deltaY = cartRect.top - this.lastClickY;
-
-      // Aplicar variables CSS para animación
-      clone.style.setProperty('--x', `${deltaX}px`);
-      clone.style.setProperty('--y', `${deltaY}px`);
-    }
-
-    // Eliminar la imagen después de la animación
-    clone.addEventListener('animationend', () => clone.remove());
-  }
-
-  addBoxToCart(box: BoxShopResponse | DailyBoxShopResponse) {
-    if ('boxes_left' in box && !this.checkIfThereAreBoxesLeft(box)) {
-      return;
-    }
-
-    if ('claimed' in box && this.checkIfBoxIsClaimed(box)) {
-      return;
-    }
-
-    setTimeout(() => {
-      this.addToCartAnimation();
-    }, 1);
-
-    setTimeout(() => {
-      this.itemsInCart.push(box);
-
-      if ('boxes_left' in box) {
-        box.boxes_left -= 1;
-      }else if ('claimed' in box) {
-        box.claimed = true;
-      }
-    }, 900);
   }
 
   filterBoxes() {

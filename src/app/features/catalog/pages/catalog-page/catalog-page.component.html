@@ -51,8 +51,8 @@
     <div class="moving-skulls-background"></div>
 
     <div class="sm:p-10 p-2 pt-10 gap-10 grid justify-items-center grid-cols-[repeat(auto-fill,minmax(260px,1fr))]" *ngIf="boxesLoaded && boxList.length > 0">
-      <app-box-free-daily-buy-card *ngFor="let item of freeDailyBoxList" [box]="item" (addToCart)="addBoxToCart($event)"></app-box-free-daily-buy-card>
-      <app-box-buy-card *ngFor="let item of boxList" [box]="item" (addToCart)="addBoxToCart($event)"></app-box-buy-card>
+      <app-box-free-daily-buy-card *ngFor="let item of freeDailyBoxList" [box]="item"></app-box-free-daily-buy-card>
+      <app-box-buy-card *ngFor="let item of boxList" [box]="item"></app-box-buy-card>
     </div>
 
     <div class="text-brawl-white text-center text-2xl sm:p-10 p-2 pt-10" *ngIf="boxList.length === 0 && allBoxes.length > 0">
@@ -71,5 +71,3 @@
 </div>
 
 <app-cart-btn/>
-
-<img src="/images/icons/box-icon.png" class="add-to-cart-animation h-12" id="add-to-cart-animation-template" alt="Caja añadida al carrito" style="display: none">
