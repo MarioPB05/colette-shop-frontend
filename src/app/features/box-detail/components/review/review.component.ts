@@ -30,6 +30,15 @@ export class ReviewComponent {
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 
+    if (hours < 1) {
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      return `${minutes} min`;
+    }
+
+    if (days < 1) {
+      return `${hours}h`;
+    }
+
     if (days < 40) {
       return `${days}d ${hours}h`;
     }
