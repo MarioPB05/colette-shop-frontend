@@ -9,14 +9,7 @@ import {ReviewResponse} from '@models/review.model';
   styleUrls: ['./../../../../shared/brawl_styles.scss']
 })
 export class ReviewComponent {
-  @Input() review: ReviewResponse = {
-    id: 1,
-    user_id: 1,
-    username: 'Javier',
-    rating: 4,
-    comment: 'Muy buen producto, me encantó la calidad y el precio es muy bueno. Lo recomiendo mucho.',
-    post_date: '2025-01-01 12:00:00'
-  }
+  @Input() review: ReviewResponse!;
 
   getStarImage(rating: number, index: number) {
     return rating >= index ? '/images/stars/star-full.svg' : '/images/stars/star-empty.svg';
