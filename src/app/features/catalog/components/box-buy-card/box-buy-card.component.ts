@@ -1,11 +1,15 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {BoxShopResponse} from '@models/box.model';
 import {NgIf} from '@angular/common';
+import {BoxTypeImages} from '@core/enums/box.enum';
+import {Router} from '@angular/router';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-box-buy-card',
   imports: [
-    NgIf
+    NgIf,
+    Tooltip
   ],
   templateUrl: './box-buy-card.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss', "./../../../../../styles.scss"],
@@ -27,29 +31,31 @@ export class BoxBuyCardComponent {
     "Omegacaja": "bg-[#ff1616]"
   }
 
-  imageByBoxType : {[key: string]: string} = {
-    "Caja": "common-box.png",
-    "Caja grande": "big-box.png",
-    "Megacaja": "megabox.png",
-    "Omegacaja": "omegabox.png"
-  }
-
   @Input() box : BoxShopResponse = {
     id: 1,
     name: 'Box name',
     price: 100,
     type: 'Box type',
-    boxesLeft: 4,
-    favoriteBrawlersInBox: 3,
+    boxes_left: 4,
+    favorite_brawlers_in_box: 3,
     pinned: true,
     popular: true
   };
 
   @Output() addToCart = new EventEmitter<BoxShopResponse>();
 
+  constructor(private router: Router) {
+  }
+
   addBoxToCart() {
-    if (this.box.boxesLeft != 0) {
+    if (this.box.boxes_left != 0) {
       this.addToCart.emit(this.box);
     }
   }
+
+  goToBoxDetails() {
+    this.router.navigate([`/box/${this.box.id}`]);
+  }
+
+  protected readonly BoxTypeImages = BoxTypeImages;
 }

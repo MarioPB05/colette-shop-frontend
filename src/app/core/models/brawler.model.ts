@@ -13,3 +13,13 @@ export interface ListBrawlerResponse {
   image: string;
   rarity: string;
 }
+
+export interface BrawlerProbabilityResponse {
+  id: number;
+  name: string;
+  image: string;
+  rarity_id: number;
+  rarity: string;
+  user_favorite: boolean;
+  probability: number;
+}

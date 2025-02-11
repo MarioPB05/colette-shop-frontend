@@ -13,20 +13,20 @@ import {
   BoxFreeDailyBuyCardComponent
 } from '@features/catalog/components/box-free-daily-buy-card/box-free-daily-buy-card.component';
 import {MessageService} from 'primeng/api';
+import {CartBtnComponent} from '@shared/components/cart-btn/cart-btn.component';
+import {BoxTypes} from '@core/enums/box.enum';
 
 @Component({
   selector: 'app-shop-page',
-  imports: [BrawlHeaderComponent, Slider, FormsModule, InputNumberModule, BoxBuyCardComponent, NgForOf, NgIf, Tooltip, BoxFreeDailyBuyCardComponent],
+  imports: [BrawlHeaderComponent, Slider, FormsModule, InputNumberModule, BoxBuyCardComponent, NgForOf, NgIf, Tooltip, BoxFreeDailyBuyCardComponent, CartBtnComponent],
   templateUrl: './catalog-page.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss'],
   standalone: true
 })
 export class CatalogPageComponent implements OnInit {
-  boxTypes: string[] = ['Caja', 'Caja grande', 'Megacaja', 'Omegacaja'];
-  filteredBoxTypes: string[] = ['Todos', ...this.boxTypes];
+  filteredBoxTypes: string[] = ['Todos', ...BoxTypes];
 
-  itemsInCart: (BoxShopResponse | DailyBoxShopResponse)[] = [
-  ];
+  itemsInCart: (BoxShopResponse | DailyBoxShopResponse)[] = [];
   gems: number = 0;
 
   rangeValues: number[] = [0, 50];
@@ -56,7 +56,7 @@ export class CatalogPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.faviconService.changeFavicon('/shop-favicon.png');
+    this.faviconService.changeFavicon('/images/favicon/shop-favicon.png');
 
     this.boxService.getBoxes().subscribe({
       next: (boxes) => {
@@ -78,7 +78,7 @@ export class CatalogPageComponent implements OnInit {
   syncBoxesLeftWithCart() {
     const itemsInCartIds = this.itemsInCart.map((item) => item.id);
     this.allBoxes.forEach((box) => {
-      box.boxesLeft -= itemsInCartIds.filter((id) => id === box.id).length;
+      box.boxes_left -= itemsInCartIds.filter((id) => id === box.id).length;
     });
     this.boxList = [...this.allBoxes];
 
@@ -89,12 +89,12 @@ export class CatalogPageComponent implements OnInit {
   }
 
   checkIfThereAreBoxesLeft(box: BoxShopResponse) {
-    if (box.boxesLeft === -1) {
+    if (box.boxes_left === -1) {
       return true;
     }
 
     const itemsInCartIds = this.itemsInCart.map((item) => item.id);
-    return box.boxesLeft > itemsInCartIds.filter((id) => id === box.id).length;
+    return box.boxes_left > itemsInCartIds.filter((id) => id === box.id).length;
   }
 
   checkIfBoxIsClaimed(box: DailyBoxShopResponse) {
@@ -138,7 +138,7 @@ export class CatalogPageComponent implements OnInit {
   }
 
   addBoxToCart(box: BoxShopResponse | DailyBoxShopResponse) {
-    if ('boxesLeft' in box && !this.checkIfThereAreBoxesLeft(box)) {
+    if ('boxes_left' in box && !this.checkIfThereAreBoxesLeft(box)) {
       return;
     }
 
@@ -153,8 +153,8 @@ export class CatalogPageComponent implements OnInit {
     setTimeout(() => {
       this.itemsInCart.push(box);
 
-      if ('boxesLeft' in box) {
-        box.boxesLeft -= 1;
+      if ('boxes_left' in box) {
+        box.boxes_left -= 1;
       }else if ('claimed' in box) {
         box.claimed = true;
       }
@@ -163,14 +163,14 @@ export class CatalogPageComponent implements OnInit {
 
   filterBoxes() {
     let filterBoxes = this.allBoxes.filter((box) => {
-      return (!this.onlyFavorites || box.favoriteBrawlersInBox > 0)
-        && (this.boxTypeFilter === 0 || box.type === this.boxTypes[this.boxTypeFilter - 1])
+      return (!this.onlyFavorites || box.favorite_brawlers_in_box > 0)
+        && (this.boxTypeFilter === 0 || box.type === BoxTypes[this.boxTypeFilter - 1])
         && (box.price >= this.rangeValues[0] && box.price <= this.rangeValues[1]);
     });
 
     let filterFreeBoxes = this.allDailyFreeBoxes.filter((box) => {
-      return (!this.onlyFavorites || box.favoriteBrawlersInBox > 0)
-        && (this.boxTypeFilter === 0 || box.type === this.boxTypes[this.boxTypeFilter - 1])
+      return (!this.onlyFavorites || box.favorite_brawlers_in_box > 0)
+        && (this.boxTypeFilter === 0 || box.type === BoxTypes[this.boxTypeFilter - 1])
         && this.rangeValues[0] === 0;
     });
 

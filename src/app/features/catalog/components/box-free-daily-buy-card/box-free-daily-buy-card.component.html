@@ -2,16 +2,16 @@
   <span class="bg-brawl-black text-brawl-light-gray text-xs text-center relative p-0.5 ">
     {{ timeToNextBox }}
   </span>
-  <div class="grid h-full relative grid-rows-[auto_1fr] min-h-64">
+  <div class="grid h-full relative grid-rows-[auto_1fr] min-h-64 cursor-pointer" (click)="goToBoxDetails()" >
     <span class="{{ headerByBoxType[box.type] }} border-b border-brawl-dark-slate {{ box.name.length > 30 ? 'text-md' : 'text-xl' }} p-2 text-brawl-white text-center text-shadow text-border-sm">
       {{ box.name }}
     </span>
     <div class="flex justify-center h-full items-center bg-gradient-radial {{ box.name.length > 30 ? 'pb-5' : '' }} {{ gradientByBoxType[box.type] }}">
-      <img src="/images/boxes/{{ imageByBoxType[box.type] }}" alt="{{ box.type }}" class="w-32 h-32 z-10 hover:scale-110 transition-all hover:rotate-12">
+      <img src="/images/boxes/{{ imageByBoxType[box.type] }}" alt="{{ box.type }}" class="w-32 h-32 z-10 hover:scale-110 transition-all hover:rotate-12" pTooltip="Ver detalles" tooltipPosition="right">
     </div>
-    <div class="bg-gradient-to-b from-brawl-purple via-brawl-purple to-brawl-pink {{ box.favoriteBrawlersInBox > 0 ? '' : 'hidden' }} irregular_rectangle_shape text-xs text-brawl-white text-shadow text-border-sm absolute bottom-0 right-0 p-1 px-3 pt-1.5">
-      <span class="text-xl mr-0.5">{{box.favoriteBrawlersInBox}}</span>
-      {{ box.favoriteBrawlersInBox === 1 ? 'FAVORITO' : 'FAVORITOS' }}
+    <div class="bg-gradient-to-b from-brawl-purple via-brawl-purple to-brawl-pink {{ box.favorite_brawlers_in_box > 0 ? '' : 'hidden' }} irregular_rectangle_shape text-xs text-brawl-white text-shadow text-border-sm absolute bottom-0 right-0 p-1 px-3 pt-1.5">
+      <span class="text-xl mr-0.5">{{box.favorite_brawlers_in_box}}</span>
+      {{ box.favorite_brawlers_in_box === 1 ? 'FAVORITO' : 'FAVORITOS' }}
     </div>
   </div>
   <div (click)="addBoxToCart()" class="bg-gradient-to-r group cursor-pointer gradientAnimation-medium from-brawl-green via-brawl-white to-brawl-lime text-shadow text-border-sm rounded-b-lg text-2xl text-brawl-white flex justify-center items-center p-3 px-6" *ngIf="!box.claimed">

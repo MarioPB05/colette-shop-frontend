@@ -2,11 +2,14 @@ import {Component, EventEmitter, input, Input, OnInit, Output} from '@angular/co
 import {DailyBoxShopResponse} from '@models/box.model';
 import {interval, take} from 'rxjs';
 import {NgIf} from '@angular/common';
+import {Router} from '@angular/router';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-box-free-daily-buy-card',
   imports: [
-    NgIf
+    NgIf,
+    Tooltip
   ],
   templateUrl: './box-free-daily-buy-card.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss', "./../../../../../styles.scss"],
@@ -38,13 +41,15 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
     id: 1,
     name: 'Box name',
     type: 'Box type',
-    favoriteBrawlersInBox: 3,
-    repeatHours: 24,
+    favorite_brawlers_in_box: 3,
+    repeat_every_hours: 24,
     claimed: false
   };
 
   timeToNextBox: string = '0h 0m 0s';
   @Output() addToCart = new EventEmitter<DailyBoxShopResponse>();
+
+  constructor(private router: Router) {}
 
   ngOnInit() {
     this.calculateTimeToNextBox();
@@ -54,12 +59,16 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
     });
   }
 
+  goToBoxDetails() {
+    this.router.navigate([`/box/${this.box.id}`]);
+  }
+
   calculateTimeToNextBox() {
     const now = new Date();
 
     const midnight = new Date(now.setHours(0, 0, 0, 0));
 
-    const nextBoxTime = new Date(midnight.getTime() + this.box.repeatHours * 60 * 60 * 1000);
+    const nextBoxTime = new Date(midnight.getTime() + this.box.repeat_every_hours * 60 * 60 * 1000);
 
     let diff = nextBoxTime.getTime() - new Date().getTime(); // Diferencia entre medianoche y la fecha calculada
 
