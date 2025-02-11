@@ -47,6 +47,7 @@ export class BoxDetailPageComponent implements OnInit {
   allReviews: ReviewResponse[] = [];
   averageRating = 0;
   brawlersByRarity: {[key: string]: BrawlerProbabilityResponse[]} = {};
+  lastReviewIsHovered = false;
 
   constructor(private faviconService: FaviconService,
               private reviewService: ReviewService,
@@ -112,6 +113,12 @@ export class BoxDetailPageComponent implements OnInit {
       this.showReviews = this.allReviews.slice(0, this.showReviews.length + 3);
     }else {
       this.showReviews = this.allReviews;
+    }
+  }
+
+  onReviewHover(isLast: boolean, state: boolean) {
+    if (isLast) {
+      this.lastReviewIsHovered = state;
     }
   }
 }

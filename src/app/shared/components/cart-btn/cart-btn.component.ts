@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-cart-btn',
@@ -8,5 +8,6 @@ import {Component} from '@angular/core';
   styleUrl: '../../brawl_styles.scss'
 })
 export class CartBtnComponent {
+  @Input() transparent: boolean = false;
   itemsInCart: number = 0;
 }
