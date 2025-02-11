@@ -39,29 +39,29 @@
   </div>
 
   <div class="mt-10 rounded-md shadow-md">
-    <div class="text-xl font-bold border-b-2 rounded-t-md px-3 py-1 bg-gray-50">
+    <div class="text-xl border-b-2 rounded-t-md px-3 py-1 bg-gray-50">
       Datos personales
     </div>
     <div class="flex flex-wrap justify-around py-3">
       <div class="flex flex-col">
-        <span class="font-bold">Nombre:</span>
-        <span>{{ user.name }}</span>
+        <span class="text-sm text-gray-500">Nombre</span>
+        <span class="font-semibold text-gray-900 text-lg">{{ user.name }}</span>
       </div>
       <div class="flex flex-col">
-        <span class="font-bold">Apellidos:</span>
-        <span>{{ user.surname }}</span>
+        <span class="text-sm text-gray-500">Apellidos</span>
+        <span class="font-semibold text-gray-900 text-lg">{{ user.surname }}</span>
       </div>
       <div class="flex flex-col">
-        <span class="font-bold">Email:</span>
-        <span>{{ user.email }}</span>
+        <span class="text-sm text-gray-500">Email</span>
+        <span class="font-semibold text-gray-900 text-lg">{{ user.email }}</span>
       </div>
       <div class="flex flex-col">
-        <span class="font-bold">DNI:</span>
-        <span>{{ user.dni }}</span>
+        <span class="text-sm text-gray-500">DNI</span>
+        <span class="font-semibold text-gray-900 text-lg">{{ user.dni }}</span>
       </div>
       <div class="flex flex-col">
-        <span class="font-bold">Fecha de nacimiento:</span>
-        <span>{{ user.birthdate | date: 'dd/MM/yyyy' }}</span>
+        <span class="text-sm text-gray-500">Fecha de nacimiento</span>
+        <span class="font-semibold text-gray-900 text-lg">{{ user.birthdate | date: 'dd/MM/yyyy' }}</span>
       </div>
     </div>
   </div>
