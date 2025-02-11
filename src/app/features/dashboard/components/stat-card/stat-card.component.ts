@@ -1,16 +1,20 @@
 import {Component, HostBinding, HostListener, Input} from '@angular/core';
 import {Card} from 'primeng/card';
 import {NgClass} from '@angular/common';
+import {Tooltip} from 'primeng/tooltip';
 
 export interface StatCard {
   title: string;
-  principalValue: number;
-  secondaryValue: number;
+  principalValue: number; // el valor del mes actual
+  secondaryValue: number; // el valor del día actual
+  tertiaryValue: number; // el valor medio del mes actual
   icon: string;
+  tabIcon: string;
   color: string;
   colorHex: string;
   rawData: any;
   key: string;
+  keyChart: string;
   unit: string;
 }
 
@@ -18,7 +22,8 @@ export interface StatCard {
   selector: 'app-stat-card',
   imports: [
     Card,
-    NgClass
+    NgClass,
+    Tooltip
   ],
   templateUrl: './stat-card.component.html',
   styles: ``
@@ -26,4 +31,11 @@ export interface StatCard {
 export class StatCardComponent {
   @Input() statCard!: StatCard;
   @HostBinding('class') class = 'w-full';
+
+  getAverageIcon(): string {
+    return this.statCard.secondaryValue > this.statCard.tertiaryValue ? 'pi pi-sort-up-fill text-brawl-lime' : (this.statCard.secondaryValue < this.statCard.tertiaryValue ? 'pi pi-sort-down-fill text-brawl-red' : 'pi pi-sort text-brawl-gray');
+  }
+  getAverageTooltip(): string {
+    return this.statCard.secondaryValue > this.statCard.tertiaryValue ? 'Superior a la media mensual' : (this.statCard.secondaryValue < this.statCard.tertiaryValue ? 'Inferior a la media mensual' : 'Igual a la media mensual');
+  }
 }
