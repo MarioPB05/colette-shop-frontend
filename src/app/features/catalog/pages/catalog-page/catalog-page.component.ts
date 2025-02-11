@@ -138,7 +138,7 @@ export class CatalogPageComponent implements OnInit {
   }
 
   addBoxToCart(box: BoxShopResponse | DailyBoxShopResponse) {
-    if ('boxesLeft' in box && !this.checkIfThereAreBoxesLeft(box)) {
+    if ('boxes_left' in box && !this.checkIfThereAreBoxesLeft(box)) {
       return;
     }
 
@@ -153,7 +153,7 @@ export class CatalogPageComponent implements OnInit {
     setTimeout(() => {
       this.itemsInCart.push(box);
 
-      if ('boxesLeft' in box) {
+      if ('boxes_left' in box) {
         box.boxes_left -= 1;
       }else if ('claimed' in box) {
         box.claimed = true;
