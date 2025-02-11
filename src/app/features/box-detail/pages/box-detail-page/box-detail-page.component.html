@@ -2,7 +2,7 @@
 <div class="bg-brawl-sea-blue min-h-screen text-brawl-white brawl-font">
   <app-brawl-header></app-brawl-header>
 
-  <div class="grid lg:grid-cols-2 xs:p-10 p-5 gap-20">
+  <div class="grid lg:grid-cols-2 gap-20">
     <div class="grid lg:h-screen h-max lg:sticky py-5 top-0 flex-col items-center gap-12" style="grid-template-rows: auto minmax(0, 1fr) auto">
       <div class="text-shadow text-border-sm flex items-center mb-6 justify-center gap-8">
         <button class="p-1 bg-brawl-gold rounded-lg hover:bg-brawl-yellow" (click)="goHome()">
@@ -12,20 +12,24 @@
       </div>
 
       <div class="w-full p-5 sm:p-0 h-44 lg:h-full flex flex-1 justify-center items-center spotlight-blue">
-        <img src="/images/boxes/common-box.png" alt="common-box" class="w-full h-full object-contain max-w-64 max-h-64 hover:scale-110 transition-all hover:rotate-12">
+        <img src="{{ BoxTypeImages[box.type] }}" alt="{{ box.type }}" class="w-full h-full object-contain max-w-64 max-h-64 hover:scale-110 transition-all hover:rotate-12">
       </div>
 
       <div class="flex flex-col justify-center gap-5 text-shadow text-border-xs">
-        <h1 class="text-5xl text-border-sm font-bold text-center">
+        <h1 class="{{ box.name.length > 20 ? 'text-3xl' : 'text-5xl' }} text-border-sm font-bold text-center">
           {{ box.name }} <h2 class="text-lg text-border-xs text-brawl-gold">{{ box.price }} €</h2>
         </h1>
         <div class="text-center items-center text-xl flex flex-col gap-2 justify-center">
-          <span>
+          <span *ngIf="box.boxes_left != -1">
             Quedan <span class="text-brawl-green">{{ box.boxes_left }}</span> unidades
           </span>
 
+          <span *ngIf="box.boxes_left === -1">
+            Unidades ilimitadas
+          </span>
+
           <span>
-            Contiene <span class="text-brawl-green">{{ box.brawler_quantity }}</span> brawlers
+            Contiene <span class="text-brawl-green">{{ box.brawler_quantity }}</span> {{ box.brawler_quantity > 1 ? 'brawlers' : 'brawler' }}
           </span>
 
           <span>
@@ -38,9 +42,8 @@
 
     </div>
 
-
-    <div class="flex flex-col gap-5">
-      <h1 class="text-5xl font-bold text-shadow text-border-sm">Brawlers disponibles</h1>
+    <div class="flex flex-col gap-5 xs:p-10 p-5 pt-0 lg:pt-10 lg:ps-0">
+      <h1 class="text-4xl font-bold text-shadow text-border-sm">Brawlers disponibles</h1>
 
       <div class="flex flex-col gap-3">
         <div *ngFor="let rarity of rarities">
@@ -61,9 +64,10 @@
         <span *ngIf="brawlers.length === 0" class="text-2xl text-shadow text-border-sm text-brawl-yellow">No hay brawlers</span>
       </div>
 
-      <h1 class="text-5xl mt-10 font-bold text-shadow text-border-sm">Opiniones</h1>
+      <h1 class="text-4xl mt-10 font-bold text-shadow text-border-sm">Opiniones</h1>
       <div class="flex flex-col gap-5 mb-5">
-        <app-review *ngFor="let review of showReviews" [review]="review"></app-review>
+        <app-review *ngFor="let review of showReviews; let last = last" (mouseenter)="onReviewHover(last, true)"
+                    (mouseleave)="onReviewHover(last, false)" [review]="review"></app-review>
 
         <span *ngIf="showReviews.length === 0" class="text-2xl text-shadow text-border-sm text-brawl-yellow">No hay opiniones</span>
 
