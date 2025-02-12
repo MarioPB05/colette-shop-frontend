@@ -1,5 +1,5 @@
 
-<div class="bg-brawl-sea-blue min-h-screen text-brawl-white brawl-font">
+<div *ngIf="dataLoaded" class="bg-brawl-sea-blue min-h-screen text-brawl-white brawl-font">
   <app-brawl-header></app-brawl-header>
 
   <div class="grid lg:grid-cols-2 gap-20">
@@ -36,7 +36,9 @@
             <span class="text-brawl-green">{{ averageRating }}</span> calificación promedio
           </span>
 
-          <button class="brawl-button max-w-72 mt-5 text-2xl">Añadir al carrito</button>
+          <button class="brawl-button max-w-72 mt-5 text-2xl" (click)="addBoxToCart()" *ngIf="!(boxShopNotHaveStock() || boxDailyClaimed())">Añadir al carrito</button>
+          <span class="max-w-72 mt-5 text-2xl p-2 bg-brawl-dark-slate text-brawl-light-gray w-full rounded-lg" *ngIf="boxShopNotHaveStock()">AGOTADO</span>
+          <span class="max-w-72 mt-5 text-2xl p-2 bg-brawl-dark-slate text-brawl-light-gray w-full rounded-lg" *ngIf="boxDailyClaimed()">RECLAMADO</span>
         </div>
       </div>
 
