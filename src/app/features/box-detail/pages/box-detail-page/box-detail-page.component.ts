@@ -16,6 +16,7 @@ import {BrawlerService} from '@features/box-detail/services/brawler.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {BoxTypeImages} from '@core/enums/box.enum';
+import {CartService} from '@shared/services/cart.service';
 
 @Component({
   selector: 'app-box-detail-page',
@@ -43,12 +44,15 @@ export class BoxDetailPageComponent implements OnInit {
   lastReviewIsHovered = false;
   protected readonly BoxTypeImages = BoxTypeImages;
 
+  dataLoaded = false;
+
   constructor(private faviconService: FaviconService,
               private reviewService: ReviewService,
               private boxService: BoxService,
               private brawlerService: BrawlerService,
               private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
+              private cartService: CartService,
               private router: Router) {}
 
   ngOnInit() {
@@ -67,6 +71,7 @@ export class BoxDetailPageComponent implements OnInit {
       this.putBrawlersByRarity();
       this.averageRating = this.getAverageRating();
       this.showReviews = this.allReviews.slice(0, 3);
+      this.dataLoaded = true;
     }, error: (error) => {
       this.router.navigate(['/']).then(() => {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los datos de la caja'});
@@ -117,5 +122,21 @@ export class BoxDetailPageComponent implements OnInit {
     if (isLast) {
       this.lastReviewIsHovered = state;
     }
+  }
+
+  boxDailyClaimed() {
+    return this.box.is_daily && this.cartService.getCartItemQuantity(this.box.id) > 0;
+  }
+
+  boxShopNotHaveStock() {
+    return !this.box.is_daily && !(this.box.boxes_left > 0 || this.box.boxes_left === -1);
+  }
+
+  addBoxToCart() {
+    if (this.boxDailyClaimed() || this.boxShopNotHaveStock()) {
+      return;
+    }
+
+    this.cartService.addToCart(this.box.id);
   }
 }
