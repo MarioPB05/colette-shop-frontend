@@ -16,8 +16,26 @@ export class CartService {
     this.cart.update(cart => [...cart, item]);
   }
 
-  public removeFromCart(item: BoxShopResponse | DailyBoxShopResponse): void {
-    this.cart.update(cart => cart.filter(cartItem => cartItem.id !== item.id));
+  public removeAllFromCart(itemId: number): void {
+    this.cart.update(cart => cart.filter(cartItem => cartItem.id !== itemId));
+  }
+
+  public removeOneFromCart(itemId: number): void {
+    const cart = this.cart();
+    const itemIndex = cart.findIndex(cartItem => cartItem.id === itemId);
+    if (itemIndex !== -1) {
+      cart.splice(itemIndex, 1);
+      this.cart.update(() => cart);
+    }
+  }
+
+  public removeCustomFromCart(itemId: number, quantityRemoved: number): void {
+    const cart = this.cart();
+    let quantityRemovedCounter = 0;
+    while (quantityRemovedCounter < quantityRemoved) {
+      this.removeOneFromCart(itemId);
+      quantityRemovedCounter++;
+    }
   }
 
   public clearCart(): void {
