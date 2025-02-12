@@ -4,6 +4,7 @@ import {interval, take} from 'rxjs';
 import {NgIf} from '@angular/common';
 import {Router} from '@angular/router';
 import {Tooltip} from 'primeng/tooltip';
+import {CartService} from '@shared/services/cart.service';
 
 @Component({
   selector: 'app-box-free-daily-buy-card',
@@ -47,9 +48,8 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
   };
 
   timeToNextBox: string = '0h 0m 0s';
-  @Output() addToCart = new EventEmitter<DailyBoxShopResponse>();
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private cartService: CartService) {}
 
   ngOnInit() {
     this.calculateTimeToNextBox();
@@ -57,6 +57,15 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
     .subscribe(() => {
       this.calculateTimeToNextBox();
     });
+
+    const itemsInCart = this.cartService.getCartItemQuantity(this.box.id);
+
+    if (itemsInCart === 1) {
+      this.box.claimed = true;
+    }else if (itemsInCart > 1) {
+      this.box.claimed = true;
+      this.cartService.removeCustomFromCart(this.box.id, itemsInCart - 1);
+    }
   }
 
   goToBoxDetails() {
@@ -89,6 +98,9 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
   }
 
   addBoxToCart() {
-    this.addToCart.emit(this.box);
+    if (!this.box.claimed) {
+      this.box.claimed = true;
+      this.cartService.addToCart(this.box);
+    }
   }
 }
