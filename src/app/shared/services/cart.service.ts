@@ -1,4 +1,3 @@
-import {BoxShopResponse, DailyBoxShopResponse} from '@models/box.model';
 import {signal, WritableSignal} from '@angular/core';
 import {Injectable} from '@angular/core';
 
@@ -6,23 +5,23 @@ import {Injectable} from '@angular/core';
   providedIn: 'root'
 })
 export class CartService {
-  private cart: WritableSignal<(BoxShopResponse | DailyBoxShopResponse)[]> = signal([]);
+  private cart: WritableSignal<number[]> = signal([]);
 
-  public getCart(): (BoxShopResponse | DailyBoxShopResponse)[] {
+  public getCart(): number[] {
     return this.cart();
   }
 
-  public addToCart(item: BoxShopResponse | DailyBoxShopResponse): void {
-    this.cart.update(cart => [...cart, item]);
+  public addToCart(itemId: number): void {
+    this.cart.update(cart => [...cart, itemId]);
   }
 
   public removeAllFromCart(itemId: number): void {
-    this.cart.update(cart => cart.filter(cartItem => cartItem.id !== itemId));
+    this.cart.update(cart => cart.filter(cartItemId => cartItemId !== itemId));
   }
 
   public removeOneFromCart(itemId: number): void {
     const cart = this.cart();
-    const itemIndex = cart.findIndex(cartItem => cartItem.id === itemId);
+    const itemIndex = cart.findIndex(cartItemId => cartItemId === itemId);
     if (itemIndex !== -1) {
       cart.splice(itemIndex, 1);
       this.cart.update(() => cart);
@@ -30,7 +29,6 @@ export class CartService {
   }
 
   public removeCustomFromCart(itemId: number, quantityRemoved: number): void {
-    const cart = this.cart();
     let quantityRemovedCounter = 0;
     while (quantityRemovedCounter < quantityRemoved) {
       this.removeOneFromCart(itemId);
@@ -42,14 +40,8 @@ export class CartService {
     this.cart.update(() => []);
   }
 
-  public getTotalPrice(): number {
-    return this.cart().reduce((acc, item) => {
-      return 'price' in item ? acc + item.price : acc;
-    }, 0);
-  }
-
   public getCartItemQuantity(itemId: number): number {
-    return this.cart().filter(cartItem => cartItem.id === itemId).length;
+    return this.cart().filter(cartItemId => cartItemId === itemId).length;
   }
 
   public getCartItemsCount(): number {

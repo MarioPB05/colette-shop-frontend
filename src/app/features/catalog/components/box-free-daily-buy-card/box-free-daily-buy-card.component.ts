@@ -100,7 +100,7 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
   addBoxToCart() {
     if (!this.box.claimed) {
       this.box.claimed = true;
-      this.cartService.addToCart(this.box);
+      this.cartService.addToCart(this.box.id);
     }
   }
 }

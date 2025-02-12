@@ -47,7 +47,7 @@ export class BoxBuyCardComponent implements OnInit {
   addBoxToCart() {
     if (this.box.boxes_left != 0) {
       this.subtractBoxesLeft(1);
-      this.cartService.addToCart(this.box);
+      this.cartService.addToCart(this.box.id);
     }
   }
 
