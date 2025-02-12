@@ -32,6 +32,8 @@ export class BoxBuyCardComponent implements OnInit {
     "Omegacaja": "bg-[#ff1616]"
   }
 
+  protected readonly BoxTypeImages = BoxTypeImages;
+
   @Input() box!: BoxShopResponse;
 
   constructor(private router: Router, private cartService: CartService) {
@@ -39,22 +41,29 @@ export class BoxBuyCardComponent implements OnInit {
 
   ngOnInit() {
     const itemsInCart = this.cartService.getCartItemQuantity(this.box.id);
-
-    if (this.box.boxes_left != -1) {
-      this.box.boxes_left -= itemsInCart;
-    }
+    this.subtractBoxesLeft(itemsInCart);
   }
 
   addBoxToCart() {
     if (this.box.boxes_left != 0) {
-      this.box.boxes_left--;
+      this.subtractBoxesLeft(1);
       this.cartService.addToCart(this.box);
     }
+  }
+
+  subtractBoxesLeft(quantity: number) {
+    if (this.box.boxes_left === 0 || this.box.boxes_left === -1)
+      return;
+
+    if (this.box.boxes_left < quantity) {
+      this.box.boxes_left = 0;
+      return;
+    }
+
+    this.box.boxes_left -= quantity;
   }
 
   goToBoxDetails() {
     this.router.navigate([`/box/${this.box.id}`]);
   }
-
-  protected readonly BoxTypeImages = BoxTypeImages;
 }
