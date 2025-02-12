@@ -1,4 +1,4 @@
-import {Component, effect, ElementRef, Input, OnInit} from '@angular/core';
+import {Component, effect, ElementRef, Input} from '@angular/core';
 import {CartService} from '@shared/services/cart.service';
 
 @Component({
@@ -12,6 +12,8 @@ export class CartBtnComponent {
   @Input() transparent: boolean = false;
   @Input() animation: boolean = true;
   itemsInCart: number = 0;
+  componentLoaded: boolean = false;
+  animationActive: boolean = false;
 
   lastClickX: number = 0;
   lastClickY: number = 0;
@@ -23,15 +25,32 @@ export class CartBtnComponent {
     });
 
     effect(() => {
-      if (this.cartService.getCartItemsCount() > this.itemsInCart && this.animation) {
+      if (!this.componentLoaded) {
+        this.itemsInCart = this.cartService.getCartItemsCount();
+        this.componentLoaded = true;
+        return;
+      }
+
+      if (this.canDoAnimation()) {
         setTimeout(() => this.addToCartAnimation(), 1);
+      }
+
+      if (!this.canDoAnimation()) {
+        this.itemsInCart = this.cartService.getCartItemsCount();
+        return;
       }
 
       setTimeout(() => this.itemsInCart = this.cartService.getCartItemsCount(), 900);
     });
   }
 
+  canDoAnimation(): boolean {
+    return this.animation && !this.animationActive && this.itemsInCart < this.cartService.getCartItemsCount();
+  }
+
   addToCartAnimation() {
+    this.animationActive = true;
+
     // Obtener la imagen de plantilla
     const template = this.elementRef.nativeElement.querySelector('#add-to-cart-animation-template');
 
@@ -64,6 +83,9 @@ export class CartBtnComponent {
     }
 
     // Eliminar la imagen después de la animación
-    clone.addEventListener('animationend', () => clone.remove());
+    clone.addEventListener('animationend', () => {
+      clone.remove();
+      this.animationActive = false;
+    });
   }
 }
