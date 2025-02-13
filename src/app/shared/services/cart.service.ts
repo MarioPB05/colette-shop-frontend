@@ -47,4 +47,12 @@ export class CartService {
   public getCartItemsCount(): number {
     return this.cart().length;
   }
+
+  public getCartItemDictionary(): { [itemId: number]: number } {
+    const cart = this.cart();
+    return cart.reduce((acc: { [itemId: number]: number }, itemId) => {
+      acc[itemId] = acc[itemId] ? acc[itemId] + 1 : 1;
+      return acc;
+    }, {});
+  }
 }
