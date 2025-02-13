@@ -71,12 +71,22 @@ export class BoxDetailPageComponent implements OnInit {
       this.putBrawlersByRarity();
       this.averageRating = this.getAverageRating();
       this.showReviews = this.allReviews.slice(0, 3);
+      this.syncWithCart();
       this.dataLoaded = true;
     }, error: (error) => {
       this.router.navigate(['/']).then(() => {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los datos de la caja'});
       });
     }});
+  }
+
+  boxHasInfinityStock() {
+    return this.box.boxes_left === -1;
+  }
+
+  syncWithCart() {
+    if (!this.boxHasInfinityStock() && !this.box.is_daily)
+      this.box.boxes_left = this.box.boxes_left - this.cartService.getCartItemQuantity(this.box.id);
   }
 
   goHome() {
