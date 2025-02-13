@@ -53,6 +53,11 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
 
     const itemsInCart = this.cartService.getCartItemQuantity(this.box.id);
 
+    // Solo se puede tener una caja gratis cada cierto tiempo
+    if (this.box.claimed && itemsInCart > 0) {
+      this.cartService.removeAllFromCart(this.box.id);
+    }
+
     if (itemsInCart === 1) {
       this.box.claimed = true;
     }else if (itemsInCart > 1) {
@@ -66,14 +71,15 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
   }
 
   calculateTimeToNextBox() {
-    const now = new Date();
+    if (!this.box.last_claimed) {
+      this.timeToNextBox = 'Disponible';
+      return;
+    }
 
-    const midnight = new Date(now.setHours(0, 0, 0, 0));
+    const lastClaimed = new Date(this.box.last_claimed);
+    const nextBoxDate = new Date(lastClaimed.getTime() + this.box.repeat_every_hours * 60 * 60 * 1000);
 
-    const nextBoxTime = new Date(midnight.getTime() + this.box.repeat_every_hours * 60 * 60 * 1000);
-
-    let diff = nextBoxTime.getTime() - new Date().getTime(); // Diferencia entre medianoche y la fecha calculada
-
+    let diff = nextBoxDate.getTime() - new Date().getTime();
     diff = diff / 1000;
 
     const hours = Math.floor(diff / 3600);
