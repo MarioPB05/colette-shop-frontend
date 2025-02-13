@@ -135,11 +135,11 @@ export class BoxDetailPageComponent implements OnInit {
   }
 
   boxDailyClaimed() {
-    return this.box.is_daily && this.cartService.getCartItemQuantity(this.box.id) > 0;
+    return this.box.is_daily && (this.box.claimed || this.cartService.getCartItemQuantity(this.box.id) > 0);
   }
 
   boxShopNotHaveStock() {
-    return !this.box.is_daily && !(this.box.boxes_left > 0 || this.box.boxes_left === -1);
+    return !this.box.is_daily && !(this.box.boxes_left > 0 || this.boxHasInfinityStock());
   }
 
   addBoxToCart() {
@@ -148,5 +148,8 @@ export class BoxDetailPageComponent implements OnInit {
     }
 
     this.cartService.addToCart(this.box.id);
+
+    if (!this.box.is_daily && !this.boxHasInfinityStock())
+      this.box.boxes_left--;
   }
 }
