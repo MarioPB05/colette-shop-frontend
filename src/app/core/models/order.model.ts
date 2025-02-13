@@ -1,4 +1,5 @@
 export interface TableOrderResponse {
+  id: number;
   invoice_number: string;
   purchase_date: string;
   state: string;
@@ -7,4 +8,35 @@ export interface TableOrderResponse {
   discount: number;
   total_price: number;
   total_with_discount: number;
+}
+
+export interface InventoryOrderDetailsResponse {
+  id: number;
+  price: number;
+  collectDate: string;
+  boxName: string;
+  boxType: string;
+  quantity: number;
+  totalPrice: number;
+}
+
+export interface OrderParticipantResponse {
+  id: number;
+  username: string;
+  name: string;
+  surname: string;
+  dni: string;
+}
+
+export interface OrderDetailsResponse {
+  from: OrderParticipantResponse;
+  to: OrderParticipantResponse;
+  subTotal: number;
+  total: number;
+  discount: number;
+  gems: number;
+  invoiceNumber: string;
+  purchaseDate: string;
+  state: string;
+  inventory: InventoryOrderDetailsResponse[];
 }
