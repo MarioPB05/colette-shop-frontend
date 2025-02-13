@@ -1,0 +1,64 @@
+<div *ngIf="!loadingData">
+  <h1 class="text-2xl font-bold pb-2">Detalles del pedido</h1>
+  <span class="text-gray-500">Pedido #{{ orderDetails.invoiceNumber }}</span>
+
+  <div class="mt-4 grid grid-cols-[1fr_auto] gap-4">
+    <p-table #dt2
+             [value]="orderDetailsItems"
+             dataKey="id"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>
+            Caja
+          </th>
+          <th>
+            Cantidad
+          </th>
+          <th>
+            Precio por unidad
+          </th>
+          <th>
+            Precio total
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-order>
+        <tr [pContextMenuRow]="orderDetailsItems">
+          <td>
+            <div class="flex align-middle gap-2">
+              <img [src]="BoxTypeImages[order.boxType]" alt="user_image" width="50" class="mr-2">
+              <div class="flex flex-col">
+                <span class="font-bold">{{ order.boxName }}</span>
+                <span class="mr-2"> {{ order.boxType }}</span>
+              </div>
+            </div>
+          </td>
+          <td>{{ order.quantity }}</td>
+          <td>{{ order.price }}</td>
+          <td>{{ order.totalPrice }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <tr>
+          <td colspan="3" style="text-align: right !important;">Subtotal:</td>
+          <td>{{ subtotal(orderDetails.total) }} €</td>
+        </tr>
+        <tr>
+          <td colspan="3" style="text-align: right !important;">IVA:</td>
+          <td>{{ iva(orderDetails.total) }} €</td>
+        </tr>
+        <tr class="">
+          <td colspan="3" style="text-align: right !important;">Total:</td>
+          <td class="font-bold">{{ orderDetails.total }} €</td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="5">No hay pedidos.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
