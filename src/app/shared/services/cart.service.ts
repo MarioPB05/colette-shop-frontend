@@ -1,11 +1,45 @@
-import {signal, WritableSignal} from '@angular/core';
+import {effect, signal, WritableSignal} from '@angular/core';
 import {Injectable} from '@angular/core';
+import {LocalStorageService} from '@shared/services/local-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
   private cart: WritableSignal<number[]> = signal([]);
+
+  constructor(private localStorageService: LocalStorageService) {
+    const cart = this.localStorageService.getItem<number[]>('cart');
+
+    if (cart && this.cartCanBeGetInLocalStorage()) {
+      this.cart.update(() => cart);
+    }else {
+      this.localStorageService.removeItem('cart');
+      this.localStorageService.removeItem('cartUpdateDate');
+    }
+
+    effect(() => {
+      this.localStorageService.setItem('cart', this.cart());
+      this.localStorageService.setItem('cartUpdateDate', new Date());
+    });
+  }
+
+  public cartCanBeGetInLocalStorage(): boolean {
+    const cart = this.localStorageService.getItem<number[]>('cart');
+    let cartUpdateDate = this.localStorageService.getItem<Date>('cartUpdateDate');
+
+    if (!cart || !cartUpdateDate) {
+      return false;
+    }
+
+    // Limpiar el carrito si han pasado más de X horas desde la última actualización
+    cartUpdateDate = new Date(cartUpdateDate);
+    const currDate = new Date();
+    const hoursToCleanCart = 48;
+    const hoursDiff = Math.abs(currDate.getTime() - cartUpdateDate.getTime()) / 36e5;
+
+    return hoursDiff < hoursToCleanCart;
+  }
 
   public getCart(): number[] {
     return this.cart();
