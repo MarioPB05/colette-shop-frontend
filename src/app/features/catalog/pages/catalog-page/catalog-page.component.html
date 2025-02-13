@@ -40,7 +40,7 @@
   </div>
 
   <div class="relative h-full flex-1">
-    <div class="moving-skulls-background"></div>
+    <div class="moving-background skull-moving-background"></div>
 
     <div class="sm:p-10 p-2 pt-10 gap-10 grid justify-items-center grid-cols-[repeat(auto-fill,minmax(260px,1fr))]" *ngIf="boxesLoaded && (boxList.length > 0 || freeDailyBoxList.length > 0)">
       <app-box-free-daily-buy-card *ngFor="let item of freeDailyBoxList" [box]="item"></app-box-free-daily-buy-card>
