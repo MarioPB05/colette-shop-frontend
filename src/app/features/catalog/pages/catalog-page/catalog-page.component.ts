@@ -15,19 +15,17 @@ import {
 import {MessageService} from 'primeng/api';
 import {CartBtnComponent} from '@shared/components/cart-btn/cart-btn.component';
 import {BoxTypes} from '@core/enums/box.enum';
+import {GemsIndicatorComponent} from '@shared/components/gems-indicator/gems-indicator.component';
 
 @Component({
   selector: 'app-shop-page',
-  imports: [BrawlHeaderComponent, Slider, FormsModule, InputNumberModule, BoxBuyCardComponent, NgForOf, NgIf, Tooltip, BoxFreeDailyBuyCardComponent, CartBtnComponent],
+  imports: [BrawlHeaderComponent, Slider, FormsModule, InputNumberModule, BoxBuyCardComponent, NgForOf, NgIf, BoxFreeDailyBuyCardComponent, CartBtnComponent, GemsIndicatorComponent],
   templateUrl: './catalog-page.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss'],
   standalone: true
 })
 export class CatalogPageComponent implements OnInit {
   filteredBoxTypes: string[] = ['Todos', ...BoxTypes];
-
-  itemsInCart: (BoxShopResponse | DailyBoxShopResponse)[] = [];
-  gems: number = 0;
 
   rangeValues: number[] = [0, 50];
   onlyFavorites: boolean = false;
@@ -57,26 +55,12 @@ export class CatalogPageComponent implements OnInit {
         this.freeDailyBoxList = this.allDailyFreeBoxes;
         this.boxList = this.boxList.sort((a, b) => a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1);
         this.filterBoxes();
-        this.syncBoxesLeftWithCart();
         this.boxesLoaded = true;
       }, error: (error) => {
         this.boxesLoaded = true;
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las cajas'});
       }
     });
-  }
-
-  syncBoxesLeftWithCart() {
-    const itemsInCartIds = this.itemsInCart.map((item) => item.id);
-    this.allBoxes.forEach((box) => {
-      box.boxes_left -= itemsInCartIds.filter((id) => id === box.id).length;
-    });
-    this.boxList = [...this.allBoxes];
-
-    this.allDailyFreeBoxes.forEach((box) => {
-      box.claimed = itemsInCartIds.includes(box.id);
-    });
-    this.freeDailyBoxList = [...this.allDailyFreeBoxes];
   }
 
   filterBoxes() {
