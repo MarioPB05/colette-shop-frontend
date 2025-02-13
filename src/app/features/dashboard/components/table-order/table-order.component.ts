@@ -1,8 +1,8 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, ViewChild} from '@angular/core';
 import {IconField} from "primeng/iconfield";
 import {InputIcon} from "primeng/inputicon";
 import {InputText} from "primeng/inputtext";
-import {MenuItem, MenuItemCommandEvent, MessageService, PrimeTemplate} from "primeng/api";
+import {MenuItem, MessageService, PrimeTemplate} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {DatePipe, NgClass} from '@angular/common';
 import {TableOrderResponse} from '@core/models/order.model';
@@ -11,7 +11,7 @@ import {Tooltip} from 'primeng/tooltip';
 import {ContextMenu} from 'primeng/contextmenu';
 import {Menu} from 'primeng/menu';
 import {Button} from 'primeng/button';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-table-order',
@@ -40,6 +40,9 @@ export class TableOrderComponent implements OnInit {
 
   private orderService = inject(OrderService);
   private messageService: MessageService = inject(MessageService);
+  private router = inject(Router);
+
+  @ViewChild('menu') menu!: Menu;
 
   items!: MenuItem[];
 
@@ -61,16 +64,6 @@ export class TableOrderComponent implements OnInit {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo cargar los pedidos'});
      }
     });
-
-    this.items = [
-      { label: 'Ver detalles', icon: 'pi pi-fw pi-search', command(event: MenuItemCommandEvent) {
-          console.log(event.item);
-        }
-      },
-      { label: 'Deshabilitar', icon: 'pi pi-fw pi-times', command(event: MenuItemCommandEvent) {
-          console.log(event.item);
-        }}
-    ]
 
   }
 
@@ -97,6 +90,19 @@ export class TableOrderComponent implements OnInit {
 
   numberFormat(value: number): string {
     return new Intl.NumberFormat('es-ES', {style: 'currency', currency: 'EUR'}).format(value);
+  }
+
+  openActionsMenu(event: Event, order: TableOrderResponse): void {
+    this.menu.toggle(event);
+    this.selectedOrder = order;
+
+    this.items = [
+      {
+        label: 'Ver detalles',
+        icon: 'pi pi-fw pi-search',
+        command: () => this.router.navigate([`/dashboard/orders/${order.id}`])
+      }
+    ];
   }
 
 }
