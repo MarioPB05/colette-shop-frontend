@@ -294,3 +294,40 @@
     background-position: 0% 50%;
   }
 }
+
+/*------------------- Animacion de entrada de la caja -------------------*/
+
+.open-box-animation {
+  animation: boxEntrance 0.7s ease-in-out forwards, beatIdle 5s ease-in-out infinite;
+  transform: translateY(-300%) scaleY(1);
+  animation-delay: 0.5s, 4s;
+  animation-play-state: running;
+}
+
+.open-box-animation:hover {
+  animation-play-state: paused;
+}
+
+@keyframes beatIdle {
+  40% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.05;
+  }
+  60% {
+    scale: 1;
+  }
+}
+
+@keyframes boxEntrance {
+  0% {
+    transform: translateY(-150%) scaleY(1);
+  }
+  70% {
+    transform: translateY(10%) scaleY(0.9);
+  }
+  100% {
+    transform: translateY(0%) scaleY(1);
+  }
+}
