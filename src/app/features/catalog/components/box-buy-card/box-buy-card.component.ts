@@ -51,9 +51,12 @@ export class BoxBuyCardComponent implements OnInit {
     }
   }
 
+  boxHasInfinityStock() {
+    return this.box.boxes_left === -1;
+  }
+
   subtractBoxesLeft(quantity: number) {
-    if (this.box.boxes_left === 0 || this.box.boxes_left === -1)
-      return;
+    if (this.box.boxes_left === 0 || this.boxHasInfinityStock()) return;
 
     if (this.box.boxes_left < quantity) {
       this.box.boxes_left = 0;
