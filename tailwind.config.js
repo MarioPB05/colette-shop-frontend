@@ -27,6 +27,7 @@ module.exports = {
           'purple': '#9908EA',     // bg-purple-500
           'pink': '#FB09C7',       // bg-pink-
           'red': '#FE0000',        // bg-red-600
+          'dark-red': '#610000', // bg-red-700
           'orange': '#EF900A', // bg-orange-600
           'gold': '#F9CC01',     // bg-orange-500
           'yellow': '#FAEF29',     // bg-yellow-500
