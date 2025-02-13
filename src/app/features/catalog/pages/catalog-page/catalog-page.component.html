@@ -17,15 +17,7 @@
       </span>
     </div>
 
-    <div class="absolute flex right-0 rounded-e-full top-0 m-5 text-brawl-white bg-brawl-black rounded">
-      <div class="relative p-1 ps-7 pe-4  text-lg ">
-        <span>{{ gems }}</span>
-        <img src="/images/icons/brawl-gem-icon.png" class="w-8 h-8 absolute -left-4 top-1/2 -translate-y-1/2" alt="Gemas">
-      </div>
-      <div class="brawl-button text-xl" tooltipPosition="bottom" pTooltip="Las gemas sirven para descontar dinero en tus proximas compras, se pueden conseguir comprando cajas">
-        ?
-      </div>
-    </div>
+    <app-gems-indicator class="absolute right-1 top-0 m-5"/>
   </div>
 
   <div class="bg-brawl-blue p-8 justify-center flex flex-wrap border-b-2 border-brawl-navy items-center px-16 lg:justify-between gap-x-5 gap-y-10 md:gap-y-5">
@@ -50,12 +42,12 @@
   <div class="relative h-full flex-1">
     <div class="moving-skulls-background"></div>
 
-    <div class="sm:p-10 p-2 pt-10 gap-10 grid justify-items-center grid-cols-[repeat(auto-fill,minmax(260px,1fr))]" *ngIf="boxesLoaded && boxList.length > 0">
-      <app-box-free-daily-buy-card *ngFor="let item of freeDailyBoxList" [box]="item" (addToCart)="addBoxToCart($event)"></app-box-free-daily-buy-card>
-      <app-box-buy-card *ngFor="let item of boxList" [box]="item" (addToCart)="addBoxToCart($event)"></app-box-buy-card>
+    <div class="sm:p-10 p-2 pt-10 gap-10 grid justify-items-center grid-cols-[repeat(auto-fill,minmax(260px,1fr))]" *ngIf="boxesLoaded && (boxList.length > 0 || freeDailyBoxList.length > 0)">
+      <app-box-free-daily-buy-card *ngFor="let item of freeDailyBoxList" [box]="item"></app-box-free-daily-buy-card>
+      <app-box-buy-card *ngFor="let item of boxList" [box]="item"></app-box-buy-card>
     </div>
 
-    <div class="text-brawl-white text-center text-2xl sm:p-10 p-2 pt-10" *ngIf="boxList.length === 0 && allBoxes.length > 0">
+    <div class="text-brawl-white text-center text-2xl sm:p-10 p-2 pt-10" *ngIf="boxList.length === 0 && freeDailyBoxList.length === 0 && allBoxes.length > 0">
       No hay cajas que cumplan con los filtros seleccionados
     </div>
 
@@ -63,7 +55,7 @@
       Cargando cajas...
     </div>
 
-    <div class="text-brawl-white text-center text-2xl sm:p-10 p-2 pt-10" *ngIf="allBoxes.length === 0 && boxesLoaded">
+    <div class="text-brawl-white text-center text-2xl sm:p-10 p-2 pt-10" *ngIf="allBoxes.length === 0 && allDailyFreeBoxes.length === 0 && boxesLoaded">
       No hay cajas disponibles
     </div>
   </div>
@@ -71,5 +63,3 @@
 </div>
 
 <app-cart-btn/>
-
-<img src="/images/icons/box-icon.png" class="add-to-cart-animation h-12" id="add-to-cart-animation-template" alt="Caja añadida al carrito" style="display: none">

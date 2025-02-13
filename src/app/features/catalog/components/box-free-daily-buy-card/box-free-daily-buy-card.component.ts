@@ -4,6 +4,7 @@ import {interval, take} from 'rxjs';
 import {NgIf} from '@angular/common';
 import {Router} from '@angular/router';
 import {Tooltip} from 'primeng/tooltip';
+import {CartService} from '@shared/services/cart.service';
 
 @Component({
   selector: 'app-box-free-daily-buy-card',
@@ -37,19 +38,11 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
     "Omegacaja": "omegabox.png"
   }
 
-  @Input() box : DailyBoxShopResponse = {
-    id: 1,
-    name: 'Box name',
-    type: 'Box type',
-    favorite_brawlers_in_box: 3,
-    repeat_every_hours: 24,
-    claimed: false
-  };
+  @Input() box!: DailyBoxShopResponse;
 
   timeToNextBox: string = '0h 0m 0s';
-  @Output() addToCart = new EventEmitter<DailyBoxShopResponse>();
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private cartService: CartService) {}
 
   ngOnInit() {
     this.calculateTimeToNextBox();
@@ -57,6 +50,20 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
     .subscribe(() => {
       this.calculateTimeToNextBox();
     });
+
+    const itemsInCart = this.cartService.getCartItemQuantity(this.box.id);
+
+    // Solo se puede tener una caja gratis cada cierto tiempo
+    if (this.box.claimed && itemsInCart > 0) {
+      this.cartService.removeAllFromCart(this.box.id);
+    }
+
+    if (itemsInCart === 1) {
+      this.box.claimed = true;
+    }else if (itemsInCart > 1) {
+      this.box.claimed = true;
+      this.cartService.removeCustomFromCart(this.box.id, itemsInCart - 1);
+    }
   }
 
   goToBoxDetails() {
@@ -64,14 +71,15 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
   }
 
   calculateTimeToNextBox() {
-    const now = new Date();
+    if (!this.box.last_claimed) {
+      this.timeToNextBox = 'Disponible';
+      return;
+    }
 
-    const midnight = new Date(now.setHours(0, 0, 0, 0));
+    const lastClaimed = new Date(this.box.last_claimed);
+    const nextBoxDate = new Date(lastClaimed.getTime() + this.box.repeat_every_hours * 60 * 60 * 1000);
 
-    const nextBoxTime = new Date(midnight.getTime() + this.box.repeat_every_hours * 60 * 60 * 1000);
-
-    let diff = nextBoxTime.getTime() - new Date().getTime(); // Diferencia entre medianoche y la fecha calculada
-
+    let diff = nextBoxDate.getTime() - new Date().getTime();
     diff = diff / 1000;
 
     const hours = Math.floor(diff / 3600);
@@ -89,6 +97,9 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
   }
 
   addBoxToCart() {
-    this.addToCart.emit(this.box);
+    if (!this.box.claimed) {
+      this.box.claimed = true;
+      this.cartService.addToCart(this.box.id);
+    }
   }
 }

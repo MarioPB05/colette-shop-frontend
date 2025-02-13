@@ -17,6 +17,7 @@ export interface DailyBoxShopResponse {
   favorite_brawlers_in_box: number;
   repeat_every_hours: number;
   claimed: boolean;
+  last_claimed: string;
 }
 
 export interface TableBoxResponse {
@@ -36,4 +37,5 @@ export interface BoxDetailResponse {
   boxes_left: number;
   brawler_quantity: number;
   is_daily: boolean;
+  claimed: boolean;
 }

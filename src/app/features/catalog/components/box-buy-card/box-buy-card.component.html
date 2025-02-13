@@ -1,7 +1,7 @@
 <div class="z-10 relative w-64 brawl-font h-full flex flex-col rounded-lg border-gray-800 border-2">
   <span class="bg-brawl-black {{ box.boxes_left < 5 && box.boxes_left != -1 ? 'text-red-500' : 'text-brawl-light-gray'}} text-xs text-center relative p-0.5 ">
     <i class="pi pi-thumbtack  absolute text-brawl-light-gray left-1 {{ !box.pinned ? 'hidden' : '' }}"  style="font-size: 0.8rem"></i>
-    {{ box.boxes_left === 1 ? 'Queda' : 'Quedan' }} {{ box.boxes_left == -1 ? 'infinitas' : box.boxes_left }} {{ box.boxes_left === 1 ? 'unidad' : 'unidades' }}
+    {{ box.boxes_left === 1 ? 'Queda' : (box.boxes_left !== -1  ? 'Quedan' : '') }} {{ box.boxes_left == -1 ? 'Infinitas' : box.boxes_left }} {{ box.boxes_left === 1 ? 'unidad' : 'unidades' }}
   </span>
   <div class="grid h-full relative grid-rows-[auto_1fr] min-h-64 cursor-pointer" (click)="goToBoxDetails()">
     <span class="{{ headerByBoxType[box.type] }} border-b border-brawl-dark-slate {{ box.name.length > 30 ? 'text-md' : 'text-xl' }} p-2 text-brawl-white text-center text-shadow text-border-sm">
@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="bg-brawl-dark-slate text-brawl-white flex justify-center items-center p-3 px-6" *ngIf="box.price > 0 || box.boxes_left === 0">
-    <button class="brawl-button group hover:text-base hover:p-2 text-2xl" (click)="addBoxToCart()" *ngIf="(box.boxes_left > 0 || box.boxes_left == -1) && box.price > 0">
+    <button class="brawl-button p-1 px-3 w-full group hover:text-base hover:p-2 text-2xl" (click)="addBoxToCart()" *ngIf="(box.boxes_left > 0 || box.boxes_left == -1) && box.price > 0">
       <span class="group-hover:hidden">€{{ box.price.toLocaleString("es-ES") }}</span>
       <span class="group-hover:block hidden">AÑADIR AL CARRITO</span>
     </button>

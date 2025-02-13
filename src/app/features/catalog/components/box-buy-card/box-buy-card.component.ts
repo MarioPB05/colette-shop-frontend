@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {BoxShopResponse} from '@models/box.model';
 import {NgIf} from '@angular/common';
 import {BoxTypeImages} from '@core/enums/box.enum';
 import {Router} from '@angular/router';
 import {Tooltip} from 'primeng/tooltip';
+import {CartService} from '@shared/services/cart.service';
 
 @Component({
   selector: 'app-box-buy-card',
@@ -16,7 +17,7 @@ import {Tooltip} from 'primeng/tooltip';
   standalone: true
 })
 
-export class BoxBuyCardComponent {
+export class BoxBuyCardComponent implements OnInit {
   gradientByBoxType : {[key: string]: string} = {
     "Caja": "from-[#3DE2FB] to-[#1375FF]",
     "Caja grande": "from-[#fbb9ff] to-[#f230ff]",
@@ -31,31 +32,41 @@ export class BoxBuyCardComponent {
     "Omegacaja": "bg-[#ff1616]"
   }
 
-  @Input() box : BoxShopResponse = {
-    id: 1,
-    name: 'Box name',
-    price: 100,
-    type: 'Box type',
-    boxes_left: 4,
-    favorite_brawlers_in_box: 3,
-    pinned: true,
-    popular: true
-  };
+  protected readonly BoxTypeImages = BoxTypeImages;
 
-  @Output() addToCart = new EventEmitter<BoxShopResponse>();
+  @Input() box!: BoxShopResponse;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private cartService: CartService) {
+  }
+
+  ngOnInit() {
+    const itemsInCart = this.cartService.getCartItemQuantity(this.box.id);
+    this.subtractBoxesLeft(itemsInCart);
   }
 
   addBoxToCart() {
     if (this.box.boxes_left != 0) {
-      this.addToCart.emit(this.box);
+      this.subtractBoxesLeft(1);
+      this.cartService.addToCart(this.box.id);
     }
+  }
+
+  boxHasInfinityStock() {
+    return this.box.boxes_left === -1;
+  }
+
+  subtractBoxesLeft(quantity: number) {
+    if (this.box.boxes_left === 0 || this.boxHasInfinityStock()) return;
+
+    if (this.box.boxes_left < quantity) {
+      this.box.boxes_left = 0;
+      return;
+    }
+
+    this.box.boxes_left -= quantity;
   }
 
   goToBoxDetails() {
     this.router.navigate([`/box/${this.box.id}`]);
   }
-
-  protected readonly BoxTypeImages = BoxTypeImages;
 }
