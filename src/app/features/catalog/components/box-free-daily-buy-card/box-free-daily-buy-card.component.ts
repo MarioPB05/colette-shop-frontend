@@ -38,14 +38,7 @@ export class BoxFreeDailyBuyCardComponent implements OnInit {
     "Omegacaja": "omegabox.png"
   }
 
-  @Input() box : DailyBoxShopResponse = {
-    id: 1,
-    name: 'Box name',
-    type: 'Box type',
-    favorite_brawlers_in_box: 3,
-    repeat_every_hours: 24,
-    claimed: false
-  };
+  @Input() box!: DailyBoxShopResponse;
 
   timeToNextBox: string = '0h 0m 0s';
 
