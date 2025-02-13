@@ -5,7 +5,7 @@
   <div class="grid lg:grid-cols-2 gap-20">
     <div class="grid lg:h-screen h-max lg:sticky py-5 top-0 flex-col items-center gap-12" style="grid-template-rows: auto minmax(0, 1fr) auto">
       <div class="text-shadow text-border-sm flex items-center mb-6 justify-center gap-8">
-        <button class="p-1 bg-brawl-gold rounded-lg hover:bg-brawl-yellow" (click)="goHome()">
+        <button class="p-1 brawl-button" (click)="goHome()">
           <img src="/images/icons/left-arrow.png" alt="left-arrow" class="w-8 h-8">
         </button>
         <h1 class="text-2xl font-bold">DETALLES DE LA CAJA</h1>
@@ -36,7 +36,7 @@
             <span class="text-brawl-green">{{ averageRating }}</span> calificación promedio
           </span>
 
-          <button class="brawl-button max-w-72 mt-5 text-2xl" (click)="addBoxToCart()" *ngIf="!(boxShopNotHaveStock() || boxDailyClaimed())">Añadir al carrito</button>
+          <button class="brawl-button p-1 px-3 w-full max-w-72 mt-5 text-2xl" (click)="addBoxToCart()" *ngIf="!(boxShopNotHaveStock() || boxDailyClaimed())">Añadir al carrito</button>
           <span class="max-w-72 mt-5 text-2xl p-2 bg-brawl-dark-slate text-brawl-light-gray w-full rounded-lg" *ngIf="boxShopNotHaveStock()">AGOTADO</span>
           <span class="max-w-72 mt-5 text-2xl p-2 bg-brawl-dark-slate text-brawl-light-gray w-full rounded-lg" *ngIf="boxDailyClaimed()">RECLAMADO</span>
         </div>

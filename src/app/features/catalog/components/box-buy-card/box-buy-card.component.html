@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="bg-brawl-dark-slate text-brawl-white flex justify-center items-center p-3 px-6" *ngIf="box.price > 0 || box.boxes_left === 0">
-    <button class="brawl-button group hover:text-base hover:p-2 text-2xl" (click)="addBoxToCart()" *ngIf="(box.boxes_left > 0 || box.boxes_left == -1) && box.price > 0">
+    <button class="brawl-button p-1 px-3 w-full group hover:text-base hover:p-2 text-2xl" (click)="addBoxToCart()" *ngIf="(box.boxes_left > 0 || box.boxes_left == -1) && box.price > 0">
       <span class="group-hover:hidden">€{{ box.price.toLocaleString("es-ES") }}</span>
       <span class="group-hover:block hidden">AÑADIR AL CARRITO</span>
     </button>
