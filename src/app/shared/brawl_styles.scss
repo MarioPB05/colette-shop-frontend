@@ -302,10 +302,12 @@
   transform: translateY(-300%) scaleY(1);
   animation-delay: 0.5s, 4s;
   animation-play-state: running;
+  transition: filter 0.3s;
 }
 
 .open-box-animation:hover {
   animation-play-state: paused;
+  filter: brightness(1.2);
 }
 
 @keyframes beatIdle {
