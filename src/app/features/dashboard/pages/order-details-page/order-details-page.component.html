@@ -1,64 +1,85 @@
-<div *ngIf="!loadingData">
-  <h1 class="text-2xl font-bold pb-2">Detalles del pedido</h1>
-  <span class="text-gray-500">Pedido #{{ orderDetails.invoiceNumber }}</span>
+<div *ngIf="!loadingData" class="p-5 pb-0">
+  <h1 class="text-2xl font-bold pb-5">Detalles del pedido</h1>
+  <div class="flex flex-wrap justify-start gap-10">
+    <div class="border-l-2 border-gray-200 pl-3 flex flex-col gap-2">
+      <span class="text-gray-500">Nº de factura: <strong>#{{ orderDetails.invoiceNumber }}</strong></span>
+      <span class="text-gray-500">Fecha: <strong>{{ orderDetails.purchaseDate | date: 'dd/MM/yyyy' }}</strong></span>
+      <span class="text-gray-500">Estado: <strong>{{ orderDetails.state }}</strong></span>
+    </div>
+    <div class="border-l-2 border-gray-200 pl-3 flex flex-col gap-2">
+      <span class="text-gray-500">Usuario: <strong>{{ orderDetails.from.username }}</strong></span>
+      <span class="text-gray-500">Nombre: <strong>{{ orderDetails.from.name }} {{ orderDetails.from.surname }}</strong></span>
+      <span class="text-gray-500">DNI: <strong>{{ orderDetails.from.dni }}</strong></span>
+    </div>
+  </div>
 
-  <div class="mt-4 grid grid-cols-[1fr_auto] gap-4">
+  <div class="mt-10 flex flex-col grid-cols-[2fr_1fr] lg:grid gap-5">
     <p-table #dt2
+             scrollable="true"
+             rowExpandMode="single"
+             columnResizeMode="expand"
              [value]="orderDetailsItems"
              dataKey="id"
+             class="table-auto w-full"
     >
       <ng-template pTemplate="header">
+        <h1 class="text-xl font-bold">Productos</h1>
         <tr>
-          <th>
+          <th class="min-w-72">
             Caja
           </th>
           <th>
             Cantidad
           </th>
           <th>
-            Precio por unidad
+            Precio/Ud
           </th>
           <th>
             Precio total
           </th>
         </tr>
       </ng-template>
-
       <ng-template pTemplate="body" let-order>
         <tr [pContextMenuRow]="orderDetailsItems">
-          <td>
-            <div class="flex align-middle gap-2">
-              <img [src]="BoxTypeImages[order.boxType]" alt="user_image" width="50" class="mr-2">
+          <td class="min-w-72">
+            <div class="flex items-center gap-2 py-2">
+              <img [src]="BoxTypeImages[order.boxType]" alt="user_image" class="mr-2 w-full max-w-12 object-contain">
               <div class="flex flex-col">
                 <span class="font-bold">{{ order.boxName }}</span>
                 <span class="mr-2"> {{ order.boxType }}</span>
               </div>
             </div>
           </td>
-          <td>{{ order.quantity }}</td>
-          <td>{{ order.price }}</td>
-          <td>{{ order.totalPrice }}</td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="footer">
-        <tr>
-          <td colspan="3" style="text-align: right !important;">Subtotal:</td>
-          <td>{{ subtotal(orderDetails.total) }} €</td>
-        </tr>
-        <tr>
-          <td colspan="3" style="text-align: right !important;">IVA:</td>
-          <td>{{ iva(orderDetails.total) }} €</td>
-        </tr>
-        <tr class="">
-          <td colspan="3" style="text-align: right !important;">Total:</td>
-          <td class="font-bold">{{ orderDetails.total }} €</td>
+          <td class="text-right xs:text-left">{{ order.quantity }}</td>
+          <td class="text-nowrap">{{ order.price }} €</td>
+          <td class="text-nowrap">{{ order.totalPrice }} €</td>
         </tr>
       </ng-template>
       <ng-template #emptymessage>
         <tr>
-          <td colspan="5">No hay pedidos.</td>
+          <td colspan="5">No hay productos.</td>
         </tr>
       </ng-template>
     </p-table>
+
+    <div class="flex flex-col justify-top gap-6 mt-5 text-sm lg:pl-10 bg-white mx-6 lg:border-l-2 border-gray-200">
+      <div class="flex flex-row justify-between">
+      <span class="text-gray-500">Descuento ({{ orderDetails.gems }} {{ orderDetails.gems === 1 ? 'gema' : 'gemas' }}
+        )</span>
+        <span class="font-semibold text-gray-900 text-nowrap">{{ orderDetails.discount }} €</span>
+      </div>
+      <div class="flex flex-row justify-between">
+        <span class="text-sm text-gray-500">IVA</span>
+        <span class="font-semibold text-gray-900 text-nowrap">{{ iva(orderDetails.total) }} €</span>
+      </div>
+      <div class="flex flex-row justify-between">
+        <span class="text-gray-500">Subtotal</span>
+        <span class="font-semibold text-gray-900 text-nowrap">{{ subtotal(orderDetails.total) }} €</span>
+      </div>
+      <div class="flex flex-row justify-between border-t-2 border-gray-200 pt-2">
+        <span class=" text-gray-500 text-lg">Total</span>
+        <span class="font-bold text-gray-900 text-lg text-nowrap">{{ orderDetails.total }} €</span>
+      </div>
+    </div>
   </div>
 </div>
