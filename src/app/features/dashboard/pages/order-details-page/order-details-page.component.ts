@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {NgIf} from '@angular/common';
+import {DatePipe, NgIf} from '@angular/common';
 import {OrderService} from '@dashboard/services/order.service';
 import {InventoryOrderDetailsResponse, OrderDetailsResponse} from '@models/order.model';
 import {ActivatedRoute} from '@angular/router';
@@ -13,6 +13,7 @@ import {BoxTypeImages} from '@core/enums/box.enum';
     NgIf,
     PrimeTemplate,
     TableModule,
+    DatePipe,
   ],
   templateUrl: './order-details-page.component.html',
   styles: ``
