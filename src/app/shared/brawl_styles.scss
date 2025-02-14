@@ -195,6 +195,7 @@
 /*------------------- Fondos en movimiento -------------------*/
 
 .moving-background {
+  will-change: background-position;
   user-select: none;
   overflow: hidden;
   background-repeat: repeat;
@@ -298,15 +299,13 @@
 /*------------------- Animacion de entrada de la caja -------------------*/
 
 .open-box-animation {
-  animation: boxEntrance 0.7s ease-in-out forwards, beatIdle 5s ease-in-out infinite;
+  animation: boxEntrance 0.7s ease-in-out forwards, beatIdle 4s ease-in-out infinite;
   transform: translateY(-300%) scaleY(1);
-  animation-delay: 0.5s, 4s;
-  animation-play-state: running;
+  animation-delay: 0.5s, 2s;
   transition: filter 0.3s;
 }
 
 .open-box-animation:hover {
-  animation-play-state: paused;
   filter: brightness(1.2);
 }
 
@@ -337,8 +336,8 @@
 /*------------------- Animacion de abrir la caja (destello de luz) --------------*/
 .flash-animation {
   animation: flash 0.4s ease forwards;
-  width: 100%;
-  height: 100%;
+  width: 0;
+  height: 0;
   position: absolute;
   z-index: 1000;
   border-radius: 100%;
@@ -357,9 +356,60 @@
     width: 0;
     height: 0;
   }
+  90% {
+    width: 200%;
+    height: 200%;
+  }
   100% {
-    width: 150%;
-    height: 150%;
+    width: 0;
+    height: 0;
+  }
+}
+
+/*------------------- Animacion de circo -------------*/
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.circus-background {
+  position: fixed;
+  width: 250vmax;
+  height: 250vmax;
+  border-radius: 50%;
+  opacity: 0.1;
+  will-change: background-position;
+  background: conic-gradient(
+      transparent 0deg 30deg,
+      white 30deg 60deg,
+      transparent 60deg 90deg,
+      white 90deg 120deg,
+      transparent 120deg 150deg,
+      white 150deg 180deg,
+      transparent 180deg 210deg,
+      white 210deg 240deg,
+      transparent 240deg 270deg,
+      white 270deg 300deg,
+      transparent 300deg 330deg,
+      white 330deg 360deg
+  );
+  animation: rotate 20s linear infinite;
+}
+
+/*-------------- animacion fade in --------------*/
+
+.fade-in-medium {
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
