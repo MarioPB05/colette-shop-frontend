@@ -12,8 +12,16 @@ import {NgIf} from '@angular/common';
 })
 export class OpenBoxPageComponent implements OnInit{
   pageLoaded = false;
+  flashVisible = false;
 
   ngOnInit() {
     this.pageLoaded = true;
+  }
+
+  showFlash() {
+    this.flashVisible = true;
+    setTimeout(() => {
+      this.flashVisible = false;
+    }, 500);
   }
 }

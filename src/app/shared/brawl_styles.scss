@@ -333,3 +333,33 @@
     transform: translateY(0%) scaleY(1);
   }
 }
+
+/*------------------- Animacion de abrir la caja (destello de luz) --------------*/
+.flash-animation {
+  animation: flash 0.4s ease forwards;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1000;
+  border-radius: 100%;
+  //@apply bg-gradient-radial from-white via-transparent to-transparent;
+
+  background: rgb(255,255,255);
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8295693277310925) 50%, rgba(255,255,255,0) 100%);
+
+  // Center absolute container
+  //top: 50%;
+  //left: 50%;
+}
+
+@keyframes flash {
+  0% {
+    width: 0;
+    height: 0;
+  }
+  100% {
+    width: 150%;
+    height: 150%;
+  }
+}
+
