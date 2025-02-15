@@ -2,7 +2,7 @@
   <p-stepper [(value)]="activeStep" [linear]="true" class="basis-[40rem]">
     <p-step-list>
       <p-step [value]="1" class="flex flex-row flex-auto gap-2">
-        <ng-template #content let-activateCallback="activateCallback" let-value="value">
+        <ng-template pTemplate="content" let-activateCallback="activateCallback" let-value="value">
           <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
                     <span
                       class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center"
@@ -18,7 +18,7 @@
       </p-step>
 
       <p-step [value]="2" class="flex flex-row flex-auto gap-2">
-        <ng-template #content let-activateCallback="activateCallback" let-value="value">
+        <ng-template pTemplate="content" let-activateCallback="activateCallback" let-value="value">
           <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
                     <span
                       class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center"
@@ -34,7 +34,7 @@
       </p-step>
 
       <p-step [value]="3" class="flex flex-row flex-auto gap-2">
-        <ng-template #content let-activateCallback="activateCallback" let-value="value">
+        <ng-template pTemplate="content" let-activateCallback="activateCallback" let-value="value">
           <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
                     <span
                       class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center"
@@ -52,7 +52,7 @@
 
     <p-step-panels>
       <p-step-panel [value]="1">
-        <ng-template #content let-activateCallback="activateCallback">
+        <ng-template pTemplate="content" let-activateCallback="activateCallback">
           <div class="flex flex-col gap-4 mx-auto" style="min-height: 16rem; max-width: 20rem">
             <div class="text-center mb-4 text-xl font-semibold">Crea tu cuenta</div>
 
@@ -124,7 +124,7 @@
                 La confirmación de la contraseña es obligatoria
               </small>
 
-              <small class="text-red-500" *ngIf="confirmPassword?.hasError('passwordMismatch') && confirmPassword?.dirty">
+              <small class="text-red-500" *ngIf="registerForm?.hasError('passwordMismatch') && confirmPassword?.touched">
                 Las contraseñas no coinciden
               </small>
             </div>
@@ -138,28 +138,56 @@
       </p-step-panel>
 
       <p-step-panel [value]="2">
-        <ng-template #content let-activateCallback="activateCallback">
-          <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+        <ng-template pTemplate="content" let-activateCallback="activateCallback">
+          <div class="flex flex-col gap-4 mx-auto" style="min-height: 16rem; max-width: 24rem">
             <div class="text-center mb-4 text-xl font-semibold">Datos Personales</div>
 
             <div class="flex flex-col gap-2">
               <label for="r_name">Nombre</label>
               <input pInputText id="r_name" formControlName="name"/>
+
+              <small class="text-red-500" *ngIf="name?.hasError('required') && name?.dirty">
+                El nombre es obligatorio.
+              </small>
             </div>
 
             <div class="flex flex-col gap-2">
               <label for="r_surname">Apellidos</label>
               <input pInputText id="r_surname" formControlName="surname"/>
+
+              <small class="text-red-500" *ngIf="surname?.hasError('required') && surname?.dirty">
+                Los apellidos son obligatorios.
+              </small>
             </div>
 
             <div class="flex flex-col gap-2">
               <label for="r_dni">DNI</label>
-              <p-inputmask mask="99999999-a" placeholder="00000000-A" id="r_dni" formControlName="dni"/>
+              <p-inputmask mask="99999999-a" placeholder="00000000-A" id="r_dni" formControlName="dni" styleClass="w-full"/>
+
+              <small class="text-red-500" *ngIf="dni?.hasError('required') && dni?.dirty">
+                El DNI es obligatorio.
+              </small>
+
+              <small class="text-red-500" *ngIf="dni?.hasError('invalidDni') && dni?.dirty">
+                El DNI no es válido.
+              </small>
+
+              <small class="text-red-500" *ngIf="(dni?.hasError('minlength') || dni?.hasError('maxlength')) && dni?.dirty">
+                El DNI debe tener 9 caracteres.
+              </small>
             </div>
 
             <div class="flex flex-col gap-2">
               <label for="r_birthdate">Fecha de Nacimiento</label>
-              <p-date-picker [maxDate]="maxDate" formControlName="birthdate" id="r_birthdate"/>
+              <p-date-picker [maxDate]="maxDate" formControlName="birthdate" id="r_birthdate" styleClass="w-full"/>
+
+              <small class="text-red-500" *ngIf="birthdate?.hasError('required') && birthdate?.dirty">
+                La fecha de nacimiento es obligatoria.
+              </small>
+
+              <small class="text-red-500" *ngIf="birthdate?.hasError('tooYoung') && birthdate?.dirty">
+                Debes ser mayor de edad para registrarte.
+              </small>
             </div>
 
           </div>
@@ -172,7 +200,7 @@
       </p-step-panel>
 
       <p-step-panel [value]="3">
-        <ng-template #content let-activateCallback="activateCallback">
+        <ng-template pTemplate="content" let-activateCallback="activateCallback">
           <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
             <div class="text-center mb-4 text-xl font-semibold">Account created successfully</div>
             <div class="text-center">

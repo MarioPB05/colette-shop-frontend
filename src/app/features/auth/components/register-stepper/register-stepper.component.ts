@@ -12,7 +12,7 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  ValidationErrors,
+  ValidationErrors, ValidatorFn,
   Validators
 } from '@angular/forms';
 import {InputMask} from 'primeng/inputmask';
@@ -20,6 +20,14 @@ import {Password} from 'primeng/password';
 import {catchError, debounceTime, map, Observable, of, switchMap} from 'rxjs';
 import {AuthService} from '@features/auth/services/auth.service';
 import { MessageService } from 'primeng/api';
+
+const passwordsMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const formGroup = control as FormGroup;
+  const password = formGroup.get('password')?.value;
+  const confirmPassword = formGroup.get('confirmPassword')?.value;
+
+  return password === confirmPassword ? null : { passwordMismatch: true };
+};
 
 @Component({
   selector: 'app-register-stepper',
@@ -51,12 +59,12 @@ export class RegisterStepperComponent {
     username: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(15)], [this.usernameExistsValidator()]),
     email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
     password: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-    confirmPassword: new FormControl<string | null>(null, [Validators.required, this.passwordsMatchValidator.bind(this)]),
+    confirmPassword: new FormControl<string | null>(null, [Validators.required]),
     name: new FormControl<string | null>(null, [Validators.required]),
     surname: new FormControl<string | null>(null, [Validators.required]),
-    birthdate: new FormControl<Date | null>(null, [Validators.required]),
-    dni: new FormControl<string | null>(null, [Validators.required, Validators.minLength(9), Validators.maxLength(9)])
-  });
+    birthdate: new FormControl<Date | null>(null, [Validators.required, this.birthdateValidator()]),
+    dni: new FormControl<string | null>(null, [Validators.required, Validators.minLength(9), Validators.maxLength(10), this.dniValidator()])
+  }, { validators: passwordsMatchValidator });
 
   get username() {
     return this.registerForm.get('username');
@@ -106,14 +114,39 @@ export class RegisterStepperComponent {
     };
   }
 
-  passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
-    if (!this.registerForm) return null;
+  birthdateValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const birthdate = control.value;
+      if (!birthdate) return null;
 
-    const password = this.registerForm.get('password')?.value;
-    const confirmPassword = control.value;
+      const minDate = new Date();
+      minDate.setFullYear(minDate.getFullYear() - 18);
 
-    return password === confirmPassword ? null : { passwordMismatch: true };
+      return birthdate <= minDate ? null : { tooYoung: true };
+    };
   }
+
+  dniValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      let dni = control.value?.toUpperCase();
+
+      if (dni?.includes('-')) {
+        dni = dni.replace('-', '');
+      }
+
+      if (!dni) return null;
+
+      const dniRegex = /^\d{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/;
+      const letterMap = "TRWAGMYFPDXBNJZSQVHLCKE";
+
+      if (!dniRegex.test(dni)) return {invalidDni: true};
+
+      const numberPart = parseInt(dni.slice(0, 8), 10);
+      const letter = dni[8];
+
+      return letter === letterMap[numberPart % 23] ? null : {invalidDni: true};
+    }
+  };
 
   getUsernameIconClass(): string {
     const username = this.username;
@@ -138,7 +171,7 @@ export class RegisterStepperComponent {
   }
 
   verifyFirstStep(callback: any) {
-    if (this.username?.valid && this.email?.valid && this.password?.valid) {
+    if (this.username?.valid && this.email?.valid && this.password?.valid && this.confirmPassword?.valid && !this.registerForm.hasError('passwordMismatch')) {
       callback(2);
       return;
     }
