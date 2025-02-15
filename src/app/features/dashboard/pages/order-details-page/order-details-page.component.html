@@ -1,16 +1,20 @@
 <div *ngIf="!loadingData" class="p-5 pb-0">
   <h1 class="text-2xl font-bold pb-5">Detalles del pedido</h1>
-  <div class="flex flex-wrap justify-start gap-10">
-    <div class="border-l-2 border-gray-200 pl-3 flex flex-col gap-2">
-      <span class="text-gray-500">Nº de factura: <strong>#{{ orderDetails.invoiceNumber }}</strong></span>
-      <span class="text-gray-500">Fecha: <strong>{{ orderDetails.purchaseDate | date: 'dd/MM/yyyy' }}</strong></span>
-      <span class="text-gray-500">Estado: <strong>{{ orderDetails.state }}</strong></span>
+  <div class="flex flex-row justify-between align-top">
+    <div class="flex flex-wrap justify-start gap-10">
+      <div class="border-l-2 border-gray-200 pl-3 flex flex-col gap-2">
+        <span class="text-gray-500">Nº de factura: <strong>#{{ orderDetails.invoiceNumber }}</strong></span>
+        <span class="text-gray-500">Fecha: <strong>{{ orderDetails.purchaseDate | date: 'dd/MM/yyyy' }}</strong></span>
+        <span class="text-gray-500">Estado: <strong>{{ orderDetails.state }}</strong></span>
+      </div>
+      <div class="border-l-2 border-gray-200 pl-3 flex flex-col gap-2">
+        <span class="text-gray-500">Usuario: <strong>{{ orderDetails.from.username }}</strong></span>
+        <span
+          class="text-gray-500">Nombre: <strong>{{ orderDetails.from.name }} {{ orderDetails.from.surname }}</strong></span>
+        <span class="text-gray-500">DNI: <strong>{{ orderDetails.from.dni }}</strong></span>
+      </div>
     </div>
-    <div class="border-l-2 border-gray-200 pl-3 flex flex-col gap-2">
-      <span class="text-gray-500">Usuario: <strong>{{ orderDetails.from.username }}</strong></span>
-      <span class="text-gray-500">Nombre: <strong>{{ orderDetails.from.name }} {{ orderDetails.from.surname }}</strong></span>
-      <span class="text-gray-500">DNI: <strong>{{ orderDetails.from.dni }}</strong></span>
-    </div>
+    <p-button *ngIf="!isPrint" label="Imprimir" icon="pi pi-print" class="mt-5" (click)="printOrder()"></p-button>
   </div>
 
   <div class="mt-10 flex flex-col grid-cols-[2fr_1fr] lg:grid gap-5">
