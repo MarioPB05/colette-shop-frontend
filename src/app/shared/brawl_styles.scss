@@ -192,6 +192,10 @@
   clip-path: polygon(0% 15%, 100% 0%, 100% 100%, 0% 100%);
 }
 
+.inverted-pentagon-shape {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%);
+}
+
 /*------------------- Fondos en movimiento -------------------*/
 
 .moving-background {
@@ -413,3 +417,21 @@
   }
 }
 
+/*-------------- animacion fade-down --------------*/
+
+.trophy-difference-animation {
+  transform: translateY(-50px);
+  height: 0;
+  animation: fadeDown 1s ease-in-out forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeDown {
+  0% {
+    transform: translateY(-50px);
+  }
+  100% {
+    transform: translateY(0);
+    height: auto;
+  }
+}
