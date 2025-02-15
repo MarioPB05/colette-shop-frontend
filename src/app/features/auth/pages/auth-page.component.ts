@@ -57,6 +57,8 @@ export class AuthPageComponent {
         summary: 'Error',
         detail: 'Usuario o contraseña incorrectos'
       });
+
+      this.loginSubmitted = false;
     }
 
     this.authService.login({username: this.username, password: this.password}).subscribe({
@@ -79,9 +81,6 @@ export class AuthPageComponent {
       error: () => {
         loginError();
       },
-      complete: () => {
-        this.loginSubmitted = false;
-      }
     });
   }
 
