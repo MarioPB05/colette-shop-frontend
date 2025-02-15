@@ -6,6 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 import {PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {BoxTypeImages} from '@core/enums/box.enum';
+import {Button} from 'primeng/button';
 
 @Component({
   selector: 'app-order-details-page',
@@ -14,6 +15,7 @@ import {BoxTypeImages} from '@core/enums/box.enum';
     PrimeTemplate,
     TableModule,
     DatePipe,
+    Button,
   ],
   templateUrl: './order-details-page.component.html',
   styles: ``
@@ -28,6 +30,7 @@ export class OrderDetailsPageComponent implements OnInit {
   private route: ActivatedRoute = inject(ActivatedRoute);
 
   protected readonly BoxTypeImages = BoxTypeImages;
+  isPrint: boolean = false;
 
   ngOnInit(): void {
 
@@ -64,5 +67,11 @@ export class OrderDetailsPageComponent implements OnInit {
 
   iva(num:number): number {
     return Math.round((num*0.21)*100)/100;
+  }
+
+  printOrder() {
+    this.isPrint = true;
+    setTimeout(() => window.print(), 1000);
+    setTimeout(() => this.isPrint = false, 1000);
   }
 }
