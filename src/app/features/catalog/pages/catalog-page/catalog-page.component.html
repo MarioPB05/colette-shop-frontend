@@ -3,7 +3,7 @@
   <app-brawl-header></app-brawl-header>
   <div class="relative">
     <img src="/images/backgrounds/brawl-gift-shop.jpg" class="w-full h-52 object-cover opacity-70 border-b-4 border-slate-800" alt="Brawl Gift Shop">
-    <img src="/images/brawlers/16000039_model.png" class="absolute bottom-1 object-top left-5 w-32 h-44 object-cover" alt="Colette">
+    <img src="/images/brawlers/16000039_model.png" (click)="reproduceColetteVoiceLine()" class="absolute cursor-pointer bottom-1 object-top left-5 w-32 h-44 object-cover" alt="Colette">
     <div class="absolute left-32 bottom-10 w-[246px] h-[70px] lg:h-auto lg:w-auto object-top object-cover">
       <img src="/images/resources/speech-bubble.png" class="right-5  hidden xs:block w-full h-full lg:w-[1000px] lg:h-24" alt="Speech Bubble">
       <span class="hidden lg:block object-top ps-20 absolute right-5 p-3 object-cover text-black font-bold top-0">
