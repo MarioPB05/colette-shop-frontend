@@ -10,6 +10,10 @@
   text-shadow: 0.5px 1.5px 0px black;
 }
 
+.text-border-xs {
+  -webkit-text-stroke: 0.3px black;
+}
+
 .text-border-sm {
   -webkit-text-stroke: 0.5px black;
 }
