@@ -13,21 +13,31 @@
     <div class="circus-background"></div>
 
     <div class="z-10 fade-in-medium flex flex-col justify-center gap-4 w-full items-center">
-      <img src="/images/brawlers/16000000_main.png" alt="pepe" class="h-32 w-32 border-4 border-brawl-black">
+      <div class="flex flex-col items-center">
+        <img src="/images/brawlers/16000000_main.png" alt="pepe" class="h-32 w-32 z-10 border-4 border-brawl-black">
+
+        <div class="relative animation-delay-2s trophy-difference-animation">
+          <div class="bg-brawl-black inverted-pentagon-shape w-[6.25rem] h-9 absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"></div>
+          <div class="bg-brawl-purple gap-1.5 flex justify-center pb-1 text-lg items-center inverted-pentagon-shape w-24 h-8 relative text-brawl-white brawl-font text-border-xs text-shadow">
+            <span>+{{ trophyProgression }}</span>
+            <img src="/images/icons/trophy-icon.png" class="h-4" alt="Trophy">
+          </div>
+        </div>
+      </div>
 
       <div class="flex w-full max-w-44 me-2.5">
-        <div id="tier-space" class="relative w-12 h-full">
-          <img src="/images/tiers/31.png" alt="Tier 31" class="h-10 z-10 w-auto -top-[0.4rem] -right-1 object-contain absolute">
+        <div id="tier-space" class="relative {{ tierContainerSize }} h-full overflow-visible">
+          <img src="{{ getTierImage() }}" alt="Tier 31" class="{{ tierSize }} ease-in z-10 w-auto -top-[0.4rem] -right-1 object-contain absolute" style="transition-duration: 0.1s" [style.filter]="tierBrightness">
         </div>
 
         <div id="trophy-bar-container" class="h-6 w-full relative">
-          <div id="trophy-bar-border" class="h-7 bg-brawl-black ps-5 flex  justify-center items-center  parallelogram_shape-sm w-[103%] absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"></div>
+          <div id="trophy-bar-border" class="h-7 bg-brawl-black ps-5 flex justify-center items-center parallelogram_shape-sm w-[103%] absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"></div>
           <div id="trophy-bar" class="bg-gradient-to-b h-full from-brawl-dark-pink via-brawl-dark-pink to-brawl-grape-purple w-full outline-offset-8 parallelogram_shape-sm">
             <div id="trophy-indicator" class="text-brawl-white z-10 text-base absolute h-full transform w-full justify-center items-center flex gap-1 brawl-font text-border-sm text-shadow">
               <img src="/images/icons/trophy-icon.png" class="h-3.5" alt="Trophy">
-              <span>100 / 200</span>
+              <span>{{ actualTrophyCount }} / {{ actualTrophyMax }}</span>
             </div>
-            <div id="trophy-bar-progress" class="bg-gradient-to-b absolute left-0 from-brawl-gold via-brawl-orange to-brawl-orange w-[50%] h-full"></div>
+            <div id="trophy-bar-progress" class="{{ trophyProgressBarColor }} absolute left-0 from-brawl-gold via-brawl-orange to-brawl-orange h-full" [style.width]="(actualTrophyCount / actualTrophyMax * 100) + '%'"></div>
           </div>
         </div>
       </div>
