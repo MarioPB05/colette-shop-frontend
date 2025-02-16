@@ -74,6 +74,7 @@ export class OpenBoxPageComponent implements OnInit{
   async updateTrophyCount() {
     let targetCount = this.actualTrophyCount + this.trophyProgression;
 
+    // If the target count is higher than the actual trophy max, we need to do multiple animations until we reach the target count
     while (targetCount > this.actualTrophyMax) {
       await this.updateTrophyCountAnimation(this.actualTrophyMax);
       targetCount -= this.actualTrophyMax;
@@ -108,21 +109,26 @@ export class OpenBoxPageComponent implements OnInit{
   }
 
   async doNextTierAnimation() {
+    // Change color of the trophy progress bar and increase the tier size
     setTimeout(() => {
       this.trophyProgressBarColor = 'bg-brawl-gold';
       this.tierSize = 'h-12';
       this.tierContainerSize = 'w-16';
     }, 100);
 
+    // Change the tier image brightness to full white
     setTimeout(() => {
       this.tierBrightness = 'brightness(0) invert(1)';
     }, 150);
 
+    // Increase the tier number and reset the brightness
     setTimeout(() => {
       this.actualTier++;
       this.tierBrightness = 'brightness(1)';
     }, 450);
 
+
+    // Reset the trophy progress bar color and decrease the tier size to the original and resolve the promise
     return new Promise<void>((resolve) => {
       setTimeout(() => {
         this.tierSize = 'h-10';
