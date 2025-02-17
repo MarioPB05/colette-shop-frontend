@@ -27,7 +27,7 @@
 
       <div class="flex w-full max-w-44 me-2.5">
         <div id="tier-space" class="relative {{ tierContainerSize }} h-full overflow-visible">
-          <img src="{{ getTierImage() }}" alt="Tier 31" class="{{ tierSize }} ease-in z-10 w-auto -top-[0.4rem] -right-1 object-contain absolute" style="transition-duration: 0.1s" [style.filter]="tierBrightness">
+          <img src="{{ getTierImage() }}" alt="Tier 31" class="{{ tierSize }} ease-in z-10 w-auto object-contain absolute" style="transition-duration: 0.1s" [style.filter]="tierBrightness" [ngClass]="isMaxTier(actualTier) || actualTier == 50 ? '-right-2 -top-3': '-right-1 -top-[0.4rem]'">
         </div>
 
         <div id="trophy-bar-container" class="h-6 w-full relative">
@@ -35,9 +35,10 @@
           <div id="trophy-bar" class="bg-gradient-to-b h-full from-brawl-dark-pink via-brawl-dark-pink to-brawl-grape-purple w-full outline-offset-8 parallelogram_shape-sm">
             <div id="trophy-indicator" class="text-brawl-white z-10 text-base absolute h-full transform w-full justify-center items-center flex gap-1 brawl-font text-border-sm text-shadow">
               <img src="/images/icons/trophy-icon.png" class="h-3.5" alt="Trophy">
-              <span>{{ actualTrophyCount }} / {{ actualTrophyMax }}</span>
+              <span *ngIf="!isMaxTier(actualTier)">{{ totalTrophyCount }} / {{ totalTrophyMax }}</span>
+              <span *ngIf="isMaxTier(actualTier)">{{ totalTrophyCount }}</span>
             </div>
-            <div id="trophy-bar-progress" class="{{ trophyProgressBarColor }} absolute left-0 from-brawl-gold via-brawl-orange to-brawl-orange h-full" [style.width]="(actualTrophyCount / actualTrophyMax * 100) + '%'"></div>
+            <div id="trophy-bar-progress" class="{{ trophyProgressBarColor }} absolute left-0 from-brawl-gold via-brawl-orange to-brawl-orange h-full" [style.width]="(isMaxTier(actualTier) ? 100 : (actualTrophyCount / actualTrophyMax * 100)) + '%'"></div>
           </div>
         </div>
       </div>
