@@ -46,6 +46,22 @@
     </div>
   </div>
 
+  <div *ngIf="actualPage == 'new-brawler-unlocked' || actualPage == 'duplicate-brawler'" class="absolute bottom-0 right-0 m-5 text-white flex flex-col items-end gap-4">
+    <div class="flex gap-2 items-end">
+      <span class="text-sm text-border-xs text-shadow">
+        ITEMS RESTANTES:
+      </span>
+      <div class="bg-brawl-red rounded-lg border-b-2 border-brawl-dark-red py-0.5 text-2xl px-2.5 text-border-sm text-shadow">
+        23
+      </div>
+    </div>
+    <button class="brawl-button p-1 px-3 text-border-md text-xl flex gap-2 items-center">
+      SIGUIENTE
+
+      <img src="/images/icons/left-arrow.png" class="h-6 transform rotate-180" alt="Left arrow">
+    </button>
+  </div>
+
   <div class="flash-animation" *ngIf="flashVisible"></div>
 </div>
 
