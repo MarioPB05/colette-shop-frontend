@@ -1,13 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {NgIf} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
 import {FaviconService} from '@core/services/favicon.service';
+import {TrophyService} from '@shared/services/trophy.service';
 
-type pageTypes = 'open-box' | 'duplicate-brawler' | 'new-brawler-unlocked';
+type pageTypes = 'open-box' | 'duplicate-brawler' | 'new-brawler-mystery-spins' | 'new-brawler-unlocked';
 
 @Component({
   selector: 'app-open-box-page',
   imports: [
-    NgIf
+    NgIf,
+    NgClass
   ],
   templateUrl: './open-box-page.component.html',
   standalone: true,
@@ -26,10 +28,14 @@ export class OpenBoxPageComponent implements OnInit{
   trophyProgressBarColor = 'bg-gradient-to-b';
 
   actualTrophyCount = 0;
-  actualTrophyMax = 15;
+  actualTrophyMax = 0;
+
+  totalTrophyCount = 0;
+  totalTrophyMax = 0;
+
   actualTier = 1;
 
-  constructor(private  faviconService: FaviconService) {}
+  constructor(private  faviconService: FaviconService, private trophyService: TrophyService) {}
 
   ngOnInit() {
     this.faviconService.changeFavicon("/images/favicon/box-favicon.png");
@@ -47,16 +53,39 @@ export class OpenBoxPageComponent implements OnInit{
 
   openBox() {
     this.showFlash().then(() => {
-      this.initDuplicateBrawlerPhase();
+      this.initDuplicateBrawlerPhase(1);
     });
   }
 
-  initDuplicateBrawlerPhase() {
+  isMaxTier(actualTier: number): boolean {
+    return this.trophyService.isMaxTier(actualTier);
+  }
+
+  initDuplicateBrawlerPhase(brawlerQuantity: number = 1) {
     this.actualPage = 'duplicate-brawler';
+
+    const totalTrophies = this.trophyService.getTotalTrophies(brawlerQuantity);
+    const tier = this.trophyService.getTier(totalTrophies);
+
+    this.actualTrophyCount = this.trophyService.getTrophiesToNextTier(totalTrophies);
+    this.actualTrophyMax = this.trophyService.getTrophiesToReachTier(tier);
+    this.actualTier = tier;
+
+    this.totalTrophyCount = totalTrophies;
+    this.totalTrophyMax = this.trophyService.getTrophyTierCount(tier);
+
+    if (this.isMaxTier(this.actualTier) || this.actualTier == 50) {
+      this.setBiggerTierSize();
+    }
 
     setTimeout(() => {
       this.updateTrophyCount();
     }, 1500);
+  }
+
+  setBiggerTierSize() {
+    this.tierSize = 'h-12';
+    this.tierContainerSize = 'w-16';
   }
 
   getParentActualPageClasses() {
@@ -72,7 +101,7 @@ export class OpenBoxPageComponent implements OnInit{
   }
 
   async updateTrophyCount() {
-    let targetCount = this.actualTrophyCount + this.trophyProgression;
+    let targetCount = this.actualTrophyCount + this.trophyService.stepTrophies;
 
     // If the target count is higher than the actual trophy max, we need to do multiple animations until we reach the target count
     while (targetCount > this.actualTrophyMax) {
@@ -94,12 +123,12 @@ export class OpenBoxPageComponent implements OnInit{
       let interval = setInterval(async () => {
         if (this.actualTrophyCount < targetCount) {
           this.actualTrophyCount++;
+          this.totalTrophyCount++;
         } else {
           clearInterval(interval);
 
           if (this.actualTrophyCount == this.actualTrophyMax) {
             await this.doNextTierAnimation().then(() => {
-              this.actualTrophyCount = 0;
               resolve();
             });
           }
@@ -108,12 +137,19 @@ export class OpenBoxPageComponent implements OnInit{
     });
   }
 
+  sumTier() {
+    this.actualTier++;
+    this.totalTrophyMax = this.trophyService.getTrophyTierCount(this.actualTier);
+    this.actualTrophyMax = this.trophyService.getTrophiesToReachTier(this.actualTier);
+
+    this.actualTrophyCount = 0;
+  }
+
   async doNextTierAnimation() {
     // Change color of the trophy progress bar and increase the tier size
     setTimeout(() => {
       this.trophyProgressBarColor = 'bg-brawl-gold';
-      this.tierSize = 'h-12';
-      this.tierContainerSize = 'w-16';
+      this.setBiggerTierSize();
     }, 100);
 
     // Change the tier image brightness to full white
@@ -123,7 +159,7 @@ export class OpenBoxPageComponent implements OnInit{
 
     // Increase the tier number and reset the brightness
     setTimeout(() => {
-      this.actualTier++;
+      this.sumTier();
       this.tierBrightness = 'brightness(1)';
     }, 450);
 
@@ -134,6 +170,10 @@ export class OpenBoxPageComponent implements OnInit{
         this.tierSize = 'h-10';
         this.tierContainerSize = 'w-12';
         this.trophyProgressBarColor = 'bg-gradient-to-b';
+
+        if (this.isMaxTier(this.actualTier) || this.actualTier == 50) {
+          this.setBiggerTierSize();
+        }
 
         resolve();
       }, 1500);
