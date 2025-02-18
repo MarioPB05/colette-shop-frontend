@@ -1,7 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {NgClass, NgIf} from '@angular/common';
 import {FaviconService} from '@core/services/favicon.service';
 import {TrophyService} from '@shared/services/trophy.service';
+import {UserBrawlerProbabilityResponse} from '@models/brawler.model';
+import {InventoryBoxResponse} from '@models/box.model';
+import {Router} from '@angular/router';
+import {MessageService} from 'primeng/api';
 
 type pageTypes = 'open-box' | 'duplicate-brawler' | 'new-brawler-mystery-spins' | 'new-brawler-unlocked';
 
@@ -19,27 +23,143 @@ export class OpenBoxPageComponent implements OnInit{
   pageLoaded = false;
   flashVisible = false;
   actualPage: pageTypes = 'open-box';
+  nextButtonVisible = false;
+  changeItemAnimation = false;
+  nextBrawlerIsNew = false;
 
-  trophyProgression = 25;
+  box: InventoryBoxResponse = {
+    'id': 1,
+    'type': 'big_box',
+    'brawler_quantity': 3,
+    'opened': false
+  }
+
+  brawlersCanGetInBox: UserBrawlerProbabilityResponse[] = [
+    {
+      'id': 1,
+      'name': 'Shelly',
+      'image': '/images/brawlers/16000000_main.png',
+      'model_image': '/images/brawlers/16000000_model.png',
+      'probability': 100,
+      'quantity': 1
+    },
+    {
+      'id': 2,
+      'name': 'Bull',
+      'image': '/images/brawlers/16000002_main.png',
+      'model_image': '/images/brawlers/16000002_model.png',
+      'probability': 50,
+      'quantity': 1
+    },
+    {
+      'id': 3,
+      'name': 'Colt',
+      'image': '/images/brawlers/16000001_main.png',
+      'model_image': '/images/brawlers/16000001_model.png',
+      'probability': 50,
+      'quantity': 0
+    }
+  ];
+  brawlersInBox: number[] = [];
+  brawlersOpened: number[] = [];
+
+  //----- DUPLICATE BRAWLER PHASE -----//
+  duplicateBrawlerImage = '';
+  duplicateBrawlerName = '';
 
   tierSize = 'h-10';
   tierContainerSize = 'w-12';
   tierBrightness = 'brightness(1)';
   trophyProgressBarColor = 'bg-gradient-to-b';
 
+  actualTier = 1;
+  trophyProgression = 25;
   actualTrophyCount = 0;
   actualTrophyMax = 0;
 
   totalTrophyCount = 0;
   totalTrophyMax = 0;
 
-  actualTier = 1;
-
-  constructor(private  faviconService: FaviconService, private trophyService: TrophyService) {}
+  constructor(private  faviconService: FaviconService,
+              private trophyService: TrophyService,
+              private router: Router,
+              private messageService: MessageService) {}
 
   ngOnInit() {
     this.faviconService.changeFavicon("/images/favicon/box-favicon.png");
     this.pageLoaded = true;
+
+    if (this.box.opened) {
+      this.router.navigate(['/inventory']).then(() => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'La caja ya ha sido abierta.'});
+      });
+      return;
+    }
+
+    this.setBrawlersInBox();
+  }
+
+  isBrawlerDuplicate(brawler: UserBrawlerProbabilityResponse): boolean {
+    return brawler.quantity > 0;
+  }
+
+  setBrawlersInBox() {
+    const brawlersInBox = this.decideAllBrawlersInBox();
+
+    if (!brawlersInBox) {
+      this.router.navigate(['/inventory']).then(() => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo seleccionar ningún brawler.'});
+      });
+      return;
+    }
+
+    this.brawlersInBox = brawlersInBox;
+    console.log(this.brawlersInBox);
+  }
+
+  decideAllBrawlersInBox() {
+    const brawlers: number[] = [];
+
+    for (let i = 0; i < this.box.brawler_quantity; i++) {
+      const brawler = this.decideNextBrawlerInBox();
+      if (brawler) {
+        brawlers.push(brawler.id);
+        continue;
+      }
+
+      return null;
+    }
+
+    return brawlers;
+  }
+
+  decideNextBrawlerInBox(): UserBrawlerProbabilityResponse | null {
+    if (!this.brawlersCanGetInBox || this.brawlersCanGetInBox.length === 0) {
+      console.warn("No hay brawlers disponibles en la caja.");
+      return null; // Evita errores si la lista está vacía
+    }
+
+    // Calcular la suma total de probabilidades
+    const totalProbability = this.brawlersCanGetInBox.reduce(
+      (sum, brawler) => sum + brawler.probability,
+      0
+    );
+
+    // Generar un número aleatorio dentro del rango de probabilidades
+    const randomThreshold = Math.random() * totalProbability;
+
+    let accumulatedProbability = 0;
+
+    // Seleccionar el brawler en función de la probabilidad acumulativa
+    for (const brawler of this.brawlersCanGetInBox) {
+      accumulatedProbability += brawler.probability;
+      if (accumulatedProbability >= randomThreshold) {
+        return brawler;
+      }
+    }
+
+    console.warn("No se pudo seleccionar un brawler. Verifica las probabilidades.");
+    return null; // Retorno de seguridad en caso de fallo inesperado
   }
 
   showFlash(): Promise<void> {
@@ -53,22 +173,62 @@ export class OpenBoxPageComponent implements OnInit{
 
   openBox() {
     this.showFlash().then(() => {
-      this.initDuplicateBrawlerPhase(1);
+      this.openNextItem();
     });
+  }
+
+  openNextItem() {
+    const index = this.brawlersOpened.length;
+    const brawlerIndex = this.brawlersCanGetInBox.findIndex(brawler => brawler.id === this.brawlersInBox[index]);
+    const brawler = this.brawlersCanGetInBox[brawlerIndex];
+    this.changeItemAnimation = true;
+    console.log(brawler);
+
+    if (index + 1 !== this.brawlersInBox.length) {
+      const nextBrawlerIndex = this.brawlersCanGetInBox.findIndex(brawler => brawler.id === this.brawlersInBox[index + 1]);
+      const nextBrawler = this.brawlersCanGetInBox[nextBrawlerIndex];
+      this.nextBrawlerIsNew = !this.isBrawlerDuplicate(nextBrawler);
+    }
+
+    setTimeout(() => {
+      this.changeItemAnimation = false;
+      this.nextButtonVisible = false;
+    }, 50);
+
+    if (!brawler) {
+      console.warn("No hay más brawlers en la caja.");
+      this.navigateToBoxResume();
+      return;
+    }
+
+    if (this.isBrawlerDuplicate(brawler)) {
+      this.initDuplicateBrawlerPhase(brawler);
+      this.brawlersCanGetInBox[brawlerIndex].quantity++;
+    } else {
+      this.initNewBrawlerPhase(brawler);
+    }
+
+    this.brawlersOpened.push(brawler.id);
+  }
+
+  navigateToBoxResume() {
+    this.router.navigate([`/box/${this.box.id}/resume`]);
   }
 
   isMaxTier(actualTier: number): boolean {
     return this.trophyService.isMaxTier(actualTier);
   }
 
-  initDuplicateBrawlerPhase(brawlerQuantity: number = 1) {
+  initDuplicateBrawlerPhase(brawler: UserBrawlerProbabilityResponse) {
     this.actualPage = 'duplicate-brawler';
+    this.duplicateBrawlerImage = brawler.image;
+    this.duplicateBrawlerName = brawler.name;
 
-    const totalTrophies = this.trophyService.getTotalTrophies(brawlerQuantity);
+    const totalTrophies = this.trophyService.getTotalTrophies(brawler.quantity);
     const tier = this.trophyService.getTier(totalTrophies);
 
-    this.actualTrophyCount = this.trophyService.getTrophiesToNextTier(totalTrophies);
     this.actualTrophyMax = this.trophyService.getTrophiesToReachTier(tier);
+    this.actualTrophyCount = this.actualTrophyMax - this.trophyService.getTrophiesToNextTier(totalTrophies);
     this.actualTier = tier;
 
     this.totalTrophyCount = totalTrophies;
@@ -79,8 +239,14 @@ export class OpenBoxPageComponent implements OnInit{
     }
 
     setTimeout(() => {
-      this.updateTrophyCount();
+      this.updateTrophyCount().then(() => {
+        this.nextButtonVisible = true
+      });
     }, 1500);
+  }
+
+  initNewBrawlerPhase(brawler: UserBrawlerProbabilityResponse) {
+    this.actualPage = 'new-brawler-mystery-spins';
   }
 
   setBiggerTierSize() {
@@ -101,15 +267,18 @@ export class OpenBoxPageComponent implements OnInit{
   }
 
   async updateTrophyCount() {
-    let targetCount = this.actualTrophyCount + this.trophyService.stepTrophies;
+    return new Promise<void>(async (resolve) => {
+      let targetCount = this.actualTrophyCount + this.trophyService.stepTrophies;
 
-    // If the target count is higher than the actual trophy max, we need to do multiple animations until we reach the target count
-    while (targetCount > this.actualTrophyMax) {
-      await this.updateTrophyCountAnimation(this.actualTrophyMax);
-      targetCount -= this.actualTrophyMax;
-    }
+      // If the target count is higher than the actual trophy max, we need to do multiple animations until we reach the target count
+      while (targetCount > this.actualTrophyMax && !this.isMaxTier(this.actualTier)) {
+        await this.updateTrophyCountAnimation(this.actualTrophyMax);
+        targetCount -= this.actualTrophyMax;
+      }
 
-    await this.updateTrophyCountAnimation(targetCount);
+      await this.updateTrophyCountAnimation(targetCount);
+      resolve();
+    });
   }
 
   async updateTrophyCountAnimation(targetCount: number): Promise<void> {
@@ -127,10 +296,12 @@ export class OpenBoxPageComponent implements OnInit{
         } else {
           clearInterval(interval);
 
-          if (this.actualTrophyCount == this.actualTrophyMax) {
+          if (this.actualTrophyCount == this.actualTrophyMax && !this.isMaxTier(this.actualTier)) {
             await this.doNextTierAnimation().then(() => {
               resolve();
             });
+          }else {
+            resolve();
           }
         }
       }, animationTime);
@@ -139,10 +310,13 @@ export class OpenBoxPageComponent implements OnInit{
 
   sumTier() {
     this.actualTier++;
-    this.totalTrophyMax = this.trophyService.getTrophyTierCount(this.actualTier);
-    this.actualTrophyMax = this.trophyService.getTrophiesToReachTier(this.actualTier);
 
-    this.actualTrophyCount = 0;
+    setTimeout(() => {
+      this.totalTrophyMax = this.trophyService.getTrophyTierCount(this.actualTier);
+      this.actualTrophyMax = this.trophyService.getTrophiesToReachTier(this.actualTier);
+
+      this.actualTrophyCount = 0;
+    }, 1000);
   }
 
   async doNextTierAnimation() {
