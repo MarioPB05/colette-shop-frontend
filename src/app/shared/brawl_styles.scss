@@ -417,7 +417,7 @@
   }
 }
 
-/*-------------- animacion fade-down --------------*/
+/*-------------- animacion panel de trofeos diferentes --------------*/
 
 .trophy-difference-animation {
   transform: translateY(-50px);
@@ -433,5 +433,40 @@
   100% {
     transform: translateY(0);
     height: auto;
+  }
+}
+
+/*-------------- animacion de fade up --------------*/
+.fade-up {
+  animation: fadeUp 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*-------------- animacion del marcador de items restante --------------*/
+
+.item-counter-animation {
+  animation: itemCounterFlash 2s ease infinite;
+  background: #FE0000;
+  filter: none;
+}
+
+@keyframes itemCounterFlash {
+  0%, 100% {
+    background: radial-gradient(circle, #FE0000 0%, #EF900A 100%);
+    filter: drop-shadow(0 10px 20px rgba(255, 255, 255, 1));
+  }
+  50% {
+    background: #FE0000; /* Rojo sólido */
+    filter: none; /* Sin sombra */
   }
 }
