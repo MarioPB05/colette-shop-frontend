@@ -39,3 +39,10 @@ export interface BoxDetailResponse {
   is_daily: boolean;
   claimed: boolean;
 }
+
+export interface InventoryBoxResponse {
+  id: number;
+  type: string;
+  brawler_quantity: number;
+  opened: boolean;
+}
