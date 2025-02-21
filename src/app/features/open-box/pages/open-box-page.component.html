@@ -1,16 +1,16 @@
-<div *ngIf="pageLoaded" class="min-h-screen overflow-hidden flex justify-center items-center relative brawl-font p-10 {{ getParentActualPageClasses() }}">
+<div *ngIf="pageLoaded" class="md:h-screen min-h-screen overflow-hidden p-10 flex justify-center items-center relative brawl-font {{ getParentActualPageClasses() }}">
   <div *ngIf="actualPage == 'open-box'" class="w-full h-full flex justify-center items-center">
     <div class="moving-background box-moving-background"></div>
     <span class="text-brawl-white absolute w-full m-7 top-0 text-2xl text-center text-shadow text-border-sm font-bold">¡Toca para abrir!</span>
+
     <button class="p-2 px-3 text-brawl-white brawl-danger-button absolute m-5 top-0 right-0">
       <img src="/images/icons/close-icon.png" class="h-7" alt="Close">
     </button>
-
     <img (click)="openBox()" src="/images/boxes/megabox.png" alt="Megacja" class="w-full open-box-animation cursor-pointer box-entrance-animation z-10 max-w-72 max-h-72">
   </div>
 
   <div *ngIf="actualPage == 'duplicate-brawler' && !changeItemAnimation" class="w-full h-full flex justify-center items-center">
-    <div class="circus-background"></div>
+    <div class="circus-background opacity-10"></div>
 
     <div class="z-10 fade-in-medium flex flex-col justify-center gap-4 w-full items-center">
       <div class="flex flex-col items-center">
@@ -43,6 +43,38 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <div *ngIf="actualPage == 'new-brawler-mystery-spins'" class="h-full p-10 w-full flex justify-center items-center">
+    <div class="dark-blue-img-filter-container  mystery-brawler-spin h-full max-h-[500px] max-w-[400px]" [style.animation-duration]="newBrawlerAnimationDuration + 's'" [style.mask]="'url(' + newBrawler.model_image + ') no-repeat center / contain'">
+      <img src="{{ newBrawler.model_image }}" alt="Shelly" class="object-contain" />
+    </div>
+    <div class="rectangles-falls">
+      <div class="rectangle"></div>
+      <div class="rectangle"></div>
+      <div class="rectangle"></div>
+      <div class="rectangle"></div>
+    </div>
+  </div>
+
+  <div *ngIf="actualPage == 'new-brawler-unlocked'" class="flex relative p-10 h-full w-full items-center justify-center flex-col-reverse gap-10 md:flex-row">
+    <div class="circus-background-left opacity-40 hidden md:flex"></div>
+    <div class="circus-background opacity-40 md:hidden flex"></div>
+    <img src="{{ newBrawler.model_image }}" alt="{{ newBrawler.model_image }}" class="h-full translate-x-0 w-full translate-x-animation max-h-[500px] max-w-[400px] z-20 object-contain">
+
+    <div class="z-20 appear-in-background flex relative md:absolute right-0 lg:right-[15vw] md:top-[20vh] flex-col gap-16" [ngClass]="showNewBrawlerText ? 'active' : ''">
+      <span class="text-yellow-100 text-4xl text-shadow text-border-md">
+        ¡NUEVO BRAWLER!
+      </span>
+      <div class=" w-80 h-14 relative -rotate-3">
+        <div [style.background-color]="getNewBrawlerRarityColor()" class=" w-full z-20 h-full relative brightness-90 inverted-shoe-shape ">
+        </div>
+        <div class=" w-full bg-brawl-black h-full brightness-95 inverted-shoe-shape z-10 absolute -bottom-2 -right-0.5">
+        </div>
+        <span class="left-5 absolute z-30 text-white h-32 top-[-95px] flex items-end text-shadow text-border-md text-5xl uppercase">{{ newBrawler.name }}</span>
+        <span class="absolute -bottom-5 brightness-125 z-30 left-2 text-shadow text-border-sm" [style.color]="getNewBrawlerRarityColor()">{{newBrawlerRarity.brawlersOfRarityUnlocked + '/' + newBrawlerRarity.totalBrawlersOfRarity}} Brawlers {{putRarityNameInPlural(newBrawlerRarity.name)}}</span>
+      </div>
     </div>
   </div>
 
