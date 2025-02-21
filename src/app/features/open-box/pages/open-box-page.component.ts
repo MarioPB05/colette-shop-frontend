@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NgClass, NgIf} from '@angular/common';
 import {FaviconService} from '@core/services/favicon.service';
 import {TrophyService} from '@shared/services/trophy.service';
@@ -6,6 +6,7 @@ import {UserBrawlerProbabilityResponse} from '@models/brawler.model';
 import {InventoryBoxResponse} from '@models/box.model';
 import {Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
+import {RarityDetailResponse} from '@models/rarity.model';
 
 type pageTypes = 'open-box' | 'duplicate-brawler' | 'new-brawler-mystery-spins' | 'new-brawler-unlocked';
 
@@ -13,7 +14,7 @@ type pageTypes = 'open-box' | 'duplicate-brawler' | 'new-brawler-mystery-spins' 
   selector: 'app-open-box-page',
   imports: [
     NgIf,
-    NgClass
+    NgClass,
   ],
   templateUrl: './open-box-page.component.html',
   standalone: true,
@@ -30,7 +31,7 @@ export class OpenBoxPageComponent implements OnInit{
   box: InventoryBoxResponse = {
     'id': 1,
     'type': 'big_box',
-    'brawler_quantity': 3,
+    'brawler_quantity': 10,
     'opened': false
   }
 
@@ -41,7 +42,9 @@ export class OpenBoxPageComponent implements OnInit{
       'image': '/images/brawlers/16000000_main.png',
       'model_image': '/images/brawlers/16000000_model.png',
       'probability': 100,
-      'quantity': 1
+      'quantity': 0,
+      'rarity_id': 1,
+
     },
     {
       'id': 2,
@@ -49,7 +52,8 @@ export class OpenBoxPageComponent implements OnInit{
       'image': '/images/brawlers/16000002_main.png',
       'model_image': '/images/brawlers/16000002_model.png',
       'probability': 50,
-      'quantity': 1
+      'quantity': 0,
+      'rarity_id': 2,
     },
     {
       'id': 3,
@@ -57,11 +61,29 @@ export class OpenBoxPageComponent implements OnInit{
       'image': '/images/brawlers/16000001_main.png',
       'model_image': '/images/brawlers/16000001_model.png',
       'probability': 50,
-      'quantity': 0
+      'quantity': 0,
+      'rarity_id': 2,
     }
   ];
   brawlersInBox: number[] = [];
   brawlersOpened: number[] = [];
+
+  rarities: RarityDetailResponse[] = [
+    {
+      'id': 1,
+      'name': 'Inicial',
+      'color': '#b9eeff',
+      'brawlersOfRarityUnlocked': 0,
+      'totalBrawlersOfRarity': 1,
+    },
+    {
+      'id': 2,
+      'name': 'Raro',
+      'color': '#68fd58',
+      'brawlersOfRarityUnlocked': 2,
+      'totalBrawlersOfRarity': 23,
+    }
+  ]
 
   //----- DUPLICATE BRAWLER PHASE -----//
   duplicateBrawlerImage = '';
@@ -79,6 +101,12 @@ export class OpenBoxPageComponent implements OnInit{
 
   totalTrophyCount = 0;
   totalTrophyMax = 0;
+
+  //-------- NEW BRAWLER PHASE --------//
+  newBrawlerAnimationDuration = 2; // in seconds
+  newBrawler!: UserBrawlerProbabilityResponse;
+  newBrawlerRarity!: RarityDetailResponse;
+  showNewBrawlerText = false;
 
   constructor(private  faviconService: FaviconService,
               private trophyService: TrophyService,
@@ -184,10 +212,15 @@ export class OpenBoxPageComponent implements OnInit{
     this.changeItemAnimation = true;
     console.log(brawler);
 
+    if (this.box.brawler_quantity === this.brawlersOpened.length) {
+        this.navigateToBoxResume();
+        return;
+    }
+
     if (index + 1 !== this.brawlersInBox.length) {
       const nextBrawlerIndex = this.brawlersCanGetInBox.findIndex(brawler => brawler.id === this.brawlersInBox[index + 1]);
       const nextBrawler = this.brawlersCanGetInBox[nextBrawlerIndex];
-      this.nextBrawlerIsNew = !this.isBrawlerDuplicate(nextBrawler);
+      this.nextBrawlerIsNew = !this.isBrawlerDuplicate(nextBrawler) && brawler.id !== nextBrawler.id && this.box.brawler_quantity !== this.brawlersOpened.length + 1;
     }
 
     setTimeout(() => {
@@ -203,12 +236,12 @@ export class OpenBoxPageComponent implements OnInit{
 
     if (this.isBrawlerDuplicate(brawler)) {
       this.initDuplicateBrawlerPhase(brawler);
-      this.brawlersCanGetInBox[brawlerIndex].quantity++;
     } else {
       this.initNewBrawlerPhase(brawler);
     }
 
     this.brawlersOpened.push(brawler.id);
+    this.brawlersCanGetInBox[brawlerIndex].quantity++;
   }
 
   navigateToBoxResume() {
@@ -246,9 +279,23 @@ export class OpenBoxPageComponent implements OnInit{
   }
 
   initNewBrawlerPhase(brawler: UserBrawlerProbabilityResponse) {
+    this.newBrawler = brawler;
+    this.newBrawlerRarity = this.getNewBrawlerRarity();
+    this.newBrawlerRarity.brawlersOfRarityUnlocked++;
     this.actualPage = 'new-brawler-mystery-spins';
+
+    setTimeout(() => {
+      this.actualPage = 'new-brawler-unlocked';
+      this.nextButtonVisible = true;
+
+    }, this.newBrawlerAnimationDuration * 1000);
+
+    setTimeout(() => {
+      this.showNewBrawlerText = true;
+    }, this.newBrawlerAnimationDuration * 1000 + 500);
   }
 
+  //----- DUPLICATE BRAWLER PHASE -----//
   setBiggerTierSize() {
     this.tierSize = 'h-12';
     this.tierContainerSize = 'w-16';
@@ -257,6 +304,20 @@ export class OpenBoxPageComponent implements OnInit{
   getParentActualPageClasses() {
     if (this.actualPage == 'duplicate-brawler') {
       return 'bg-gradient-radial via-brawl-purple to-brawl-purple from-purple-500';
+    }
+
+    if (this.actualPage == 'new-brawler-mystery-spins') {
+      return 'bg-brawl-sky-blue';
+    }
+
+    if (this.actualPage == 'new-brawler-unlocked') {
+      const rarity = this.getNewBrawlerRarity();
+
+      if (rarity) {
+          return `bg-[${rarity.color}]`;
+      }
+
+      return `bg-[${this.getNewBrawlerRarityColor()}]`;
     }
 
     return 'bg-gradient-radial via-brawl-dark-blue to-brawl-dark-blue from-brawl-blue';
@@ -354,4 +415,24 @@ export class OpenBoxPageComponent implements OnInit{
     });
   }
 
+  //----------------- NEW BRAWLER PHASE -----------------//
+
+  getNewBrawlerRarity(): RarityDetailResponse {
+    const rarity = this.rarities.find(rarity => rarity.id === this.newBrawler.rarity_id);
+
+    return rarity ? rarity : this.rarities[0];
+  }
+
+  getNewBrawlerRarityColor(): string {
+    const rarity = this.getNewBrawlerRarity();
+    return rarity ? rarity.color : '';
+  }
+
+  putRarityNameInPlural(rarityName: string): string {
+    if (rarityName === 'Inicial') {
+      return rarityName + 'es';
+    }
+
+    return rarityName + 's';
+  }
 }
