@@ -21,6 +21,7 @@ export class LoadingService {
       return;
     }
 
+    this.count = 0;
     this.loadingSubject.next(false);
   }
 }
