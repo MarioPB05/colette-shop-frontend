@@ -3,6 +3,7 @@ import {AuthPageComponent} from '@features/auth/pages/auth-page.component';
 import {CatalogPageComponent} from '@features/catalog/pages/catalog-page/catalog-page.component';
 import {BoxDetailPageComponent} from '@features/box-detail/pages/box-detail-page/box-detail-page.component';
 import {authGuard} from '@guards/auth.guard';
+import {UserDetailsPageComponent} from '@features/user-details/pages/user-details-page/user-details-page.component';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,12 @@ export const routes: Routes = [
   {
     path: 'box/:id',
     component: BoxDetailPageComponent,
+    canActivate: [authGuard],
+    data: { role: 'authenticated' }
+  },
+  {
+    path: 'user/details',
+    component: UserDetailsPageComponent,
     canActivate: [authGuard],
     data: { role: 'authenticated' }
   },
