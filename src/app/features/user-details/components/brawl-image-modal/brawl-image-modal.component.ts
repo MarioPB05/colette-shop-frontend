@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FloatLabel} from 'primeng/floatlabel';
 import {InputText} from 'primeng/inputtext';
 import {NgIf} from '@angular/common';
 import {Select} from 'primeng/select';
 import {FormsModule} from '@angular/forms';
+import {BrawlerUserDetailsResponse} from '@models/user.model';
 
 @Component({
   selector: 'app-brawl-image-modal',
@@ -19,23 +20,13 @@ export class BrawlImageModalComponent implements OnInit {
 
   isOpen = false;
 
-  brawlers: any[] | undefined;
+  @Input() brawlers!: BrawlerUserDetailsResponse[];
+  @Input() userBrawler!: BrawlerUserDetailsResponse;
 
-  selectedBrawler: string | undefined;
+  selectedBrawler: BrawlerUserDetailsResponse | undefined;
 
   ngOnInit() {
-    this.brawlers = [
-      { name: 'Australia', code: 'AU' },
-      { name: 'Brazil', code: 'BR' },
-      { name: 'China', code: 'CN' },
-      { name: 'Egypt', code: 'EG' },
-      { name: 'France', code: 'FR' },
-      { name: 'Germany', code: 'DE' },
-      { name: 'India', code: 'IN' },
-      { name: 'Japan', code: 'JP' },
-      { name: 'Spain', code: 'ES' },
-      { name: 'United States', code: 'US' }
-    ];
+    this.selectedBrawler = this.userBrawler;
   }
 
   openModal() {
