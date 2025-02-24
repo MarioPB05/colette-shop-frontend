@@ -8,6 +8,6 @@ export interface RarityDetailResponse {
   id: number;
   name: string;
   color: string;
-  brawlersOfRarityUnlocked: number;
-  totalBrawlersOfRarity: number;
+  brawlers_of_rarity_unlocked: number;
+  total_brawlers_of_rarity: number;
 }
