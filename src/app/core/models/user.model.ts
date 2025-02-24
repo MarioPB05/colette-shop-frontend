@@ -37,4 +37,12 @@ export interface UserDetailsResponse {
   favouriteBrawlers: number;
   brawlers: number;
   gifts: number;
+  brawlerAvatar: string;
+}
+
+export interface BrawlerUserDetailsResponse {
+  brawlerId: number;
+  name: string;
+  image: string;
+  modelImage: string;
 }
