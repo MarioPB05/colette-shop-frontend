@@ -26,9 +26,31 @@
   -webkit-text-stroke: 1.5px black;
 }
 
+/*------------------- Corazon -------------------*/
+
+.brawl-heart {
+  @apply text-brawl-white bg-brawl-pink border-2 w-5 h-5 border-brawl-white flex justify-center pt-0.5 items-center rounded-full;
+}
+
+.brawl-heart>i {
+  font-size: 0.6rem;
+}
+
 /*------------------- Botones -------------------*/
 .brawl-button {
-  @apply bg-brawl-gold p-1 px-3 rounded-lg w-full text-shadow text-border-sm;
+  @apply bg-brawl-gold rounded-lg text-shadow text-border-sm border-b-2 border-yellow-800;
+}
+
+.brawl-button:hover {
+  @apply bg-brawl-yellow;
+}
+
+.brawl-button:focus {
+  @apply outline-none;
+}
+
+.brawl-button:active {
+  @apply bg-brawl-white;
 }
 
 /*------------------- Estilos de los checkboxes -------------------*/
@@ -110,12 +132,12 @@
 
 :host ::ng-deep .brawl-range-slider .p-slider-handle[data-pc-section="startHandler"]::before,
 :host ::ng-deep .brawl-range-slider .p-slider-handle[data-pc-section="startHandler"]:hover::before {
-  background: url('/slider-left-arrow.png') no-repeat center center / contain;
+  background: url('/images/resources/slider-left-arrow.png') no-repeat center center / contain;
 }
 
 :host ::ng-deep .brawl-range-slider .p-slider-handle[data-pc-section="endHandler"]::before,
 :host ::ng-deep .brawl-range-slider .p-slider-handle[data-pc-section="endHandler"]:hover::before {
-  background: url('/slider-right-arrow.png') no-repeat center center / contain;
+  background: url('/images/resources/slider-right-arrow.png') no-repeat center center / contain;
 }
 
 
@@ -158,7 +180,7 @@
 .moving-skulls-background {
   user-select: none;
   overflow: hidden;
-  background-image: url('/brawl-stars-skull.png');
+  background-image: url('/images/resources/brawl-stars-skull.png');
   background-size: 15%;
   background-repeat: repeat;
   animation: scrollBackground 100s linear infinite;
@@ -173,6 +195,10 @@
 
 .spotlight {
   background: radial-gradient(50% 50% at 50% 50%, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.spotlight-blue {
+  background: radial-gradient(50% 50% at 50% 50%, #00B4FF 0%, rgba(0, 180, 255, 0) 100%);
 }
 
 @keyframes scrollBackground {

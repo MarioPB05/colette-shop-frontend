@@ -4,8 +4,8 @@ export interface BoxShopResponse {
   name: string;
   price: number;
   type: string;
-  boxesLeft: number;
-  favoriteBrawlersInBox: number;
+  boxes_left: number;
+  favorite_brawlers_in_box: number;
   pinned: boolean;
   popular: boolean;
 }
@@ -14,9 +14,10 @@ export interface DailyBoxShopResponse {
   id: number;
   name: string;
   type: string;
-  favoriteBrawlersInBox: number;
-  repeatHours: number;
+  favorite_brawlers_in_box: number;
+  repeat_every_hours: number;
   claimed: boolean;
+  last_claimed: string;
 }
 
 export interface TableBoxResponse {
@@ -26,4 +27,15 @@ export interface TableBoxResponse {
   quantity: number;
   type: string;
   pinned: boolean;
+}
+
+export interface BoxDetailResponse {
+  id: number;
+  name: string;
+  price: number;
+  type: string;
+  boxes_left: number;
+  brawler_quantity: number;
+  is_daily: boolean;
+  claimed: boolean;
 }

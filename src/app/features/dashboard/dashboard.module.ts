@@ -8,6 +8,7 @@ import {UserPageComponent} from '@dashboard/pages/users-page/user-page.component
 import {OrderPageComponent} from '@dashboard/pages/orders-page/order-page.component';
 import {BoxEditorPageComponent} from '@dashboard/pages/box-editor-page/box-editor-page.component';
 import {UserDetailsPageComponent} from '@dashboard/pages/user-details-page/user-details-page.component';
+import {OrderDetailsPageComponent} from '@dashboard/pages/order-details-page/order-details-page.component';
 
 @NgModule({
   declarations: [],
@@ -20,6 +21,7 @@ import {UserDetailsPageComponent} from '@dashboard/pages/user-details-page/user-
     BoxesPageComponent,
     BoxEditorPageComponent,
     UserDetailsPageComponent,
+    OrderDetailsPageComponent,
     DashboardRoutesModule,
   ]
 })

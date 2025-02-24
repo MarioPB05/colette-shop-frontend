@@ -1,18 +1,23 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {BoxShopResponse} from '@models/box.model';
 import {NgIf} from '@angular/common';
+import {BoxTypeImages} from '@core/enums/box.enum';
+import {Router} from '@angular/router';
+import {Tooltip} from 'primeng/tooltip';
+import {CartService} from '@shared/services/cart.service';
 
 @Component({
   selector: 'app-box-buy-card',
   imports: [
-    NgIf
+    NgIf,
+    Tooltip
   ],
   templateUrl: './box-buy-card.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss', "./../../../../../styles.scss"],
   standalone: true
 })
 
-export class BoxBuyCardComponent {
+export class BoxBuyCardComponent implements OnInit {
   gradientByBoxType : {[key: string]: string} = {
     "Caja": "from-[#3DE2FB] to-[#1375FF]",
     "Caja grande": "from-[#fbb9ff] to-[#f230ff]",
@@ -27,29 +32,41 @@ export class BoxBuyCardComponent {
     "Omegacaja": "bg-[#ff1616]"
   }
 
-  imageByBoxType : {[key: string]: string} = {
-    "Caja": "common-box.png",
-    "Caja grande": "big-box.png",
-    "Megacaja": "megabox.png",
-    "Omegacaja": "omegabox.png"
+  protected readonly BoxTypeImages = BoxTypeImages;
+
+  @Input() box!: BoxShopResponse;
+
+  constructor(private router: Router, private cartService: CartService) {
   }
 
-  @Input() box : BoxShopResponse = {
-    id: 1,
-    name: 'Box name',
-    price: 100,
-    type: 'Box type',
-    boxesLeft: 4,
-    favoriteBrawlersInBox: 3,
-    pinned: true,
-    popular: true
-  };
-
-  @Output() addToCart = new EventEmitter<BoxShopResponse>();
+  ngOnInit() {
+    const itemsInCart = this.cartService.getCartItemQuantity(this.box.id);
+    this.subtractBoxesLeft(itemsInCart);
+  }
 
   addBoxToCart() {
-    if (this.box.boxesLeft != 0) {
-      this.addToCart.emit(this.box);
+    if (this.box.boxes_left != 0) {
+      this.subtractBoxesLeft(1);
+      this.cartService.addToCart(this.box.id);
     }
+  }
+
+  boxHasInfinityStock() {
+    return this.box.boxes_left === -1;
+  }
+
+  subtractBoxesLeft(quantity: number) {
+    if (this.box.boxes_left === 0 || this.boxHasInfinityStock()) return;
+
+    if (this.box.boxes_left < quantity) {
+      this.box.boxes_left = 0;
+      return;
+    }
+
+    this.box.boxes_left -= quantity;
+  }
+
+  goToBoxDetails() {
+    this.router.navigate([`/box/${this.box.id}`]);
   }
 }

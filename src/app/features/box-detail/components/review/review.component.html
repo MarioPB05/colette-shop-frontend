@@ -1,0 +1,14 @@
+<div class="border-2 relative rounded gap-1 border-brawl-navy px-5 py-3 pb-7 bg-brawl-blue flex flex-col">
+  <span class="text-base text-shadow text-border-xs text-brawl-baby-blue">{{ review.username }}</span>
+  <span class="text-lg text-shadow text-border-xs text-brawl-white">
+    {{ review.comment }}
+  </span>
+
+  <div class="flex m-2 absolute top-0 right-0">
+    @for (item of [1, 2, 3, 4, 5]; track item) {
+      <img src="{{ getStarImage(review.rating, item)}}" alt="star" class="w-6 h-6 select-none">
+    }
+  </div>
+
+  <span class="text-xs absolute bottom-0 right-0 text-brawl-navy m-1">Hace {{ getFormattedDate(review.post_date) }}</span>
+</div>

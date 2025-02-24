@@ -8,6 +8,7 @@ import {OrderPageComponent} from '@dashboard/pages/orders-page/order-page.compon
 import {BoxesPageComponent} from '@dashboard/pages/boxes-page/boxes-page.component';
 import {BoxEditorPageComponent} from '@dashboard/pages/box-editor-page/box-editor-page.component';
 import {UserDetailsPageComponent} from '@dashboard/pages/user-details-page/user-details-page.component';
+import {OrderDetailsPageComponent} from '@dashboard/pages/order-details-page/order-details-page.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,10 @@ const routes: Routes = [
       {
         path: 'orders',
         component: OrderPageComponent
+      },
+      {
+        path: 'orders/:orderId',
+        component: OrderDetailsPageComponent
       },
       {
         path: 'boxes',

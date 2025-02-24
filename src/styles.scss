@@ -7,3 +7,19 @@
   box-sizing: border-box;
   margin: 0;
 }
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-brawl-dark-slate;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-brawl-gold rounded-lg;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-brawl-yellow;
+}
