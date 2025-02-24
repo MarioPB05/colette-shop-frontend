@@ -107,6 +107,14 @@ export class OpenBoxPageComponent implements OnInit{
   newBrawler!: UserBrawlerProbabilityResponse;
   newBrawlerRarity!: RarityDetailResponse;
   showNewBrawlerText = false;
+  rarityUnlockedSounds: {[key: number]: string} = {
+    1: '/audios/brawler-reveal/common.ogg',
+    2: '/audios/brawler-reveal/rare.ogg',
+    3: '/audios/brawler-reveal/rare.ogg',
+    4: '/audios/brawler-reveal/epic.ogg',
+    5: '/audios/brawler-reveal/epic.ogg',
+    6: '/audios/brawler-reveal/legendary.ogg',
+  }
 
   constructor(private  faviconService: FaviconService,
               private trophyService: TrophyService,
@@ -123,6 +131,12 @@ export class OpenBoxPageComponent implements OnInit{
       });
       return;
     }
+
+    // Evento de despues de la carga del documento
+    setTimeout(() => {
+      const boxDropSound = new Audio("/audios/box/box-drop.ogg");
+      boxDropSound.play();
+    }, 500);
 
     this.setBrawlersInBox();
   }
@@ -200,6 +214,9 @@ export class OpenBoxPageComponent implements OnInit{
   }
 
   openBox() {
+    const audio = new Audio("/audios/box/open-box.ogg");
+    audio.play();
+
     this.showFlash().then(() => {
       this.openNextItem();
     });
@@ -256,6 +273,8 @@ export class OpenBoxPageComponent implements OnInit{
     this.actualPage = 'duplicate-brawler';
     this.duplicateBrawlerImage = brawler.image;
     this.duplicateBrawlerName = brawler.name;
+    const duplicateBrawlerSound = new Audio("/audios/box/get-powerpoints.ogg");
+    duplicateBrawlerSound.play();
 
     const totalTrophies = this.trophyService.getTotalTrophies(brawler.quantity);
     const tier = this.trophyService.getTier(totalTrophies);
@@ -283,10 +302,15 @@ export class OpenBoxPageComponent implements OnInit{
     this.newBrawlerRarity = this.getNewBrawlerRarity();
     this.newBrawlerRarity.brawlersOfRarityUnlocked++;
     this.actualPage = 'new-brawler-mystery-spins';
+    const brawlerRollSound = new Audio("/audios/box/brawler-roll-out.ogg");
+    brawlerRollSound.play();
 
     setTimeout(() => {
       this.actualPage = 'new-brawler-unlocked';
       this.nextButtonVisible = true;
+      const rarityUnlockedSound = new Audio(this.rarityUnlockedSounds[this.newBrawler.rarity_id]);
+      console.log(this.rarityUnlockedSounds[this.newBrawler.rarity_id]);
+      rarityUnlockedSound.play();
 
     }, this.newBrawlerAnimationDuration * 1000);
 
@@ -343,17 +367,19 @@ export class OpenBoxPageComponent implements OnInit{
   }
 
   async updateTrophyCountAnimation(targetCount: number): Promise<void> {
-    let animationTime = 25;
-
-    if (targetCount - this.actualTrophyCount > 40) {
-      animationTime = 10;
-    }
+    let animationTime = 50;
 
     return new Promise((resolve) => {
+
       let interval = setInterval(async () => {
         if (this.actualTrophyCount < targetCount) {
           this.actualTrophyCount++;
           this.totalTrophyCount++;
+          if (this.actualTrophyCount % 2 === 0) {
+            // Play sound every 2 trophies
+            new Audio("/audios/box/get-trophies.ogg").play();
+          }
+
         } else {
           clearInterval(interval);
 
@@ -381,6 +407,9 @@ export class OpenBoxPageComponent implements OnInit{
   }
 
   async doNextTierAnimation() {
+    const tierUpSound = new Audio("/audios/box/tier-up.ogg");
+    tierUpSound.play();
+
     // Change color of the trophy progress bar and increase the tier size
     setTimeout(() => {
       this.trophyProgressBarColor = 'bg-brawl-gold';
