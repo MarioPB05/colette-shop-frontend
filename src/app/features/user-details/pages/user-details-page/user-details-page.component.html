@@ -3,16 +3,16 @@
 
   <main class="w-full grid grid-cols-[auto_1fr] gap-4 p-5">
     <div class="flex align-baseline gap-3">
-      <img src="{{ user.brawlerAvatar }}" alt="user"
+      <img src="{{ userBrawler.modelImage }}" alt="user"
            class="object-contain w-64 h-72 spotlight"/>
       <div (click)="brawlImageModalComponent.openModal()" class="flex flex-col align-baseline gap-2 justify-end cursor-pointer">
         <span class="text-brawl-white text-shadow text-sm text-border-xs">ICONO DE PERFIL</span>
         <div class="text-brawl-white text-shadow text-base text-border-xs flex gap-1">
           <img src="/images/icons/gear-icon.png" alt="gear" class="w-6 h-6 inline-block"/>
-          <span class="text-xl">8 BIT</span>
+          <span class="text-xl">{{ userBrawler.name }}</span>
         </div>
       </div>
-      <app-brawl-image-modal #brawlImageModalComponent></app-brawl-image-modal>
+      <app-brawl-image-modal [brawlers]="brawlers" [userBrawler]="userBrawler" #brawlImageModalComponent></app-brawl-image-modal>
     </div>
     <div class="border-l-4 border-brawl-dark-slate pl-10 flex flex-col gap-10">
       <div class="flex justify-between items-start">
@@ -21,13 +21,12 @@
                class="relative bg-brawl-dark-slate rounded-md border-b-2 border-brawl-navy w-56 py-3 text-center cursor-pointer">
             <img src="/images/icons/gear-icon.png" alt="medal" class="w-6 absolute -top-1 -left-1"/>
             <span class="text-shadow text-2xl text-border-xs text-brawl-white">alligatoro</span>
-            <!--            <input value="alligatoro" type="text" class="text-brawl-white text-shadow text-2xl text-border-xs bg-transparent border-none"/>-->
           </div>
           <app-modal-username #modalUsernameComponent></app-modal-username>
           <div
             class="relative flex items-center bg-brawl-dark-blue text-white font-bold text-lg pe-6 ps-4 py-2 rounded-r-2xl">
             <div class="absolute left-[0.4rem] -ml-6 w-9 h-9 bg-brawl-dark-blue rotate-45 rounded-lg"></div>
-            <span class="z-10">#BGT5454</span>
+            <span class="z-10">{{ user.brawlTag }}</span>
           </div>
         </div>
         <div (click)="modalDataComponent.openModal()"
@@ -37,12 +36,48 @@
         <app-modal-data #modalDataComponent></app-modal-data>
       </div>
       <div class="grid grid-cols-3 gap-y-7 gap-x-16 max-w-[750px] mx-auto w-full">
-        <app-user-stat></app-user-stat>
-        <app-user-stat></app-user-stat>
-        <app-user-stat></app-user-stat>
-        <app-user-stat></app-user-stat>
-        <app-user-stat></app-user-stat>
-        <app-user-stat></app-user-stat>
+        <app-user-stat
+          title="TROFEOS TOTALES"
+          value="{{ user.trophies }}"
+          icon="/images/favicon/box-favicon.png"
+          color="text-brawl-light-gray"
+          bgColor="bg-blue-900"
+        ></app-user-stat>
+        <app-user-stat
+          title="BRAWLERS DESBLOQUEADOS"
+          value= "{{ user.brawlers }}"
+          icon="/images/favicon/box-favicon.png"
+          color="text-brawl-light-gray"
+          bgColor="bg-blue-900"
+        ></app-user-stat>
+        <app-user-stat
+          title="CAJAS REGALADAS"
+          value= "{{ user.gifts }}"
+          icon="/images/favicon/box-favicon.png"
+          color="text-brawl-yellow"
+          bgColor="bg-[#4B85B3]"
+        ></app-user-stat>
+        <app-user-stat
+          title="CAJAS ABIERTAS"
+          value="{{ user.openBoxes }}"
+          icon="/images/favicon/box-favicon.png"
+          color="text-brawl-light-gray"
+          bgColor="bg-blue-900"
+        ></app-user-stat>
+        <app-user-stat
+          title="BRAWLERS FAVORITOS"
+          value="{{ user.favouriteBrawlers }}"
+          icon="/images/favicon/box-favicon.png"
+          color="text-brawl-light-gray"
+          bgColor="bg-blue-900"
+        ></app-user-stat>
+        <app-user-stat
+          title="GEMAS"
+          value="{{ user.gems }}"
+          icon="/images/icons/brawl-gem-icon.png"
+          color="text-brawl-light-gray"
+          bgColor="bg-blue-900"
+        ></app-user-stat>
       </div>
     </div>
   </main>

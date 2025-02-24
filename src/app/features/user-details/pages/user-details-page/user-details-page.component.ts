@@ -2,7 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {UserService} from '@features/user-details/service/user.service';
 import {Router} from '@angular/router';
 import {AuthService} from '@core/services/auth.service';
-import {UserDetailsResponse} from '@models/user.model';
+import {BrawlerUserDetailsResponse, UserDetailsResponse} from '@models/user.model';
 import {BrawlHeaderComponent} from '@shared/components/brawl-header/brawl-header.component';
 import {UserStatComponent} from '@features/user-details/components/user-stat/user-stat.component';
 import {ModalDataComponent} from '@features/user-details/components/modal-data/modal-data.component';
@@ -18,7 +18,6 @@ import {
     BrawlHeaderComponent,
     UserStatComponent,
     ModalDataComponent,
-    NgIf,
     ModalUsernameComponent,
     BrawlImageModalComponent
   ],
@@ -28,11 +27,14 @@ import {
 export class UserDetailsPageComponent implements OnInit {
 
   protected user!: UserDetailsResponse;
+  protected brawlers!: BrawlerUserDetailsResponse[];
+  protected userBrawler!: BrawlerUserDetailsResponse;
 
   private authService: AuthService = inject(AuthService);
   private router: Router = inject(Router);
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) {
+  }
 
   ngOnInit() {
     if (!this.authService.isAuthenticated()) {
@@ -42,10 +44,13 @@ export class UserDetailsPageComponent implements OnInit {
     this.userService.getUserDetails().subscribe(user => {
       this.user = user;
       console.log(user);
-    });
 
-    this.userService.getBrawlersOfUser().subscribe(brawlers => {
-      console.log(brawlers);
+      this.userService.getBrawlersOfUser().subscribe(brawlers => {
+        this.brawlers = brawlers;
+        console.log(brawlers);
+
+        this.userBrawler = this.brawlers.find(brawler => brawler.brawlerId === this.user.brawlerAvatar)!;
+      });
     });
   }
 }
