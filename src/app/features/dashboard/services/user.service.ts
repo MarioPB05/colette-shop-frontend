@@ -25,7 +25,7 @@ export class UserService {
   }
 
   showUser(brawlTag: string): Observable<ShowUserResponse> {
-    return this.http.get<ShowUserResponse>(`${this.apiUrl}/${brawlTag}`);
+    return this.http.get<ShowUserResponse>(`${this.apiUrl}/find/${brawlTag}`);
   }
 
 }

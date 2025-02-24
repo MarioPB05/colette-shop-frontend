@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {UserDetailsResponse} from '@models/user.model';
+import {BrawlerUserDetailsResponse, UserDetailsResponse} from '@models/user.model';
 import {GemsStats} from '@models/stats.model';
 
 @Injectable({
@@ -15,5 +15,9 @@ export class UserService {
 
   getUserDetails(): Observable<UserDetailsResponse> {
     return this.http.get<UserDetailsResponse>(`${this.apiUrl}/details`);
+  }
+
+  getBrawlersOfUser(): Observable<BrawlerUserDetailsResponse[]> {
+    return this.http.get<BrawlerUserDetailsResponse[]>(`${this.apiUrl}/details/brawlers`);
   }
 }
