@@ -32,7 +32,7 @@ export class OpenBoxPageComponent implements OnInit{
     'id': 1,
     'type': 'big_box',
     'brawler_quantity': 10,
-    'opened': false
+    'open': false
   }
 
   brawlersCanGetInBox: UserBrawlerProbabilityResponse[] = [
@@ -125,7 +125,7 @@ export class OpenBoxPageComponent implements OnInit{
     this.faviconService.changeFavicon("/images/favicon/box-favicon.png");
     this.pageLoaded = true;
 
-    if (this.box.opened) {
+    if (this.box.open) {
       this.router.navigate(['/inventory']).then(() => {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'La caja ya ha sido abierta.'});
       });
