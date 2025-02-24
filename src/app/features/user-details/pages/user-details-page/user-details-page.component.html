@@ -3,7 +3,7 @@
 
   <main class="w-full grid grid-cols-[auto_1fr] gap-4 p-5">
     <div class="flex align-baseline gap-3">
-      <img src="/images/brawlers/16000027_model.png" alt="user"
+      <img src="{{ user.brawlerAvatar }}" alt="user"
            class="object-contain w-64 h-72 spotlight"/>
       <div (click)="brawlImageModalComponent.openModal()" class="flex flex-col align-baseline gap-2 justify-end cursor-pointer">
         <span class="text-brawl-white text-shadow text-sm text-border-xs">ICONO DE PERFIL</span>

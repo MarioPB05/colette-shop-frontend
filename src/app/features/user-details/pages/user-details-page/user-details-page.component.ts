@@ -43,5 +43,9 @@ export class UserDetailsPageComponent implements OnInit {
       this.user = user;
       console.log(user);
     });
+
+    this.userService.getBrawlersOfUser().subscribe(brawlers => {
+      console.log(brawlers);
+    });
   }
 }
