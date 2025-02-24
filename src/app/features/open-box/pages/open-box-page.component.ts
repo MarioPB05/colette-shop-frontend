@@ -30,6 +30,7 @@ export class OpenBoxPageComponent implements OnInit{
 
   box: InventoryBoxResponse = {
     'id': 1,
+    'box_id': 1,
     'type': 'big_box',
     'brawler_quantity': 10,
     'open': false
@@ -42,7 +43,7 @@ export class OpenBoxPageComponent implements OnInit{
       'image': '/images/brawlers/16000000_main.png',
       'model_image': '/images/brawlers/16000000_model.png',
       'probability': 100,
-      'quantity': 0,
+      'user_quantity': 0,
       'rarity_id': 1,
 
     },
@@ -52,7 +53,7 @@ export class OpenBoxPageComponent implements OnInit{
       'image': '/images/brawlers/16000002_main.png',
       'model_image': '/images/brawlers/16000002_model.png',
       'probability': 50,
-      'quantity': 0,
+      'user_quantity': 0,
       'rarity_id': 2,
     },
     {
@@ -61,7 +62,7 @@ export class OpenBoxPageComponent implements OnInit{
       'image': '/images/brawlers/16000001_main.png',
       'model_image': '/images/brawlers/16000001_model.png',
       'probability': 50,
-      'quantity': 0,
+      'user_quantity': 0,
       'rarity_id': 2,
     }
   ];
@@ -142,7 +143,7 @@ export class OpenBoxPageComponent implements OnInit{
   }
 
   isBrawlerDuplicate(brawler: UserBrawlerProbabilityResponse): boolean {
-    return brawler.quantity > 0;
+    return brawler.user_quantity > 0;
   }
 
   setBrawlersInBox() {
@@ -258,7 +259,7 @@ export class OpenBoxPageComponent implements OnInit{
     }
 
     this.brawlersOpened.push(brawler.id);
-    this.brawlersCanGetInBox[brawlerIndex].quantity++;
+    this.brawlersCanGetInBox[brawlerIndex].user_quantity++;
   }
 
   navigateToBoxResume() {
@@ -276,7 +277,7 @@ export class OpenBoxPageComponent implements OnInit{
     const duplicateBrawlerSound = new Audio("/audios/box/get-powerpoints.ogg");
     duplicateBrawlerSound.play();
 
-    const totalTrophies = this.trophyService.getTotalTrophies(brawler.quantity);
+    const totalTrophies = this.trophyService.getTotalTrophies(brawler.user_quantity);
     const tier = this.trophyService.getTier(totalTrophies);
 
     this.actualTrophyMax = this.trophyService.getTrophiesToReachTier(tier);

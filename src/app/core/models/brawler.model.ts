@@ -30,6 +30,6 @@ export interface UserBrawlerProbabilityResponse {
   image: string;
   model_image: string;
   probability: number;
-  quantity: number;
+  user_quantity: number;
   rarity_id: number;
 }

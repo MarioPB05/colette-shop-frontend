@@ -42,6 +42,7 @@ export interface BoxDetailResponse {
 
 export interface InventoryBoxResponse {
   id: number;
+  box_id: number;
   type: string;
   brawler_quantity: number;
   open: boolean;
