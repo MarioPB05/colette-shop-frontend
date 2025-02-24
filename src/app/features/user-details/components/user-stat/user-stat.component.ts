@@ -1,12 +1,4 @@
-import {Component, Input} from '@angular/core';
-
-export interface UserStatCard {
-  title: string;
-  value: number;
-  icon: string;
-  color: string;
-  bgColor: string;
-}
+import {Component, Input, numberAttribute} from '@angular/core';
 
 @Component({
   selector: 'app-user-stat',
@@ -16,7 +8,11 @@ export interface UserStatCard {
 })
 export class UserStatComponent {
 
-  // @Input() card!: UserStatCard;
+  @Input() title!: string;
+  @Input({transform: numberAttribute}) value!: number;
+  @Input() icon!: string;
+  @Input() color!: string;
+  @Input() bgColor!: string;
 
   constructor() {}
 
