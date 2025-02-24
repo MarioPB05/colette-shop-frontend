@@ -37,7 +37,7 @@ export interface UserDetailsResponse {
   favouriteBrawlers: number;
   brawlers: number;
   gifts: number;
-  brawlerAvatar: string;
+  brawlerAvatar: number;
 }
 
 export interface BrawlerUserDetailsResponse {
