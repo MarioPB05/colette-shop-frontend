@@ -9,6 +9,7 @@ import {loadingInterceptor} from '@core/interceptors/loading.interceptor';
 import {BrawlTheme} from './brawl.theme';
 import {authInterceptor} from '@interceptors/auth.interceptor';
 import {ConfirmationService, MessageService} from 'primeng/api';
+import {SpanishTranslation} from './es.translation';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,7 +23,8 @@ export const appConfig: ApplicationConfig = {
         options: {
           darkModeSelector: 'none'
         }
-      }
+      },
+      translation: SpanishTranslation
     }),
     ConfirmationService,
     MessageService
