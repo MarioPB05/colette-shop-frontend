@@ -33,7 +33,7 @@ export const routes: Routes = [
     data: { role: 'authenticated' }
   },
   {
-    path: 'box/:id/open',
+    path: 'box/:item_id/open',
     component: OpenBoxPageComponent,
     canActivate: [authGuard],
     data: { role: 'authenticated' }
