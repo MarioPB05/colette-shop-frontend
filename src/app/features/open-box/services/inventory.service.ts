@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpContext} from '@angular/common/http';
 import {InventoryBoxResponse} from '@core/models/box.model';
 import {Observable} from 'rxjs';
+import {SkipLoading} from '@interceptors/loading.interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,8 @@ export class InventoryService {
   }
 
   saveBoxOpenResults(id_item: number, data: any): Observable<any> {
-    return this.http.post(`/api/inventory/${id_item}/open`, data);
+    return this.http.post(`/api/inventory/${id_item}/open`, data, {
+      context: new HttpContext().set(SkipLoading, true)
+    });
   }
 }
