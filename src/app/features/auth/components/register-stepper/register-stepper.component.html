@@ -61,7 +61,7 @@
 
               <p-iconfield>
                 <p-inputicon [styleClass]="getUsernameIconClass()" />
-                <input class="w-full" pInputText id="r_username" formControlName="username"/>
+                <input [maxLength]="15" class="w-full" pInputText id="r_username" formControlName="username"/>
               </p-iconfield>
 
               <small class="text-red-500" *ngIf="username?.hasError('required') && username?.dirty">
@@ -83,6 +83,10 @@
               <small class="text-red-500" *ngIf="username?.hasError('serverError')">
                 Error al verificar el usuario. Inténtalo más tarde.
               </small>
+
+              <small class="text-red-500" *ngIf="username?.hasError('hasSpaces') && username?.dirty">
+                El nombre de usuario no puede contener espacios.
+              </small>
             </div>
 
             <div class="flex flex-col gap-2">
@@ -90,7 +94,7 @@
 
               <p-iconfield>
                 <p-inputicon styleClass="pi pi-envelope" />
-                <input class="w-full" pInputText id="r_email" formControlName="email"/>
+                <input [maxLength]="400" class="w-full" pInputText id="r_email" formControlName="email"/>
               </p-iconfield>
 
               <small class="text-red-500" *ngIf="email?.hasError('required') && email?.dirty">
@@ -104,7 +108,7 @@
 
             <div class="flex flex-col gap-2">
               <label for="r_password">Contraseña</label>
-              <p-password [toggleMask]="true" id="r_password" formControlName="password" />
+              <p-password [toggleMask]="true" id="r_password" formControlName="password" [maxLength]="30" />
 
               <small class="text-red-500" *ngIf="password?.hasError('required') && password?.dirty">
                 La contraseña es obligatoria
@@ -118,7 +122,7 @@
             <div class="flex flex-col gap-2">
               <label for="r_confirmPassword">Confirmar Contraseña</label>
               <p-password [toggleMask]="true" [feedback]="false" id="r_confirmPassword"
-                          formControlName="confirmPassword"/>
+                          formControlName="confirmPassword" [maxLength]="30"/>
 
               <small class="text-red-500" *ngIf="confirmPassword?.hasError('required') && confirmPassword?.dirty">
                 La confirmación de la contraseña es obligatoria
@@ -144,7 +148,7 @@
 
             <div class="flex flex-col gap-2">
               <label for="r_name">Nombre</label>
-              <input pInputText id="r_name" formControlName="name"/>
+              <input [maxLength]="200" pInputText id="r_name" formControlName="name"/>
 
               <small class="text-red-500" *ngIf="name?.hasError('required') && name?.dirty">
                 El nombre es obligatorio.
@@ -153,7 +157,7 @@
 
             <div class="flex flex-col gap-2">
               <label for="r_surname">Apellidos</label>
-              <input pInputText id="r_surname" formControlName="surname"/>
+              <input [maxLength]="400" pInputText id="r_surname" formControlName="surname"/>
 
               <small class="text-red-500" *ngIf="surname?.hasError('required') && surname?.dirty">
                 Los apellidos son obligatorios.
@@ -194,21 +198,17 @@
 
           <div class="flex pt-6 justify-between">
             <p-button (onClick)="activateCallback(1)" label="Volver" severity="secondary" icon="pi pi-arrow-left"/>
-            <p-button (onClick)="activateCallback(3)" label="Continuar" icon="pi pi-arrow-right" iconPos="right"/>
+            <p-button (onClick)="verifySecondStep(activateCallback)" label="Continuar" icon="pi pi-arrow-right" iconPos="right"/>
           </div>
         </ng-template>
       </p-step-panel>
 
       <p-step-panel [value]="3">
         <ng-template pTemplate="content" let-activateCallback="activateCallback">
-          <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
-            <div class="text-center mb-4 text-xl font-semibold">Account created successfully</div>
-            <div class="text-center">
-              <img alt="logo" src="https://primefaces.org/cdn/primeng/images/stepper/content.svg"/>
-            </div>
-          </div>
-          <div class="flex pt-6 justify-start">
-            <p-button (onClick)="activateCallback(2)" label="Volver" severity="secondary" icon="pi pi-arrow-left"/>
+          <div class="flex flex-col justify-center gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+            <div class="text-center text-xl font-semibold">Cuenta Creada</div>
+            <p class="text-center mb-4">Se ha enviado un correo de confirmación a tu dirección de correo electrónico.</p>
+            <img alt="logo" class="-mt-32" src="/images/animations/surge_win.gif"/>
           </div>
         </ng-template>
       </p-step-panel>

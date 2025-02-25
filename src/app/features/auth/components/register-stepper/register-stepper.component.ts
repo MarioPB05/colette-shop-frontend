@@ -20,6 +20,7 @@ import {Password} from 'primeng/password';
 import {catchError, debounceTime, map, Observable, of, switchMap} from 'rxjs';
 import {AuthService} from '@features/auth/services/auth.service';
 import { MessageService } from 'primeng/api';
+import {RegisterUserRequest} from '@models/auth.model';
 
 const passwordsMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const formGroup = control as FormGroup;
@@ -56,7 +57,7 @@ export class RegisterStepperComponent {
   activeStep: number = 1;
   maxDate: Date = new Date();
   registerForm = new FormGroup({
-    username: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(15)], [this.usernameExistsValidator()]),
+    username: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(15), this.usernameNotHasSpacesValidator()], [this.usernameExistsValidator()]),
     email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
     password: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
     confirmPassword: new FormControl<string | null>(null, [Validators.required]),
@@ -111,6 +112,15 @@ export class RegisterStepperComponent {
           )
         )
       );
+    };
+  }
+
+  usernameNotHasSpacesValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const username = control.value;
+      if (!username) return null;
+
+      return username.includes(' ') ? { hasSpaces: true } : null;
     };
   }
 
@@ -181,6 +191,88 @@ export class RegisterStepperComponent {
       summary: 'Error',
       detail: 'Por favor, rellena los campos correctamente'
     });
+  }
+
+  verifySecondStep(callback: any) {
+    if (this.name?.valid && this.surname?.valid && this.birthdate?.valid && this.dni?.valid) {
+      this.register();
+      callback(3);
+      return;
+    }
+
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Por favor, rellena los campos correctamente'
+    });
+  }
+
+  register() {
+    if (this.registerForm.valid) {
+      const birthdate = this.birthdate?.value as Date;
+      const month = String(birthdate.getMonth() + 1).padStart(2, '0');
+      const formattedBirthdate = `${birthdate.getFullYear()}-${month}-${birthdate.getDate()}`;
+      const dni = this.dni?.value as string;
+
+      const username = (this.username?.value as string).trim();
+      const password = (this.password?.value as string).trim();
+      const email = (this.email?.value as string).trim();
+      const name = (this.name?.value as string).trim();
+      const surname = (this.surname?.value as string).trim();
+
+      if (!username || !password || !email || !name || !surname || !dni) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Por favor, rellena los campos correctamente'
+        });
+
+        return;
+      }
+
+      const dto: RegisterUserRequest = {
+        username: username,
+        email: email,
+        password: password,
+        name: name,
+        surname: surname,
+        birthdate: formattedBirthdate,
+        dni: dni.replace('-', '')
+      }
+
+      this.authService.register(dto).subscribe({
+        next: (response) => {
+          if (response.status !== 'success') {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: response.message
+            });
+
+            return;
+          }
+
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Registro completado',
+            detail: 'Por favor, verifica tu correo electrónico para activar tu cuenta'
+          });
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Ha ocurrido un error al registrar tu cuenta'
+          });
+        }
+      });
+    }else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Por favor, rellena los campos correctamente'
+      });
+    }
   }
 
 }
