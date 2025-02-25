@@ -116,6 +116,7 @@ export class OpenBoxPageComponent implements OnInit{
     // Evento de despues de la carga del documento
     setTimeout(() => {
       const boxDropSound = new Audio("/audios/box/box-drop.ogg");
+      boxDropSound.volume = 0.4;
       boxDropSound.play();
     }, 500);
 
@@ -172,6 +173,8 @@ export class OpenBoxPageComponent implements OnInit{
       0
     );
 
+    console.log(totalProbability);
+
     // Generar un número aleatorio dentro del rango de probabilidades
     const randomThreshold = Math.random() * totalProbability;
 
@@ -200,6 +203,7 @@ export class OpenBoxPageComponent implements OnInit{
 
   openBox() {
     const audio = new Audio("/audios/box/open-box.ogg");
+    audio.volume = 0.6;
     audio.play();
 
     this.showFlash().then(() => {
@@ -212,7 +216,6 @@ export class OpenBoxPageComponent implements OnInit{
     const brawlerIndex = this.brawlersCanGetInBox.findIndex(brawler => brawler.id === this.brawlersInBox[index]);
     const brawler = this.brawlersCanGetInBox[brawlerIndex];
     this.changeItemAnimation = true;
-    console.log(brawler);
 
     if (this.box.brawler_quantity === this.brawlersOpened.length) {
         this.navigateToBoxResume();
@@ -259,6 +262,7 @@ export class OpenBoxPageComponent implements OnInit{
     this.duplicateBrawlerImage = brawler.image;
     this.duplicateBrawlerName = brawler.name;
     const duplicateBrawlerSound = new Audio("/audios/box/get-powerpoints.ogg");
+    duplicateBrawlerSound.volume = 0.6;
     duplicateBrawlerSound.play();
 
     const totalTrophies = this.trophyService.getTotalTrophies(brawler.user_quantity);
@@ -288,13 +292,14 @@ export class OpenBoxPageComponent implements OnInit{
     this.newBrawlerRarity.brawlers_of_rarity_unlocked++;
     this.actualPage = 'new-brawler-mystery-spins';
     const brawlerRollSound = new Audio("/audios/box/brawler-roll-out.ogg");
+    brawlerRollSound.volume = 0.6;
     brawlerRollSound.play();
 
     setTimeout(() => {
       this.actualPage = 'new-brawler-unlocked';
       this.nextButtonVisible = true;
       const rarityUnlockedSound = new Audio(this.rarityUnlockedSounds[this.newBrawler.rarity_id]);
-      console.log(this.rarityUnlockedSounds[this.newBrawler.rarity_id]);
+      rarityUnlockedSound.volume = 0.6;
       rarityUnlockedSound.play();
 
     }, this.newBrawlerAnimationDuration * 1000);
@@ -320,12 +325,18 @@ export class OpenBoxPageComponent implements OnInit{
     }
 
     if (this.actualPage == 'new-brawler-unlocked') {
-      const rarityColor = this.getNewBrawlerRarityColor();
-      console.log(`bg-[${rarityColor}]`);
-      return `bg-[${rarityColor}]`;
+      return '';
     }
 
     return 'bg-gradient-radial via-brawl-dark-blue to-brawl-dark-blue from-brawl-blue';
+  }
+
+  getParentBgColor() {
+    if (this.actualPage == 'new-brawler-unlocked') {
+      return this.getNewBrawlerRarityColor();
+    }
+
+    return '';
   }
 
   getTierImage() {
@@ -357,8 +368,10 @@ export class OpenBoxPageComponent implements OnInit{
           this.actualTrophyCount++;
           this.totalTrophyCount++;
           if (this.actualTrophyCount % 2 === 0) {
-            // Play sound every 2 trophies
-            new Audio("/audios/box/get-trophies.ogg").play();
+            const audioGetTrophies = new Audio();
+            audioGetTrophies.src = "/audios/box/get-trophies.ogg";
+            audioGetTrophies.volume = 0.5;
+            audioGetTrophies.play();
           }
 
         } else {
@@ -389,6 +402,7 @@ export class OpenBoxPageComponent implements OnInit{
 
   async doNextTierAnimation() {
     const tierUpSound = new Audio("/audios/box/tier-up.ogg");
+    tierUpSound.volume = 0.6;
     tierUpSound.play();
 
     // Change color of the trophy progress bar and increase the tier size
@@ -434,9 +448,7 @@ export class OpenBoxPageComponent implements OnInit{
   }
 
   getNewBrawlerRarityColor(): string {
-    // const rarity = this.getNewBrawlerRarity();
-    const rarity = this.rarities[5];
-    console.log(rarity);
+    const rarity = this.getNewBrawlerRarity();
     return rarity ? rarity.color : '';
   }
 
