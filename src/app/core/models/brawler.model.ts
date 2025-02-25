@@ -33,3 +33,11 @@ export interface UserBrawlerProbabilityResponse {
   user_quantity: number;
   rarity_id: number;
 }
+
+export interface InventoryBrawlerResponse {
+  id: number;
+  name: string;
+  image: string;
+  user_quantity_actual: number;
+  user_quantity_past: number;
+}
