@@ -22,7 +22,9 @@
         <i class="pi pi-lock"></i>
 
         <p-floatlabel variant="on" class="w-full">
-          <input pInputText type="password" id="password" autocomplete="off" class="w-full" [(ngModel)]="password" />
+          <p-password [toggleMask]="true" [feedback]="false" id="password"
+                      [maxLength]="30" [(ngModel)]="password" />
+
           <label for="password">Contraseña</label>
         </p-floatlabel>
       </div>

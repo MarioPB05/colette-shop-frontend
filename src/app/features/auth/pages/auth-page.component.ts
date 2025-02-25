@@ -9,6 +9,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {RegisterStepperComponent} from '@features/auth/components/register-stepper/register-stepper.component';
+import {Password} from 'primeng/password';
 
 @Component({
   selector: 'app-auth-page',
@@ -20,7 +21,8 @@ import {RegisterStepperComponent} from '@features/auth/components/register-stepp
     FloatLabel,
     FormsModule,
     ReactiveFormsModule,
-    RegisterStepperComponent
+    RegisterStepperComponent,
+    Password
   ],
   templateUrl: './auth-page.component.html',
   styleUrls: ['../../../shared/brawl_styles.scss', 'auth-page.styles.scss']
@@ -33,9 +35,6 @@ export class AuthPageComponent {
   username: string = '';
   password: string = '';
   loginSubmitted: boolean = false;
-
-  // Register form fields
-  registerSubmitted: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -82,10 +81,6 @@ export class AuthPageComponent {
         loginError();
       },
     });
-  }
-
-  register() {
-
   }
 
 }
