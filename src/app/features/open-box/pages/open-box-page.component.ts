@@ -142,9 +142,6 @@ export class OpenBoxPageComponent implements OnInit{
 
   saveBoxOpenResults() {
     this.inventoryService.saveBoxOpenResults(this.box.id, this.brawlersInBox).subscribe({
-      next: () => {
-        this.navigateToBoxResume();
-      },
       error: (error) => {
         this.router.navigate(['/inventory']).then(() => {
           this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo guardar los resultados de la caja.'});
