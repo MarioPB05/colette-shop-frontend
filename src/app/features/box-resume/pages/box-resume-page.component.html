@@ -1,0 +1,11 @@
+<div *ngIf="pageLoaded" class="md:h-screen min-h-screen overflow-hidden p-10 flex bg-gradient-radial via-brawl-dark-blue to-brawl-dark-blue flex-col gap-5 from-brawl-blue justify-center items-center relative brawl-font">
+  <span class="text-border-xs text-lg text-brawl-baby-blue text-shadow">HAS CONSEGUIDO:</span>
+
+  <div class="flex flex-row gap-7">
+    <div *ngFor="let brawlerCard of brawlerCardsAppearing">
+      <app-brawler-unlocked-card *ngIf="brawlerCard.type == 'unlocked'" [brawler_name]="getBrawlerById(brawlerCard.id_brawler).name" [brawler_image]="getBrawlerById(brawlerCard.id_brawler).image"/>
+
+      <app-brawler-duplicate-card *ngIf="brawlerCard.type == 'duplicate'" [brawler_name]="getBrawlerById(brawlerCard.id_brawler).name" [brawler_image]="getBrawlerById(brawlerCard.id_brawler).image" [brawler_quantity]="getActualBrawlerQuantity(brawlerCard.id_brawler)"/>
+    </div>
+  </div>
+</div>
