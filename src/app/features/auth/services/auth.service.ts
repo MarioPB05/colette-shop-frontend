@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpContext} from '@angular/common/http';
-import {AuthResponse, LoginUserRequest} from '@models/auth.model';
+import {AuthResponse, LoginUserRequest, RegisterUserRequest} from '@models/auth.model';
 import {map, Observable} from 'rxjs';
 import {SkipAuth} from '@interceptors/auth.interceptor';
 import {SkipLoading} from '@interceptors/loading.interceptor';
@@ -19,8 +19,14 @@ export class AuthService {
     });
   }
 
+  register(dto: RegisterUserRequest): Observable<APIResponse> {
+    return this.http.post<APIResponse>('/api/auth/register', dto, {
+      context: new HttpContext().set(SkipAuth, true)
+    });
+  }
+
   checkUsernameExists(username: string): Observable<boolean> {
-    return this.http.get<{exists: boolean}>(`/api/auth/verify-username/${username}`, {
+    return this.http.get<{exists: boolean}>(`/api/auth/verify-username/${username.trim()}`, {
       context: new HttpContext().set(SkipAuth, true).set(SkipLoading, true)
     }).pipe(
       map(response => response.exists)
