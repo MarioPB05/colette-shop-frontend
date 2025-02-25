@@ -1,0 +1,20 @@
+<!--<div class="flex flex-col items-center">-->
+<!--  <img src="/images/brawlers/16000000_main.png" alt="Shelly" class="h-20 w-20 z-10 border-4 border-brawl-black">-->
+
+<!--  <div class="relative">-->
+<!--    <div class="bg-brawl-black inverted-pentagon-shape w-16 h-7 scale-[1.03] absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"></div>-->
+<!--    <div class="bg-brawl-purple gap-1 text-sm flex justify-center pb-1.5 items-center inverted-pentagon-shape w-16 h-7 relative text-brawl-white brawl-font text-border-xs text-shadow">-->
+<!--      <span>250</span>-->
+<!--      <img src="/images/icons/trophy-icon.png" class="h-3" alt="Trophy">-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<div class="flex flex-col items-center gap-2">
+  <img [src]="brawler_image" [alt]="brawler_name" class="h-20 w-20 z-10 border-4 border-brawl-black">
+
+  <div class="flex gap-1 justify-center items-center relative bg-opacity-20 rounded-full bg-white w-20">
+    <img src="/images/icons/trophy-icon.png" class="h-4" alt="Trophy">
+    <span class="text-brawl-yellow text-border-xs text-shadow">+{{ trophy_count }}</span>
+  </div>
+</div>
