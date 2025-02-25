@@ -4,7 +4,7 @@ import {FaviconService} from '@core/services/favicon.service';
 import {TrophyService} from '@shared/services/trophy.service';
 import {UserBrawlerProbabilityResponse} from '@models/brawler.model';
 import {InventoryBoxResponse} from '@models/box.model';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {RarityDetailResponse} from '@models/rarity.model';
 import {InventoryService} from '@features/open-box/services/inventory.service';
@@ -78,29 +78,80 @@ export class OpenBoxPageComponent implements OnInit{
               private messageService: MessageService,
               private inventoryService: InventoryService,
               private brawlerService: BrawlerService,
-              private rarityService: RarityService) {}
+              private rarityService: RarityService,
+              private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.faviconService.changeFavicon("/images/favicon/box-favicon.png");
 
-    const item_id = 2;
+    const item_id = this.route.snapshot.params['item_id'];
     forkJoin({
       box: this.inventoryService.getInventoryBox(item_id),
-      brawlers: this.brawlerService.getUserProbabilityBrawlersFromBox(item_id),
       rarities: this.rarityService.getAllRarityDetails(),
     }).subscribe({
-      next: ({box, brawlers, rarities}) => {
+      next: ({box, rarities}) => {
         this.box = box;
-        this.brawlersCanGetInBox = brawlers;
         this.rarities = rarities;
-        this.onPageLoaded();
+        this.loadBrawlersInBox(box.box_id).then(() => {
+          this.onPageLoaded();
+        });
       },
       error: (error) => {
         this.router.navigate(['/inventory']).then(() => {
           this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo cargar la caja.'});
         });
+        this.pageLoaded = false;
       }
     })
+  }
+
+  loadBrawlersInBox(box_id: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.brawlerService.getUserProbabilityBrawlersFromBox(box_id).subscribe({
+        next: (brawlers) => {
+          this.brawlersCanGetInBox = brawlers;
+
+          if (!this.brawlersCanGetInBox || this.brawlersCanGetInBox.length === 0) {
+            this.throwNoBrawlerError();
+            reject();
+            return;
+          }
+
+          resolve();
+        },
+        error: (error) => {
+          reject(error);
+          this.router.navigate(['/inventory']).then(() => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'No se pudo cargar los brawlers de la caja.'
+            });
+          });
+          this.pageLoaded = false;
+        }});
+    });
+  }
+
+  throwNoBrawlerError() {
+    this.router.navigate(['/inventory']).then(() => {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo seleccionar ningún brawler.'});
+    });
+    this.pageLoaded = false;
+  }
+
+  saveBoxOpenResults() {
+    this.inventoryService.saveBoxOpenResults(this.box.id, this.brawlersInBox).subscribe({
+      next: () => {
+        this.navigateToBoxResume();
+      },
+      error: (error) => {
+        this.router.navigate(['/inventory']).then(() => {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo guardar los resultados de la caja.'});
+        });
+        this.pageLoaded = false;
+      }
+    });
   }
 
   onPageLoaded() {
@@ -110,6 +161,7 @@ export class OpenBoxPageComponent implements OnInit{
       this.router.navigate(['/inventory']).then(() => {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'La caja ya ha sido abierta.'});
       });
+      this.pageLoaded = false;
       return;
     }
 
@@ -138,11 +190,11 @@ export class OpenBoxPageComponent implements OnInit{
       this.router.navigate(['/inventory']).then(() => {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo seleccionar ningún brawler.'});
       });
+      this.pageLoaded = false;
       return;
     }
 
     this.brawlersInBox = brawlersInBox;
-    console.log(this.brawlersInBox);
   }
 
   decideAllBrawlersInBox() {
@@ -172,8 +224,6 @@ export class OpenBoxPageComponent implements OnInit{
       (sum, brawler) => sum + brawler.probability,
       0
     );
-
-    console.log(totalProbability);
 
     // Generar un número aleatorio dentro del rango de probabilidades
     const randomThreshold = Math.random() * totalProbability;
@@ -205,6 +255,8 @@ export class OpenBoxPageComponent implements OnInit{
     const audio = new Audio("/audios/box/open-box.ogg");
     audio.volume = 0.6;
     audio.play();
+
+    this.saveBoxOpenResults();
 
     this.showFlash().then(() => {
       this.openNextItem();
