@@ -10,6 +10,7 @@ import {InventoryBrawlerResponse} from '@models/brawler.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BrawlerService} from '@features/box-resume/services/brawler.service';
 import {MessageService} from 'primeng/api';
+import {FaviconService} from '@core/services/favicon.service';
 
 interface BrawlerCard {
   id_brawler: number;
@@ -38,11 +39,13 @@ export class BoxResumePageComponent implements OnInit {
   constructor(private router: Router,
               private activeRoute: ActivatedRoute,
               private brawlerService: BrawlerService,
-              private messageService: MessageService) {}
+              private messageService: MessageService,
+              private faviconService: FaviconService) {}
 
   ngOnInit() {
     this.getInventoryBrawlers().then(() => {
       this.brawlersCards = this.convertBrawlersToCards();
+      this.faviconService.changeFavicon("/images/favicon/box-favicon.png");
 
       if (this.brawlersCards.length === 0) {
         this.router.navigate(['/inventory']).then(() => {
