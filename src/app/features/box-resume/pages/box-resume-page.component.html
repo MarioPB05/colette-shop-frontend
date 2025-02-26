@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <button *ngIf="animation_finished" class="brawl-button p-1.5 text-white text-xl px-5 fade-up">
+  <button *ngIf="animation_finished" (click)="goToInventory()" class="brawl-button p-1.5 text-white text-xl px-5 fade-up">
     VOLVER AL INVENTARIO
   </button>
 </div>
