@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {catchError, map, Observable} from 'rxjs';
 import {AuthVerifyResponse} from '@models/auth.model';
+import {environment} from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class AuthService {
   }
 
   isAuthenticated(): Observable<boolean> {
-    return this.http.get<AuthVerifyResponse>('/api/auth/verify').pipe(
+    return this.http.get<AuthVerifyResponse>(`${environment.baseUrl}/auth/verify`).pipe(
       map((response) => response.valid),
       catchError(() => {
         this.removeToken();
@@ -34,7 +35,7 @@ export class AuthService {
   }
 
   isAdministrator(): Observable<boolean> {
-    return this.http.get<AuthVerifyResponse>('/api/auth/verify-admin').pipe(
+    return this.http.get<AuthVerifyResponse>(`${environment.baseUrl}/auth/verify-admin`).pipe(
       map((response) => response.valid),
       catchError(() => {
         this.removeToken();
@@ -44,7 +45,7 @@ export class AuthService {
   }
 
   isUser(): Observable<boolean> {
-    return this.http.get<AuthVerifyResponse>('/api/auth/verify-user').pipe(
+    return this.http.get<AuthVerifyResponse>(`${environment.baseUrl}/api/auth/verify-user`).pipe(
       map((response) => response.valid),
       catchError(() => {
         this.removeToken();
