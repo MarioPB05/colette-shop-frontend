@@ -7,6 +7,9 @@ import {
   BrawlerDuplicateCardComponent
 } from '@features/box-resume/components/brawler-duplicate-card/brawler-duplicate-card.component';
 import {InventoryBrawlerResponse} from '@models/brawler.model';
+import {ActivatedRoute, Router} from '@angular/router';
+import {BrawlerService} from '@features/box-resume/services/brawler.service';
+import {MessageService} from 'primeng/api';
 
 interface BrawlerCard {
   id_brawler: number;
@@ -23,55 +26,77 @@ interface BrawlerCard {
   ],
   templateUrl: './box-resume-page.component.html',
   styleUrl: './../../../shared/brawl_styles.scss',
+  standalone: true
 })
 export class BoxResumePageComponent implements OnInit {
   pageLoaded: boolean = false;
-  brawlers: InventoryBrawlerResponse[]= [
-    {
-      id: 1,
-      name: 'Shelly',
-      image: '/images/brawlers/16000000_main.png',
-      user_quantity_actual: 1,
-      user_quantity_past: 0
-    },
-    {
-      id: 2,
-      name: 'Nita',
-      image: '/images/brawlers/16000001_main.png',
-      user_quantity_actual: 2,
-      user_quantity_past: 1
-    },
-    {
-      id: 3,
-      name: 'Colt',
-      image: '/images/brawlers/16000002_main.png',
-      user_quantity_actual: 4,
-      user_quantity_past: 2
-    },
-    {
-      id: 3,
-      name: 'Bull',
-      image: '/images/brawlers/16000003_main.png',
-      user_quantity_actual: 2,
-      user_quantity_past: 0
-    },
-  ]
+  brawlers: InventoryBrawlerResponse[] = [];
   brawlersCards: BrawlerCard[] = [];
   brawlerCardsAppearing: BrawlerCard[] = [];
+  animation_finished: boolean = false;
+
+  constructor(private router: Router,
+              private activeRoute: ActivatedRoute,
+              private brawlerService: BrawlerService,
+              private messageService: MessageService) {}
 
   ngOnInit() {
-    this.pageLoaded = true;
-    this.brawlersCards = this.convertBrawlersToCards();
-    console.log(this.brawlersCards);
-    this.doAppearBrawlerCardsAnimation();
+    this.getInventoryBrawlers().then(() => {
+      this.brawlersCards = this.convertBrawlersToCards();
+
+      if (this.brawlersCards.length === 0) {
+        this.router.navigate(['/inventory']).then(() => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se encontraron brawlers en esta apertura'
+          });
+        })
+      }
+
+      this.pageLoaded = true;
+      this.doAppearBrawlerCardsAnimation();
+    }).catch(() => {
+      this.router.navigate(['/inventory']);
+    });
+  }
+
+  getInventoryBrawlers(): Promise<void> {
+    const item_id = this.activeRoute.snapshot.params['item_id'];
+
+    return new Promise((resolve, reject) => {
+      this.brawlerService.getInventoryBrawlers(item_id).subscribe({
+        next: (brawlers: InventoryBrawlerResponse[]) => {
+          this.brawlers = brawlers;
+          resolve();
+        },
+        error: (error) => {
+          reject(error);
+        }
+      });
+    });
   }
 
   doAppearBrawlerCardsAnimation() {
+    const appear_sound = new Audio('/audios/box/reveal-resume-item.ogg');
+    appear_sound.volume = 0.5;
     for (let i = 0; i < this.brawlersCards.length; i++) {
       setTimeout(() => {
         this.brawlerCardsAppearing.push(this.brawlersCards[i]);
-      }, i * 1000);
+        appear_sound.play();
+
+        if (i === this.brawlersCards.length - 1) {
+          setTimeout(() => {
+            this.animation_finished = true;
+          }, 2000);
+        }
+
+      }, i * 1100);
     }
+  }
+
+  goToInventory() {
+    this.router.navigate(['/inventory']);
   }
 
   convertBrawlersToCards() {
@@ -85,7 +110,7 @@ export class BoxResumePageComponent implements OnInit {
         });
       }
 
-      if (brawler.user_quantity_actual + brawler.user_quantity_past > 1) {
+      if (brawler.user_quantity_actual + brawler.user_quantity_past > 1 && brawler.user_quantity_actual > 0) {
         brawlerCards.push({
           id_brawler: brawler.id,
           type: 'duplicate'
@@ -103,6 +128,12 @@ export class BoxResumePageComponent implements OnInit {
 
   getActualBrawlerQuantity(id: number) {
     const brawler = this.brawlers.find(brawler => brawler.id === id);
-    return brawler ? brawler.user_quantity_actual - brawler.user_quantity_past : 0;
+
+    if (!brawler) {
+      return 0;
+    }
+
+    // Le sumamos uno si el usuario ya tenia ese brawler, para que la animacion de trofeos empiece en el valor correcto
+    return brawler.user_quantity_past > 0 ? brawler.user_quantity_actual + 1 : brawler.user_quantity_actual;
   }
 }
