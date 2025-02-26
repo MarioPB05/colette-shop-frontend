@@ -23,3 +23,21 @@ export interface BrawlerProbabilityResponse {
   user_favorite: boolean;
   probability: number;
 }
+
+export interface UserBrawlerProbabilityResponse {
+  id: number;
+  name: string;
+  image: string;
+  model_image: string;
+  probability: number;
+  user_quantity: number;
+  rarity_id: number;
+}
+
+export interface InventoryBrawlerResponse {
+  id: number;
+  name: string;
+  image: string;
+  user_quantity_actual: number;
+  user_quantity_past: number;
+}
