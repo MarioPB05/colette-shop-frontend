@@ -1,9 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TrophyService} from '@shared/services/trophy.service';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-brawler-duplicate-card',
-  imports: [],
+  imports: [
+    Tooltip
+  ],
+  standalone: true,
   templateUrl: './brawler-duplicate-card.component.html'
 })
 export class BrawlerDuplicateCardComponent implements OnInit {
@@ -19,13 +23,13 @@ export class BrawlerDuplicateCardComponent implements OnInit {
   }
 
   playTrophyCountAnimation() {
-    const total_count = this.trophyService.getTotalTrophies(this.brawler_quantity + 1);
-    const animation_step_time = total_count > 100 ? 30 : 50;
+    const total_count = this.trophyService.getTotalTrophies(this.brawler_quantity);
+    const animation_total_time = 900;
 
     for (let i = 0; i < total_count; i++) {
       setTimeout(() => {
         this.trophy_count++;
-      }, i * animation_step_time);
+      }, i * (animation_total_time / total_count));
     }
   }
 }
