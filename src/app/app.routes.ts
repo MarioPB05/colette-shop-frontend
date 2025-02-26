@@ -5,6 +5,7 @@ import {BoxDetailPageComponent} from '@features/box-detail/pages/box-detail-page
 import {authGuard} from '@guards/auth.guard';
 import {OpenBoxPageComponent} from '@features/open-box/pages/open-box-page.component';
 import {BoxResumePageComponent} from '@features/box-resume/pages/box-resume-page.component';
+import {VerifyPageComponent} from '@features/auth/pages/verify-page/verify-page.component';
 
 export const routes: Routes = [
   {
@@ -48,5 +49,9 @@ export const routes: Routes = [
   {
     path: 'auth',
     component: AuthPageComponent
+  },
+  {
+    path: 'auth/verify-email',
+    component: VerifyPageComponent
   }
 ];

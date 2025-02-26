@@ -5,9 +5,11 @@ import {InputText} from 'primeng/inputtext';
 import {FloatLabel} from 'primeng/floatlabel';
 import {AuthService} from '@features/auth/services/auth.service';
 import {AuthService as GlobalAuthService} from '@core/services/auth.service';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
+import {RegisterStepperComponent} from '@features/auth/components/register-stepper/register-stepper.component';
+import {Password} from 'primeng/password';
 
 @Component({
   selector: 'app-auth-page',
@@ -17,7 +19,10 @@ import {MessageService} from 'primeng/api';
     Card,
     InputText,
     FloatLabel,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    RegisterStepperComponent,
+    Password
   ],
   templateUrl: './auth-page.component.html',
   styleUrls: ['../../../shared/brawl_styles.scss', 'auth-page.styles.scss']
@@ -51,6 +56,8 @@ export class AuthPageComponent {
         summary: 'Error',
         detail: 'Usuario o contraseña incorrectos'
       });
+
+      this.loginSubmitted = false;
     }
 
     this.authService.login({username: this.username, password: this.password}).subscribe({
@@ -73,9 +80,6 @@ export class AuthPageComponent {
       error: () => {
         loginError();
       },
-      complete: () => {
-        this.loginSubmitted = false;
-      }
     });
   }
 
