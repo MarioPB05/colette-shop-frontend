@@ -8,4 +8,7 @@
       <app-brawler-duplicate-card *ngIf="brawlerCard.type == 'duplicate'" [brawler_name]="getBrawlerById(brawlerCard.id_brawler).name" [brawler_image]="getBrawlerById(brawlerCard.id_brawler).image" [brawler_quantity]="getActualBrawlerQuantity(brawlerCard.id_brawler)"/>
     </div>
   </div>
+  <button *ngIf="animation_finished" class="brawl-button p-1.5 text-white text-xl px-5 fade-up">
+    VOLVER AL INVENTARIO
+  </button>
 </div>
