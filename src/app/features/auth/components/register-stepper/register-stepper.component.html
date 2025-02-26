@@ -1,0 +1,217 @@
+<form [formGroup]="registerForm">
+  <p-stepper [(value)]="activeStep" [linear]="true" class="basis-[40rem]">
+    <p-step-list>
+      <p-step [value]="1" class="flex flex-row flex-auto gap-2">
+        <ng-template pTemplate="content" let-activateCallback="activateCallback" let-value="value">
+          <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+                    <span
+                      class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center"
+                      [ngClass]="{
+                            'bg-primary text-primary-contrast border-primary': value <= activeStep,
+                            'border-surface': value > activeStep
+                        }"
+                    >
+                        <i class="pi pi-user"></i>
+                    </span>
+          </button>
+        </ng-template>
+      </p-step>
+
+      <p-step [value]="2" class="flex flex-row flex-auto gap-2">
+        <ng-template pTemplate="content" let-activateCallback="activateCallback" let-value="value">
+          <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+                    <span
+                      class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center"
+                      [ngClass]="{
+                            'bg-primary text-primary-contrast border-primary': value <= activeStep,
+                            'border-surface': value > activeStep
+                        }"
+                    >
+                        <i class="pi pi-id-card"></i>
+                    </span>
+          </button>
+        </ng-template>
+      </p-step>
+
+      <p-step [value]="3" class="flex flex-row flex-auto gap-2">
+        <ng-template pTemplate="content" let-activateCallback="activateCallback" let-value="value">
+          <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+                    <span
+                      class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center"
+                      [ngClass]="{
+                            'bg-primary text-primary-contrast border-primary': value <= activeStep,
+                            'border-surface': value > activeStep
+                        }"
+                    >
+                        <i class="pi pi-check-circle"></i>
+                    </span>
+          </button>
+        </ng-template>
+      </p-step>
+    </p-step-list>
+
+    <p-step-panels>
+      <p-step-panel [value]="1">
+        <ng-template pTemplate="content" let-activateCallback="activateCallback">
+          <div class="flex flex-col gap-4 mx-auto" style="min-height: 16rem; max-width: 20rem">
+            <div class="text-center mb-4 text-xl font-semibold">Crea tu cuenta</div>
+
+            <div class="flex flex-col gap-2">
+              <label for="r_username">Nombre de Usuario</label>
+
+              <p-iconfield>
+                <p-inputicon [styleClass]="getUsernameIconClass()" />
+                <input [maxLength]="15" class="w-full" pInputText id="r_username" formControlName="username"/>
+              </p-iconfield>
+
+              <small class="text-red-500" *ngIf="username?.hasError('required') && username?.dirty">
+                El nombre de usuario es obligatorio.
+              </small>
+
+              <small class="text-red-500" *ngIf="username?.hasError('maxlength') && username?.dirty">
+                Debe tener menos de 16 caracteres.
+              </small>
+
+              <small class="text-gray-500" *ngIf="username?.pending">
+                Verificando disponibilidad...
+              </small>
+
+              <small class="text-red-500" *ngIf="username?.hasError('usernameTaken') && username?.dirty">
+                Este nombre de usuario ya está en uso.
+              </small>
+
+              <small class="text-red-500" *ngIf="username?.hasError('serverError')">
+                Error al verificar el usuario. Inténtalo más tarde.
+              </small>
+
+              <small class="text-red-500" *ngIf="username?.hasError('hasSpaces') && username?.dirty">
+                El nombre de usuario no puede contener espacios.
+              </small>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="r_email">Correo Electrónico</label>
+
+              <p-iconfield>
+                <p-inputicon styleClass="pi pi-envelope" />
+                <input [maxLength]="400" class="w-full" pInputText id="r_email" formControlName="email"/>
+              </p-iconfield>
+
+              <small class="text-red-500" *ngIf="email?.hasError('required') && email?.dirty">
+                El correo electrónico es obligatorio
+              </small>
+
+              <small class="text-red-500" *ngIf="email?.hasError('email') && email?.dirty">
+                El correo electrónico no es válido
+              </small>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="r_password">Contraseña</label>
+              <p-password [toggleMask]="true" id="r_password" formControlName="password" [maxLength]="30" />
+
+              <small class="text-red-500" *ngIf="password?.hasError('required') && password?.dirty">
+                La contraseña es obligatoria
+              </small>
+
+              <small class="text-red-500" *ngIf="password?.hasError('minlength') && password?.dirty">
+                La contraseña debe tener al menos 6 caracteres
+              </small>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="r_confirmPassword">Confirmar Contraseña</label>
+              <p-password [toggleMask]="true" [feedback]="false" id="r_confirmPassword"
+                          formControlName="confirmPassword" [maxLength]="30"/>
+
+              <small class="text-red-500" *ngIf="confirmPassword?.hasError('required') && confirmPassword?.dirty">
+                La confirmación de la contraseña es obligatoria
+              </small>
+
+              <small class="text-red-500" *ngIf="registerForm?.hasError('passwordMismatch') && confirmPassword?.touched">
+                Las contraseñas no coinciden
+              </small>
+            </div>
+          </div>
+
+          <div class="flex pt-6 justify-between">
+            <p-button (onClick)="stepperClosed.emit()" label="Cancelar" severity="secondary"/>
+            <p-button (onClick)="verifyFirstStep(activateCallback)" label="Continuar" icon="pi pi-arrow-right" iconPos="right" />
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="2">
+        <ng-template pTemplate="content" let-activateCallback="activateCallback">
+          <div class="flex flex-col gap-4 mx-auto" style="min-height: 16rem; max-width: 24rem">
+            <div class="text-center mb-4 text-xl font-semibold">Datos Personales</div>
+
+            <div class="flex flex-col gap-2">
+              <label for="r_name">Nombre</label>
+              <input [maxLength]="200" pInputText id="r_name" formControlName="name"/>
+
+              <small class="text-red-500" *ngIf="name?.hasError('required') && name?.dirty">
+                El nombre es obligatorio.
+              </small>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="r_surname">Apellidos</label>
+              <input [maxLength]="400" pInputText id="r_surname" formControlName="surname"/>
+
+              <small class="text-red-500" *ngIf="surname?.hasError('required') && surname?.dirty">
+                Los apellidos son obligatorios.
+              </small>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="r_dni">DNI</label>
+              <p-inputmask mask="99999999-a" placeholder="00000000-A" id="r_dni" formControlName="dni" styleClass="w-full"/>
+
+              <small class="text-red-500" *ngIf="dni?.hasError('required') && dni?.dirty">
+                El DNI es obligatorio.
+              </small>
+
+              <small class="text-red-500" *ngIf="dni?.hasError('invalidDni') && dni?.dirty">
+                El DNI no es válido.
+              </small>
+
+              <small class="text-red-500" *ngIf="(dni?.hasError('minlength') || dni?.hasError('maxlength')) && dni?.dirty">
+                El DNI debe tener 9 caracteres.
+              </small>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="r_birthdate">Fecha de Nacimiento</label>
+              <p-date-picker [maxDate]="maxDate" formControlName="birthdate" id="r_birthdate" styleClass="w-full"/>
+
+              <small class="text-red-500" *ngIf="birthdate?.hasError('required') && birthdate?.dirty">
+                La fecha de nacimiento es obligatoria.
+              </small>
+
+              <small class="text-red-500" *ngIf="birthdate?.hasError('tooYoung') && birthdate?.dirty">
+                Debes ser mayor de edad para registrarte.
+              </small>
+            </div>
+
+          </div>
+
+          <div class="flex pt-6 justify-between">
+            <p-button (onClick)="activateCallback(1)" label="Volver" severity="secondary" icon="pi pi-arrow-left"/>
+            <p-button (onClick)="verifySecondStep(activateCallback)" label="Continuar" icon="pi pi-arrow-right" iconPos="right"/>
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="3">
+        <ng-template pTemplate="content" let-activateCallback="activateCallback">
+          <div class="flex flex-col justify-center gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+            <div class="text-center text-xl font-semibold">Cuenta Creada</div>
+            <p class="text-center mb-4">Se ha enviado un correo de confirmación a tu dirección de correo electrónico.</p>
+            <img alt="logo" class="-mt-32" src="/images/animations/surge_win.gif"/>
+          </div>
+        </ng-template>
+      </p-step-panel>
+    </p-step-panels>
+  </p-stepper>
+</form>

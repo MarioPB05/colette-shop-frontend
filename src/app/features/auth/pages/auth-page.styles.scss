@@ -82,3 +82,7 @@ i, input {
 .btn-link {
   @apply text-black;
 }
+
+::ng-deep .p-password, ::ng-deep .p-password-input {
+  width: 100% !important;
+}

@@ -1,0 +1,24 @@
+<div class="w-screen h-screen relative brawl-font flex flex-col justify-center items-center bg-brawl-dark-blue">
+  <div class="moving-skulls-background"></div>
+
+  <h1 class="text-5xl text-center text-shadow spotlight text-border-md mb-10">
+    Colette's <br>
+    <span class="text-white">SHOP</span>
+  </h1>
+
+  <div class="w-max px-20 py-10 bg-white rounded-xl z-10 flex flex-col justify-center items-center">
+    <img src="/images/brawlers/16000039_pin.png" alt="Pin" class="size-40 mx-auto mb-6 p-4 shadow-lg rounded-full overflow-visible" [ngClass]="{'bg-brawl-lime': resultStatus === 'success', 'bg-brawl-red': resultStatus === 'error'}" />
+    <div class="text-center mb-2 text-4xl font-semibold text-border-xs text-shadow" [ngClass]="{'text-brawl-lime': resultStatus === 'success', 'text-brawl-red': resultStatus === 'error'}">
+      {{ title }}
+    </div>
+    <p class="text-center text-brawl-light-gray">{{ subtitle }}</p>
+
+    <a *ngIf="showButton" routerLink="/auth" class="btn-yellow-hover text-shadow text-border-sm mt-10" style="width: fit-content">
+      INICIAR SESIÓN
+    </a>
+
+    <a *ngIf="!showButton && resultStatus === 'error'" routerLink="/" class="btn-yellow-hover text-shadow text-border-sm mt-10" style="width: fit-content">
+      VOLVER A LA TIENDA
+    </a>
+  </div>
+</div>

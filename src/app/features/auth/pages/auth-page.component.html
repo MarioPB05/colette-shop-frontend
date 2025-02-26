@@ -22,7 +22,9 @@
         <i class="pi pi-lock"></i>
 
         <p-floatlabel variant="on" class="w-full">
-          <input pInputText type="password" id="password" autocomplete="off" class="w-full" [(ngModel)]="password" />
+          <p-password [toggleMask]="true" [feedback]="false" id="password"
+                      [maxLength]="30" [(ngModel)]="password" />
+
           <label for="password">Contraseña</label>
         </p-floatlabel>
       </div>
@@ -32,7 +34,11 @@
     </div>
   </p-card>
 
-  <div class="absolute bottom-10 flex gap-6" [ngClass]="{'button-hide': cardVisible(), 'button-show': !cardVisible()}">
+  <p-card *ngIf="registerVisible" class="min-w-full sm:min-w-[600px]">
+    <app-register-stepper (stepperClosed)="registerVisible = false" />
+  </p-card>
+
+  <div class="absolute bottom-10 flex flex-col md:flex-row gap-6" [ngClass]="{'button-hide': cardVisible(), 'button-show': !cardVisible()}">
     <button (click)="loginVisible = true" class="btn-yellow-hover text-shadow text-border-sm">
       INICIAR SESIÓN
     </button>

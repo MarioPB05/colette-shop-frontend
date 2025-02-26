@@ -4,6 +4,7 @@ import {CatalogPageComponent} from '@features/catalog/pages/catalog-page/catalog
 import {BoxDetailPageComponent} from '@features/box-detail/pages/box-detail-page/box-detail-page.component';
 import {authGuard} from '@guards/auth.guard';
 import {UserDetailsPageComponent} from '@features/user-details/pages/user-details-page/user-details-page.component';
+import {VerifyPageComponent} from '@features/auth/pages/verify-page/verify-page.component';
 
 export const routes: Routes = [
   {
@@ -41,5 +42,9 @@ export const routes: Routes = [
   {
     path: 'auth',
     component: AuthPageComponent
+  },
+  {
+    path: 'auth/verify-email',
+    component: VerifyPageComponent
   }
 ];
