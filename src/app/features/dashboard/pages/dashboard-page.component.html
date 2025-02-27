@@ -7,13 +7,13 @@
 <div class="flex px-2 xs:px-8 min-h-screen bg-[#EAEAEA]">
   <app-sidebar />
 
-  <div class="w-full min-h-screen flex justify-center xl:ml-[16rem]">
+  <div class="w-full min-h-screen flex justify-center overflow-x-hidden xl:ml-[16rem]">
     <p-card class="w-full py-5 xs:py-10 p-4">
         <router-outlet />
     </p-card>
   </div>
 
-  <div class="xl:hidden">
+  <div class="xl:hidden fixed bottom-3 right-3">
     <p-speeddial className="bottom-3 right-3" [model]="items" [radius]="120" direction="up" [style]="{ position: 'absolute' }" [tooltipOptions]="{ tooltipPosition: 'left' }">
       <ng-template #button let-toggleCallback="toggleCallback">
         <p-button (click)="toggleCallback($event)" icon="pi pi-bars" />
