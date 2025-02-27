@@ -1,8 +1,8 @@
-<div class="min-h-screen  overflow-hidden bg-gradient-radial via-brawl-dark-blue to-brawl-dark-blue flex-col from-brawl-blue relative brawl-font">
+<div class="min-h-screen overflow-hidden bg-gradient-radial via-brawl-dark-blue to-brawl-dark-blue flex-col from-brawl-blue relative brawl-font">
   <app-brawl-header/>
 
-  <div class="p-10 flex w-full justify-center">
-    <div class="flex justify-between gap-10 w-full">
+  <div class="flex gap-10 items-center flex-col p-10 pt-16 justify-center max-w-[850px] mx-auto">
+    <div class="flex justify-between w-full gap-12 mb-4">
       <h1 class="text-white m-0 text-3xl text-border-regular">
         BRAWLERS
         <span class="text-brawl-light-blue">(13/22)</span>
@@ -21,5 +21,18 @@
       </div>
     </div>
 
+    <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-12">
+      <app-brawler-card *ngFor="let brawler of unlockedBrawlers" [brawler]="brawler"/>
+    </div>
+
+    <div class="bg-brawl-black w-full h-2 relative text-white mt-10 text-center">
+      <span class="absolute left-1/2 transform -translate-x-1/2 -top-3">
+        BRAWLERS POR DESBLOQUEAR
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-12">
+      <app-brawler-card *ngFor="let brawler of blockedBrawlers" [brawler]="brawler"/>
+    </div>
   </div>
 </div>
