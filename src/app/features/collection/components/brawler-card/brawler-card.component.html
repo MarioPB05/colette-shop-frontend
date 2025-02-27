@@ -1,0 +1,35 @@
+
+<div class="rounded relative group pb-0 border-2 border-brawl-black">
+  <div class="py-3 px-6 relative pb-0 h-36 overflow-hidden " [class.brightness-50]="!userUnlockedBrawler()" [style.background-color]="brawler.rarity_color">
+    <div class="spotlight from-brawl-white via-transparent to-transparent absolute inset-0"></div>
+    <img [src]="brawler.model_image" [alt]="brawler.name" class="w-32 h-52 group-hover:h-32 object-contain transition-all relative z-10 object-top"/>
+    <span class="absolute bottom-0 right-0 text-white z-30 text-border-regular px-1.5 pt-1 irregular_rectangle_shape bg-gradient-to-b  to-brawl-purple via-brawl-purple from-brawl-pink uppercase {{ getBrawlerNameSize() }}">{{ brawler.name }}</span>
+    <span class="absolute bottom-0 right-0 text-white text-2xl z-20 text-border-regular px-[6.5px] pt-[5px] irregular_rectangle_shape uppercase bg-brawl-black {{ getBrawlerNameSize() }}">{{ brawler.name }}</span>
+  </div>
+
+  <div class="flex w-full relative" *ngIf="userUnlockedBrawler()">
+    <img src="{{ getTierImage() }}" alt="Tier {{ actualTier }}" class="h-11 -left-3 ease-in z-10 w-auto object-contain absolute" style="transition-duration: 0.1s" [ngClass]="isMaxTier(actualTier) || actualTier == 50 ? '-right-2 -top-3': '-right-1 -top-[0.4rem]'">
+
+    <div id="trophy-bar" class="bg-gradient-to-b relative h-7 from-brawl-dark-pink via-brawl-dark-pink to-brawl-grape-purple w-full border-t-2 border-brawl-black">
+      <div id="trophy-indicator" class="text-brawl-white z-10 text-base absolute h-full transform w-full justify-center items-center flex gap-1 brawl-font text-border-sm text-shadow">
+        <img src="/images/icons/trophy-icon.png" class="h-3.5" alt="Trophy">
+        <span *ngIf="!isMaxTier(actualTier)">{{ totalTrophyCount }} / {{ totalTrophyMax }}</span>
+        <span *ngIf="isMaxTier(actualTier)">{{ totalTrophyCount }}</span>
+      </div>
+      <div id="trophy-bar-progress" class="bg-gradient-to-b left-0 from-brawl-gold via-brawl-orange to-brawl-orange h-full" [style.width]="(isMaxTier(actualTier) ? 100 : (actualTrophyCount / actualTrophyMax * 100)) + '%'"></div>
+    </div>
+  </div>
+
+  <div class="h-7 relative bg-brawl-dark-purple ps-6 text-brawl-light-gray flex items-center justify-center text-sm text-center" *ngIf="!userUnlockedBrawler()">
+    NO DESBLOQUEADO
+
+    <img src="/images/resources/brawl-lock.png" alt="Lock" class="absolute h-10 -left-2">
+  </div>
+
+  <div (click)="triggerUserFavorite()" class="absolute -top-3 -left-3 p-1.5 rounded-lg cursor-pointer group-hover:border group-hover:bg-brawl-dark-slate border-brawl-black">
+    <img *ngIf="brawler.user_favorite" src="/images/icons/heart-icon.png" alt="Heart" class="h-6 z-20 object-contain">
+    <div *ngIf="!brawler.user_favorite" class="relative group-hover:flex hidden after:absolute after:inset-0 after:bg-gray-500 after:mix-blend-soft-light after:rounded-lg">
+      <img src="/images/icons/heart-icon.png" alt="Heart" class="h-6 z-20 object-contain grayscale">
+    </div>
+  </div>
+</div>
