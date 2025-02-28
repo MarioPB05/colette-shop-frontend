@@ -40,3 +40,15 @@ export interface OrderDetailsResponse {
   state: string;
   inventory: InventoryOrderDetailsResponse[];
 }
+
+export interface OrderUserDetailsResponse {
+  id: number;
+  invoiceNumber: string;
+  purchaseDate: string;
+  username: string;
+  totalItems: number;
+  discount: number;
+  totalPrice: number;
+  totalWithDiscount: number;
+  giftUsername?: string;
+}
