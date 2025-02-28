@@ -2,15 +2,17 @@ import {Component, inject, OnInit} from '@angular/core';
 import {UserService} from '@features/user-details/service/user.service';
 import {Router} from '@angular/router';
 import {AuthService} from '@core/services/auth.service';
-import {BrawlerUserDetailsResponse, UserDetailsResponse} from '@models/user.model';
 import {BrawlHeaderComponent} from '@shared/components/brawl-header/brawl-header.component';
 import {UserStatComponent} from '@features/user-details/components/user-stat/user-stat.component';
 import {ModalDataComponent} from '@features/user-details/components/modal-data/modal-data.component';
-import {NgIf} from '@angular/common';
-import {ModalUsernameComponent} from '@features/user-details/components/modal-username/modal-username.component';
+import {NgForOf, NgIf} from '@angular/common';
 import {
   BrawlImageModalComponent
 } from '@features/user-details/components/brawl-image-modal/brawl-image-modal.component';
+import {OrderUserDetailsResponse} from '@models/order.model';
+import {OrderCardComponent} from '@features/user-details/components/order-card/order-card.component';
+import {MessageService} from 'primeng/api';
+import {UserBrawler, UserDetailsResponse} from '@models/user.model';
 
 @Component({
   selector: 'app-user-details-page',
@@ -18,8 +20,10 @@ import {
     BrawlHeaderComponent,
     UserStatComponent,
     ModalDataComponent,
-    ModalUsernameComponent,
-    BrawlImageModalComponent
+    BrawlImageModalComponent,
+    NgIf,
+    OrderCardComponent,
+    NgForOf
   ],
   templateUrl: './user-details-page.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss']
@@ -27,11 +31,12 @@ import {
 export class UserDetailsPageComponent implements OnInit {
 
   protected user!: UserDetailsResponse;
-  protected brawlers!: BrawlerUserDetailsResponse[];
-  protected userBrawler!: BrawlerUserDetailsResponse;
+  protected brawlers!: UserBrawler[];
+  protected orders!: OrderUserDetailsResponse[];
 
   private authService: AuthService = inject(AuthService);
   private router: Router = inject(Router);
+  private messageService: MessageService = inject(MessageService);
 
   constructor(private userService: UserService) {
   }
@@ -41,16 +46,35 @@ export class UserDetailsPageComponent implements OnInit {
       this.router.navigate(['/login']).then(r => r);
     }
 
-    this.userService.getUserDetails().subscribe(user => {
-      this.user = user;
-      console.log(user);
+    this.userService.getUserDetails().subscribe({
+      next: (user) => {
+        this.user = user;
 
-      this.userService.getBrawlersOfUser().subscribe(brawlers => {
-        this.brawlers = brawlers;
-        console.log(brawlers);
+        this.userService.getBrawlersOfUser().subscribe({
+          next: (brawlers) => {
+            this.brawlers = brawlers;
 
-        this.userBrawler = this.brawlers.find(brawler => brawler.brawlerId === this.user.brawlerAvatar)!;
-      });
+          },
+          error: (err) => {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: 'Failed to load brawlers'});
+          }
+        });
+      },
+      error: (err) => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Failed to load user details'});
+      }
     });
+
+    this.userService.getOrderOfUser().subscribe(orders => {
+      this.orders = orders;
+    });
+  }
+
+  redirectHomePage() {
+    this.router.navigate(['/']).then(r => r);
+  }
+
+  changeBrawler(brawler: UserBrawler) {
+    this.user.brawlerAvatar = brawler;
   }
 }
