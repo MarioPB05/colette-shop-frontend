@@ -1,0 +1,17 @@
+<div *ngIf="pageLoaded" class="md:h-screen min-h-screen overflow-hidden p-10 md:p-20 gap-14 flex bg-gradient-radial via-brawl-dark-blue to-brawl-dark-blue flex-col from-brawl-blue justify-center items-center relative brawl-font">
+  <div class="h-full flex-1 flex flex-col gap-5 items-center justify-center">
+    <span class="text-border-xs text-center text-lg text-brawl-baby-blue text-shadow">HAS CONSEGUIDO:</span>
+
+    <div class="flex max-w-[1000px] flex-row gap-x-7 gap-y-10 items-center justify-center flex-wrap">
+      <div *ngFor="let brawlerCard of brawlerCardsAppearing" class="fade-up flex justify-center">
+        <app-brawler-unlocked-card *ngIf="brawlerCard.type == 'unlocked'"  [brawler_name]="getBrawlerById(brawlerCard.id_brawler).name" [brawler_image]="getBrawlerById(brawlerCard.id_brawler).image"/>
+
+        <app-brawler-duplicate-card *ngIf="brawlerCard.type == 'duplicate'" [brawler_name]="getBrawlerById(brawlerCard.id_brawler).name" [brawler_image]="getBrawlerById(brawlerCard.id_brawler).image" [brawler_quantity]="getActualBrawlerQuantity(brawlerCard.id_brawler)"/>
+      </div>
+    </div>
+  </div>
+
+  <button *ngIf="animation_finished" (click)="goToInventory()" class="brawl-button p-1.5 text-white text-xl px-5 fade-up">
+    VOLVER AL INVENTARIO
+  </button>
+</div>

@@ -38,6 +38,9 @@ export class CatalogPageComponent implements OnInit {
   boxList: BoxShopResponse[] = [];
   freeDailyBoxList: DailyBoxShopResponse[] = [];
 
+  audioPlaying: boolean = false;
+  voiceLineIndex: number = 0;
+
   constructor(
     private boxService: BoxService,
     private faviconService: FaviconService,
@@ -61,6 +64,35 @@ export class CatalogPageComponent implements OnInit {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las cajas'});
       }
     });
+  }
+
+  reproduceColetteVoiceLine() {
+    // Easter egg
+    if (this.audioPlaying) return;
+
+    const voicelines = [
+      '/audios/colette-voicelines/laught.mp3',
+      '/audios/colette-voicelines/favorite-brawler.mp3',
+      '/audios/colette-voicelines/dont-touch-my-scrapbook.mp3',
+      '/audios/colette-voicelines/one-from-my-collection.mp3',
+      '/audios/colette-voicelines/this-is-so-cool.mp3',
+      '/audios/colette-voicelines/you-cant-get-away-from-me.mp3',
+    ];
+
+    this.voiceLineIndex += 1;
+
+    if (this.voiceLineIndex >= voicelines.length) {
+      this.voiceLineIndex = 0;
+    }
+
+    this.audioPlaying = true;
+    const audio = new Audio();
+    audio.src = voicelines[this.voiceLineIndex];
+
+    audio.play();
+    audio.onended = () => {
+      this.audioPlaying = false;
+    }
   }
 
   filterBoxes() {

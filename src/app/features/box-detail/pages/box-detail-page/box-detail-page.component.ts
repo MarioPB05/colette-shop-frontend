@@ -17,6 +17,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {BoxTypeImages} from '@core/enums/box.enum';
 import {CartService} from '@shared/services/cart.service';
+import {LoadingService} from '@core/services/loading.service';
 
 @Component({
   selector: 'app-box-detail-page',
@@ -53,11 +54,14 @@ export class BoxDetailPageComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
               private cartService: CartService,
+              private loadingService: LoadingService,
               private router: Router) {}
 
   ngOnInit() {
     this.faviconService.changeFavicon('/images/favicon/box-favicon.png');
     this.boxId = parseInt(this.activatedRoute.snapshot.paramMap.get('id') || '0');
+
+    this.loadingService.loadingOn();
 
     forkJoin({
       box: this.boxService.getBoxDetails(this.boxId),
@@ -73,6 +77,7 @@ export class BoxDetailPageComponent implements OnInit {
       this.showReviews = this.allReviews.slice(0, 3);
       this.syncWithCart();
       this.dataLoaded = true;
+      this.loadingService.loadingOff();
     }, error: (error) => {
       this.router.navigate(['/']).then(() => {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los datos de la caja'});

@@ -1,4 +1,4 @@
-<header class="p-4 bg-brawl-dark-slate relative border-b brawl-font border-slate-800 gap-10 text-white md:items-center  h-full justify-between text-xl flex text-shadow text-border-sm">
+<header class="p-4 bg-brawl-dark-slate relative border-b brawl-font border-slate-800 gap-10 text-white md:items-center h-full justify-between text-xl flex text-shadow text-border-sm">
   <div class="flex w-full gap-5 md:gap-10 flex-col md:flex-row"> <!-- Este div hace que los elementos ocupen toda la altura del header -->
     <img src="/logo.png" alt="Colette's Shop" class="w-28 h-auto mx-auto md:mx-0">
     <div class="flex gap-3 md:gap-6 justify-center md:justify-start flex-wrap md:flex-nowrap">
@@ -19,5 +19,8 @@
     </div>
   </div>
 
-  <img src="https://cdn.brawlify.com/brawlers/borderless/16000000.png" alt="profile picture" class="w-14 absolute md:block right-5 h-14 border-4 border-black">
+  <div class="gap-6 flex-col-reverse md:flex-row md:ps-10 items-center justify-center absolute flex md:relative right-5">
+    <img [src]="getNoteImage()" (click)="triggerMusic()" alt="Icono de música" class="w-8 h-8 cursor-pointer">
+    <img src="https://cdn.brawlify.com/brawlers/borderless/16000000.png" alt="profile picture" class="w-14 h-14 border-4 border-black">
+  </div>
 </header>

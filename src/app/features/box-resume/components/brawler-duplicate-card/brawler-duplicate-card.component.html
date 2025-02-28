@@ -1,0 +1,9 @@
+<div class="flex flex-col items-center gap-2">
+  <img [src]="brawler_image" [alt]="brawler_name" [pTooltip]="brawler_name" tooltipPosition="top" class="h-20 w-20 z-10 border-4 border-brawl-black">
+
+  <div class="flex gap-1 justify-center items-center relative bg-opacity-25 rounded-full bg-white w-20">
+    <img src="/images/icons/trophy-icon.png" class="h-4" alt="Trophy">
+    <span class="text-brawl-yellow text-border-xs text-shadow">+{{ trophy_count }}</span>
+  </div>
+</div>
+

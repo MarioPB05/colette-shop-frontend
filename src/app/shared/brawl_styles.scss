@@ -53,6 +53,22 @@
   @apply bg-brawl-white;
 }
 
+.brawl-danger-button {
+  @apply bg-brawl-red rounded-lg text-shadow text-border-sm border-b-2 border-brawl-dark-red;
+}
+
+.brawl-danger-button:hover {
+  @apply opacity-90;
+}
+
+.brawl-danger-button:focus {
+  @apply outline-none;
+}
+
+.brawl-danger-button:active {
+  @apply bg-brawl-white;
+}
+
 /*------------------- Estilos de los checkboxes -------------------*/
 .brawl-checkbox-container {
   display: block;
@@ -188,15 +204,21 @@
   clip-path: polygon(0% 15%, 100% 0%, 100% 100%, 0% 100%);
 }
 
-/*------------------- moving skulls background -------------------*/
-.moving-skulls-background {
+.inverted-pentagon-shape {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%);
+}
+
+.inverted-shoe-shape {
+  clip-path: polygon(0% 0%, 95% 0%, 80% 100%, 0% 100%);
+}
+
+/*------------------- Fondos en movimiento -------------------*/
+
+.moving-background {
+  will-change: background-position;
   user-select: none;
   overflow: hidden;
-  background-image: url('/images/resources/brawl-stars-skull.png');
-  background-size: 15%;
   background-repeat: repeat;
-  animation: scrollBackground 100s linear infinite;
-  opacity: 0.05;
   position: absolute;
   z-index: 0;
   top: 0;
@@ -205,6 +227,33 @@
   height: 100%;
 }
 
+.skull-moving-background {
+  background-image: url('/images/resources/brawl-stars-skull.png');
+  animation: scrollBackground 100s linear infinite;
+  background-size: 15%;
+  opacity: 0.05;
+}
+
+.box-moving-background {
+  background-image: url('/images/icons/box-icon.png');
+  animation: scrollBackground 30s linear infinite;
+  background-size: 15%;
+  opacity: 0.03;
+}
+
+@keyframes scrollBackground {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 100% -100%;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/*------------------- Efecto de luz -------------------*/
 .spotlight {
   background: radial-gradient(50% 50% at 50% 50%, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
 }
@@ -213,19 +262,11 @@
   background: radial-gradient(50% 50% at 50% 50%, #00B4FF 0%, rgba(0, 180, 255, 0) 100%);
 }
 
-@keyframes scrollBackground {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 100% -100%;
-  }
-}
-
 /*------------------- Animacion de añadir al carrito -------------------*/
 
 .add-to-cart-animation {
   position: fixed;
+  pointer-events: none;
   z-index: 1000;
   animation: moveToCorner 1s ease-in-out forwards;
   display: none;
@@ -236,8 +277,16 @@
 }
 
 @keyframes moveToCorner {
+  0% {
+    scale: 0;
+    opacity: 1;
+  }
+  10% {
+    scale: 1;
+    opacity: 1;
+  }
   50% {
-    opacity: 0.7;
+    opacity: 1;
   }
   to {
     opacity: 0;
@@ -273,5 +322,325 @@
   }
   100% {
     background-position: 0% 50%;
+  }
+}
+
+/*------------------- Animacion de entrada de la caja -------------------*/
+
+.open-box-animation {
+  animation: boxEntrance 0.7s ease-in-out forwards, beatIdle 4s ease-in-out infinite;
+  transform: translateY(-300%) scaleY(1);
+  animation-delay: 0.5s, 2s;
+  transition: filter 0.3s;
+}
+
+.open-box-animation:hover {
+  filter: brightness(1.2);
+}
+
+@keyframes beatIdle {
+  40% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.05;
+  }
+  60% {
+    scale: 1;
+  }
+}
+
+@keyframes boxEntrance {
+  0% {
+    transform: translateY(-150%) scaleY(1);
+  }
+  70% {
+    transform: translateY(10%) scaleY(0.9);
+  }
+  100% {
+    transform: translateY(0%) scaleY(1);
+  }
+}
+
+/*------------------- Animacion de abrir la caja (destello de luz) --------------*/
+.flash-animation {
+  animation: flash 0.4s ease forwards;
+  width: 0;
+  height: 0;
+  position: absolute;
+  z-index: 1000;
+  border-radius: 100%;
+  //@apply bg-gradient-radial from-white via-transparent to-transparent;
+
+  background: rgb(255,255,255);
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8295693277310925) 50%, rgba(255,255,255,0) 100%);
+
+  // Center absolute container
+  //top: 50%;
+  //left: 50%;
+}
+
+@keyframes flash {
+  0% {
+    width: 0;
+    height: 0;
+  }
+  60% {
+    width: 200%;
+    height: 200%;
+  }
+  100% {
+    width: 0;
+    height: 0;
+  }
+}
+
+/*------------------- Animacion de circo -------------*/
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.circus-background {
+  position: fixed;
+  width: 250vmax;
+  height: 250vmax;
+  border-radius: 50%;
+  will-change: background-position;
+  background: conic-gradient(
+      transparent 0deg 30deg,
+      white 30deg 60deg,
+      transparent 60deg 90deg,
+      white 90deg 120deg,
+      transparent 120deg 150deg,
+      white 150deg 180deg,
+      transparent 180deg 210deg,
+      white 210deg 240deg,
+      transparent 240deg 270deg,
+      white 270deg 300deg,
+      transparent 300deg 330deg,
+      white 330deg 360deg
+  );
+  animation: rotate 20s linear infinite;
+}
+
+.circus-background-left {
+  right: -60vmax;
+  position: fixed;
+  width: 250vmax;
+  height: 250vmax;
+  border-radius: 50%;
+  will-change: background-position;
+  background: conic-gradient(
+      transparent 0deg 30deg,
+      white 30deg 60deg,
+      transparent 60deg 90deg,
+      white 90deg 120deg,
+      transparent 120deg 150deg,
+      white 150deg 180deg,
+      transparent 180deg 210deg,
+      white 210deg 240deg,
+      transparent 240deg 270deg,
+      white 270deg 300deg,
+      transparent 300deg 330deg,
+      white 330deg 360deg
+  );
+  animation: rotate 20s linear infinite;
+}
+
+/*-------------- animacion fade in --------------*/
+
+.fade-in-medium {
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*-------------- animacion panel de trofeos diferentes --------------*/
+
+.trophy-difference-animation {
+  transform: translateY(-50px);
+  height: 0;
+  animation: fadeDown 1s ease-in-out forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeDown {
+  0% {
+    transform: translateY(-50px);
+  }
+  100% {
+    transform: translateY(0);
+    height: auto;
+  }
+}
+
+/*-------------- animacion de fade up --------------*/
+.fade-up {
+  animation: fadeUp 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*-------------- animacion del marcador de items restante --------------*/
+
+.item-counter-animation {
+  animation: itemCounterFlash 2s ease infinite;
+  background: #FE0000;
+  filter: none;
+}
+
+@keyframes itemCounterFlash {
+  0%, 100% {
+    background: radial-gradient(circle, #FE0000 0%, #EF900A 100%);
+    filter: drop-shadow(0 10px 20px rgba(255, 255, 255, 1));
+  }
+  50% {
+    background: #FE0000; /* Rojo sólido */
+    filter: none; /* Sin sombra */
+  }
+}
+
+/*-------------- filtro azul para la imagen --------------*/
+
+.dark-blue-img-filter-container {
+  //position: relative;
+  display: inline-block;
+  background-color: #004c9a;
+  overflow: hidden;
+
+  img {
+    width: 100%; // Ajusta según sea necesario
+    z-index: 100;
+
+    // Convierte la imagen en una máscara monocromática
+    filter: brightness(0) invert(1);
+
+    // Mezcla la imagen con el color de fondo
+    mix-blend-mode: multiply;
+  }
+
+  &::after {
+    content: "";
+    //position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #004c9a; // Azul en hex
+    z-index: -1;
+  }
+}
+
+/*-------------- brawler misterioso gira --------------*/
+.mystery-brawler-spin {
+  animation: spin-grow ease-out forwards;
+}
+
+@keyframes spin-grow {
+  from {
+    transform: scale(0.1) rotateY(0deg);
+    opacity: 0;
+  }
+  10%{
+    opacity: 1;
+  }
+  to {
+    transform: scale(1) rotateY(1440deg);
+    opacity: 1;
+  }
+}
+
+/*-------------- animacion de rectangulos que caen --------------*/
+
+.rectangle {
+  position: absolute;
+  top: -400px; /* Comienza fuera de la pantalla */
+  width: 80px;
+  height: 400px;
+  background-color: white;
+  opacity: 0.5;
+  animation: fall 0.3s linear infinite;
+}
+
+/* Animación de caída */
+@keyframes fall {
+  from {
+    top: -400px;
+  }
+  to {
+    transform: translateY(calc(100vh + 400px));
+  }
+}
+
+/* Posicionar rectángulos en columnas fijas */
+.rectangle:nth-child(1) { left: 10%; animation-delay: 0s; }
+.rectangle:nth-child(2) { left: 35%; animation-delay: 0.2s; }
+.rectangle:nth-child(3) { left: 65%; animation-delay: 0s; }
+.rectangle:nth-child(4) { left: 90%; animation-delay: 0.2s; }
+
+/*-------------- animacion de fade left --------------*/
+.appear-in-background {
+  animation: fadeLeftAndScale 1s ease-in-out forwards;
+  animation-delay: 0.5s;
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .appear-in-background {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+@keyframes fadeLeftAndScale {
+  0% {
+    opacity: 0;
+    scale: 0;
+    transform: translateX(200px);
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+    transform: translateX(0);
+  }
+}
+
+/*-------------- animacion de translate x --------------*/
+.translate-x-animation {
+  animation: translateX 1s ease forwards;
+}
+
+// In mobile devices, the animation is disabled
+@media (max-width: 768px) {
+  .translate-x-animation {
+    animation: none;
+  }
+}
+
+@keyframes translateX {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-15vmax);
   }
 }

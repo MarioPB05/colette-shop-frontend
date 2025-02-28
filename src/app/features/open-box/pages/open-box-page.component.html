@@ -1,0 +1,99 @@
+<div *ngIf="pageLoaded" class="md:h-screen min-h-screen overflow-hidden p-10 flex justify-center items-center relative brawl-font {{ getParentActualPageClasses() }}" [style.background-color]="getParentBgColor()">
+  <div *ngIf="actualPage == 'open-box'" class="w-full h-full flex justify-center items-center">
+    <div class="moving-background box-moving-background"></div>
+    <span class="text-brawl-white absolute w-full m-7 top-0 text-2xl text-center text-shadow text-border-sm font-bold">¡Toca para abrir!</span>
+
+    <button class="p-2 px-3 text-brawl-white brawl-danger-button absolute m-5 top-0 right-0">
+      <img src="/images/icons/close-icon.png" class="h-7" alt="Close">
+    </button>
+    <img (click)="openBox()" [src]="getBoxImage()" alt="Megacja" class="w-full open-box-animation cursor-pointer box-entrance-animation z-10 max-w-72 max-h-72">
+  </div>
+
+  <div *ngIf="actualPage == 'duplicate-brawler' && !changeItemAnimation" class="w-full h-full flex justify-center items-center">
+    <div class="circus-background opacity-10"></div>
+
+    <div class="z-10 fade-in-medium flex flex-col justify-center gap-4 w-full items-center">
+      <div class="flex flex-col items-center">
+        <img src="{{ duplicateBrawlerImage }}" alt="{{ duplicateBrawlerName }}" class="h-32 w-32 z-10 border-4 border-brawl-black">
+
+        <div class="relative animation-delay-2s trophy-difference-animation">
+          <div class="bg-brawl-black inverted-pentagon-shape w-[6.25rem] h-9 absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"></div>
+          <div class="bg-brawl-purple gap-1.5 flex justify-center pb-1 text-lg items-center inverted-pentagon-shape w-24 h-8 relative text-brawl-white brawl-font text-border-xs text-shadow">
+            <span>+{{ trophyProgression }}</span>
+            <img src="/images/icons/trophy-icon.png" class="h-4" alt="Trophy">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex w-full max-w-44 me-3">
+        <div id="tier-space" class="relative {{ tierContainerSize }} h-full overflow-visible">
+          <img src="{{ getTierImage() }}" alt="Tier {{ actualTier }}" class="{{ tierSize }} ease-in z-10 w-auto object-contain absolute" style="transition-duration: 0.1s" [style.filter]="tierBrightness" [ngClass]="isMaxTier(actualTier) || actualTier == 50 ? '-right-2 -top-3': '-right-1 -top-[0.4rem]'">
+        </div>
+
+        <div id="trophy-bar-container" class="h-6 w-full relative">
+          <div id="trophy-bar-border" class="h-7 bg-brawl-black ps-5 flex justify-center items-center parallelogram_shape-sm w-[103%] absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"></div>
+          <div id="trophy-bar" class="bg-gradient-to-b h-full from-brawl-dark-pink via-brawl-dark-pink to-brawl-grape-purple w-full outline-offset-8 parallelogram_shape-sm">
+            <div id="trophy-indicator" class="text-brawl-white z-10 text-base absolute h-full transform w-full justify-center items-center flex gap-1 brawl-font text-border-sm text-shadow">
+              <img src="/images/icons/trophy-icon.png" class="h-3.5" alt="Trophy">
+              <span *ngIf="!isMaxTier(actualTier)">{{ totalTrophyCount }} / {{ totalTrophyMax }}</span>
+              <span *ngIf="isMaxTier(actualTier)">{{ totalTrophyCount }}</span>
+            </div>
+            <div id="trophy-bar-progress" class="{{ trophyProgressBarColor }} absolute left-0 from-brawl-gold via-brawl-orange to-brawl-orange h-full" [style.width]="(isMaxTier(actualTier) ? 100 : (actualTrophyCount / actualTrophyMax * 100)) + '%'"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="actualPage == 'new-brawler-mystery-spins'" class="h-full p-10 w-full flex justify-center items-center">
+    <div class="dark-blue-img-filter-container  mystery-brawler-spin h-full max-h-[500px] max-w-[400px]" [style.animation-duration]="newBrawlerAnimationDuration + 's'" [style.mask]="'url(' + newBrawler.model_image + ') no-repeat center / contain'">
+      <img src="{{ newBrawler.model_image }}" alt="Shelly" class="object-contain" />
+    </div>
+    <div class="rectangles-falls">
+      <div class="rectangle"></div>
+      <div class="rectangle"></div>
+      <div class="rectangle"></div>
+      <div class="rectangle"></div>
+    </div>
+  </div>
+
+  <div *ngIf="actualPage == 'new-brawler-unlocked'"  class="flex relative p-10 h-full w-full items-center justify-center flex-col-reverse gap-10 md:flex-row">
+    <div class="circus-background-left opacity-40 hidden md:flex"></div>
+    <div class="circus-background opacity-40 md:hidden flex"></div>
+    <img src="{{ newBrawler.model_image }}"  alt="{{ newBrawler.model_image }}" class="h-full translate-x-0 w-full translate-x-animation max-h-[500px] max-w-[400px] z-20 object-contain">
+
+    <div class="z-20 appear-in-background flex relative md:absolute right-0 lg:right-[15vw] xl:right-[20vw] 2xl:right-[26vw] 3xl:right-[32vw] md:top-[20vh] flex-col gap-16" [ngClass]="showNewBrawlerText ? 'active' : ''">
+      <span class="text-yellow-100 text-4xl text-shadow text-border-md">
+        ¡NUEVO BRAWLER!
+      </span>
+      <div class=" w-80 h-14 relative -rotate-3">
+        <div [style.background-color]="getNewBrawlerRarityColor()" class=" w-full z-20 h-full relative brightness-90 inverted-shoe-shape ">
+        </div>
+        <div class=" w-full bg-brawl-black h-full brightness-95 inverted-shoe-shape z-10 absolute -bottom-2 -right-0.5">
+        </div>
+        <span class="left-5 absolute z-30 text-white h-32 top-[-95px] flex items-end text-shadow text-border-md text-5xl uppercase">{{ newBrawler.name }}</span>
+        <span class="absolute -bottom-5 brightness-125 z-30 left-2 text-shadow text-border-sm" [style.color]="getNewBrawlerRarityColor()">{{newBrawlerRarity.brawlers_of_rarity_unlocked + '/' + newBrawlerRarity.total_brawlers_of_rarity}} Brawlers {{putRarityNameInPlural(newBrawlerRarity.name).toLowerCase()}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="actualPage == 'new-brawler-unlocked' || actualPage == 'duplicate-brawler'" class="absolute z-40 bottom-0 right-0 m-5 text-white flex flex-col items-end gap-4">
+    <div class="flex gap-2 items-end">
+      <span class="text-sm text-border-xs text-shadow">
+        ITEMS RESTANTES:
+      </span>
+      <div class="min-w-9 {{ (nextBrawlerIsNew ? 'item-counter-animation' : 'bg-brawl-red') }} text-center rounded-lg border-b-2 border-brawl-dark-red py-0.5 text-2xl px-2.5 text-border-sm text-shadow">
+        {{ brawlersInBox.length - brawlersOpened.length }}
+      </div>
+    </div>
+    <button class="brawl-button p-1 px-3 text-border-md text-xl flex gap-2 items-center fade-up" *ngIf="nextButtonVisible" (click)="openNextItem()">
+      SIGUIENTE
+      <img src="/images/icons/left-arrow.png" class="h-6 transform rotate-180" alt="Left arrow">
+    </button>
+  </div>
+
+  <div class="flash-animation" *ngIf="flashVisible"></div>
+</div>
+
+

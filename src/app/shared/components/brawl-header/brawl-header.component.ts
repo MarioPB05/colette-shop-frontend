@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
+import {LocalStorageService} from '@shared/services/local-storage.service';
 
 @Component({
   selector: 'app-brawl-header',
@@ -7,6 +8,51 @@ import {Component} from '@angular/core';
   standalone: true,
   styleUrl: './../../brawl_styles.scss',
 })
-export class BrawlHeaderComponent {
+export class BrawlHeaderComponent implements OnDestroy{
+  canPlayMusic: boolean = false;
+  music = new Audio("/audios/menu/brawl-stars-menu-01.ogg");
 
+  constructor(private localStorageService: LocalStorageService) {
+    this.canPlayMusic = this.localStorageService.getItem('canPlayMusic') === 'true';
+    if (this.canPlayMusic) {
+      this.playMenuMusic();
+    }
+  }
+
+  ngOnDestroy() {
+    this.stopMenuMusic();
+  }
+
+  playMenuMusic() {
+    this.music.volume = 0.1;
+    this.music.loop = true;
+
+    this.music.play().catch(() => {
+      this.triggerMusic();
+    });
+  }
+
+  stopMenuMusic() {
+    this.music.pause();
+  }
+
+  triggerMusic() {
+    this.canPlayMusic = !this.canPlayMusic;
+    this.localStorageService.setItem('canPlayMusic', this.canPlayMusic.toString());
+
+    if (this.canPlayMusic) {
+      this.playMenuMusic();
+      return;
+    }
+
+    this.stopMenuMusic();
+  }
+
+  getNoteImage() {
+    if (this.canPlayMusic) {
+      return '/images/icons/music-note.svg';
+    }
+
+    return '/images/icons/music-note-off.svg';
+  }
 }
