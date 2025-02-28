@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {BrawlerUserDetailsResponse, UserDetailsResponse} from '@models/user.model';
-import {GemsStats} from '@models/stats.model';
+import {BrawlerUserDetailsResponse, UserBrawler, UserChangeRequest, UserDetailsResponse} from '@models/user.model';
+import {OrderUserDetailsResponse} from '@models/order.model';
+import {environment} from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,20 @@ export class UserService {
     return this.http.get<UserDetailsResponse>(`${this.apiUrl}/details`);
   }
 
-  getBrawlersOfUser(): Observable<BrawlerUserDetailsResponse[]> {
-    return this.http.get<BrawlerUserDetailsResponse[]>(`${this.apiUrl}/details/brawlers`);
+  getBrawlersOfUser(): Observable<UserBrawler[]> {
+    return this.http.get<UserBrawler[]>(`${this.apiUrl}/details/brawlers`);
+  }
+
+  getOrderOfUser(): Observable<OrderUserDetailsResponse[]> {
+    return this.http.get<any>(`${this.apiUrl}/details/orders`);
+  }
+
+  setBrawlerImage(id: number): Observable<any> {
+    console.log(id);
+    return this.http.post(`${environment}/details/user_avatar/${id}`, {});
+  }
+
+  setUserChanges(user: UserChangeRequest): Observable<UserChangeRequest> {
+    return this.http.put<UserChangeRequest>(`${environment.baseUrl}/user/details/user/change_details`, user);
   }
 }
