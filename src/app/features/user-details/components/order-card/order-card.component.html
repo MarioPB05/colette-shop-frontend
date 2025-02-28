@@ -1,0 +1,14 @@
+<div
+  class="border-brawl-navy border-2 rounded-md w-full gap-2 bg-brawl-blue flex flex-col justify-center p-2 px-5">
+  <div class="flex justify-between">
+    <span class="text-shadow text-base text-border-sm text-brawl-sky-blue">PEDIDO Nº{{ order.invoiceNumber }}</span>
+    <span class="text-xs text-brawl-dark-slate">Hace {{ timeOrder() }}</span>
+  </div>
+  <div class="flex justify-between pb-3">
+    <span class="text-shadow text-xl text-border-sm text-brawl-white">{{ order.totalItems }} CAJAS COMPRADAS</span>
+    <span class="text-lg text-brawl-white text-shadow text-border-sm"><span
+      class="text-shadow text-xl text-border-sm text-brawl-green">{{ numberFormat(order.totalWithDiscount) }}</span> PRECIO TOTAL</span>
+    <div><span class="text-base text-brawl-white text-shadow text-border-sm">PARA </span><span
+      class="text-xl text-brawl-gold text-shadow text-border-sm">{{ order.giftUsername }}</span></div>
+  </div>
+</div>
