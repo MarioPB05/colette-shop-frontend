@@ -5,6 +5,7 @@ import {BoxDetailPageComponent} from '@features/box-detail/pages/box-detail-page
 import {authGuard} from '@guards/auth.guard';
 import {OpenBoxPageComponent} from '@features/open-box/pages/open-box-page.component';
 import {BoxResumePageComponent} from '@features/box-resume/pages/box-resume-page.component';
+import {UserDetailsPageComponent} from '@features/user-details/pages/user-details-page/user-details-page.component';
 import {VerifyPageComponent} from '@features/auth/pages/verify-page/verify-page.component';
 import {CollectionPageComponent} from '@features/collection/pages/collection-page.component';
 
@@ -44,6 +45,12 @@ export const routes: Routes = [
   {
     path: 'box/:item_id/resume',
     component: BoxResumePageComponent,
+    canActivate: [authGuard],
+    data: { role: 'authenticated' }
+  },
+  {
+    path: 'user/details',
+    component: UserDetailsPageComponent,
     canActivate: [authGuard],
     data: { role: 'authenticated' }
   },

@@ -1,0 +1,106 @@
+<app-brawl-header></app-brawl-header>
+<div class="w-full min-h-screen bg-brawl-sea-blue flex flex-col gap-16 p-12 items-center brawl-font">
+
+  <main class="w-full flex flex-col lg:grid grid-cols-[auto_1fr] gap-4 p-5">
+    <div class="flex align-baseline gap-3 flex-wrap">
+      <img src="{{ user.brawlerAvatar.modelImage }}" alt="user"
+           class="object-contain w-64 h-72 spotlight"/>
+      <div (click)="brawlImageModalComponent.openModal()" class="flex flex-col align-baseline gap-2 justify-end cursor-pointer">
+        <span class="text-brawl-white text-shadow text-sm text-border-xs">ICONO DE PERFIL</span>
+        <div class="text-brawl-white text-shadow text-base text-border-xs flex gap-1">
+          <img src="/images/icons/gear-icon.png" alt="gear" class="w-6 h-6 inline-block"/>
+          <span class="text-xl">{{ user.brawlerAvatar.name }}</span>
+        </div>
+      </div>
+      <app-brawl-image-modal [brawlers]="brawlers" [userBrawler]="user.brawlerAvatar" (userBrawlerChange)="changeBrawler($event)" #brawlImageModalComponent></app-brawl-image-modal>
+    </div>
+    <div class="max-lg:border-t-4 lg:border-l-4 border-brawl-dark-slate pl-10 pt-3 flex flex-col gap-10">
+      <div class="flex justify-between items-start">
+        <div class="flex justify-between items-center gap-10 flex-wrap">
+          <div
+               class="relative bg-brawl-dark-slate rounded-md border-b-2 border-brawl-navy w-56 py-3 text-center">
+            <span class="text-shadow text-2xl text-border-xs text-brawl-white">{{ user.username }}</span>
+          </div>
+          <div
+            class="relative flex justify-between items-center bg-brawl-dark-blue text-white font-bold text-lg pe-6 ps-4 py-2 rounded-r-2xl">
+            <div class="absolute left-[0.4rem] -ml-6 w-9 h-9 bg-brawl-dark-blue rotate-45 rounded-lg"></div>
+            <span class="z-10">#{{ user.brawlTag }}</span>
+          </div>
+          <div (click)="modalDataComponent.openModal()"
+               class=" lg:hidden border-t border-s border-e border-b-2 border-brawl-black rounded-md p-2 hover:bg-brawl-blue transition-all cursor-pointer">
+            <img src="/images/icons/gear-icon.png" alt="medal" class="w-7 h-7"/>
+          </div>
+        </div>
+        <div (click)="modalDataComponent.openModal()"
+             class="max-lg:hidden border-t border-s border-e border-b-2 border-brawl-black rounded-md p-2 hover:bg-brawl-blue transition-all cursor-pointer">
+          <img src="/images/icons/gear-icon.png" alt="medal" class="w-7 h-7"/>
+        </div>
+      </div>
+      <div class="flex flex-wrap justify-center lg:grid grid-cols-3 gap-y-7 gap-x-16 max-w-[750px] mx-auto w-full">
+        <app-user-stat
+          title="TROFEOS TOTALES"
+          value="{{ user.trophies * 25 }}"
+          icon="/images/user-details-icons/trophie-icon.png"
+          color="text-brawl-light-gray"
+          bgColor="bg-blue-900"
+        ></app-user-stat>
+        <app-user-stat
+          title="BRAWLERS"
+          value= "{{ user.brawlers }}"
+          icon="/images/user-details-icons/brawl-icon.png"
+          color="text-brawl-light-gray"
+          bgColor="bg-blue-900"
+        ></app-user-stat>
+        <app-user-stat
+          title="CAJAS REGALADAS"
+          value= "{{ user.gifts }}"
+          icon="/images/user-details-icons/gift-icon.png"
+          color="text-brawl-yellow"
+          bgColor="bg-[#4B85B3]"
+        ></app-user-stat>
+        <app-user-stat
+          title="CAJAS ABIERTAS"
+          value="{{ user.openBoxes }}"
+          icon="/images/user-details-icons/box-icon.png"
+          color="text-brawl-light-gray"
+          bgColor="bg-blue-900"
+        ></app-user-stat>
+        <app-user-stat
+          title="BRAWLERS FAVORITOS"
+          value="{{ user.favouriteBrawlers }}"
+          icon="/images/user-details-icons/heart-icon.png"
+          color="text-brawl-light-gray"
+          bgColor="bg-blue-900"
+        ></app-user-stat>
+        <app-user-stat
+          title="GEMAS"
+          value="{{ user.gems }}"
+          icon="/images/user-details-icons/gem-icon.png"
+          color="text-brawl-light-gray"
+          bgColor="bg-blue-900"
+        ></app-user-stat>
+      </div>
+    </div>
+  </main>
+
+  <div class="w-full flex flex-col gap-10">
+    <div class="relative h-1.5">
+      <div class="bg-brawl-dark-slate w-full parallelogram_shape-xs h-full"></div>
+      <span
+        class="absolute text-shadow text-lg text-border-xs text-brawl-white transform -top-[1.1rem] left-1/2 -translate-x-1/2">
+        PEDIDOS
+      </span>
+    </div>
+    <div class="flex flex-col gap-4">
+      <app-order-card
+        *ngFor="let order of orders"
+        [order]="order"
+      ></app-order-card>
+      <div *ngIf="!orders || orders.length === 0" class="flex flex-col items-center gap-4">
+        <h1 class="text-brawl-white text-shadow text-2xl text-border-xs">No has realizado ningún pedido</h1>
+        <button class="brawl-button p-2 text-brawl-white text-lg py-1 px-3" (click)="redirectHomePage()">Explorar cajas</button>
+      </div>
+    </div>
+  </div>
+  <app-modal-data [user]="user" #modalDataComponent></app-modal-data>
+</div>
