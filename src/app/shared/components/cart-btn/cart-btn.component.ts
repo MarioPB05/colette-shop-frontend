@@ -1,9 +1,12 @@
 import {Component, effect, ElementRef, Input} from '@angular/core';
 import {CartService} from '@shared/services/cart.service';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-cart-btn',
-  imports: [],
+  imports: [
+    RouterLink
+  ],
   templateUrl: './cart-btn.component.html',
   standalone: true,
   styleUrl: '../../brawl_styles.scss'
