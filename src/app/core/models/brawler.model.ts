@@ -48,7 +48,6 @@ export interface BrawlerCardResponse {
   model_image: string;
 
   rarity_id: number;
-  rarity_name: string;
   rarity_color: string;
 
   user_quantity: number;
