@@ -1,10 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {BrawlHeaderComponent} from '@shared/components/brawl-header/brawl-header.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrawlerCardComponent} from '@features/collection/components/brawler-card/brawler-card.component';
 import {BrawlerCardResponse} from '@models/brawler.model';
 import {NgForOf} from '@angular/common';
 import {FaviconService} from '@core/services/favicon.service';
+import {BrawlerService} from '@features/collection/services/brawler.service';
+
+type OrderBrawlers = 'Nombre' | 'Calidad' | 'Mas trofeos' | 'Menos trofeos';
 
 @Component({
   selector: 'app-collection-page',
@@ -12,53 +15,39 @@ import {FaviconService} from '@core/services/favicon.service';
     BrawlHeaderComponent,
     ReactiveFormsModule,
     BrawlerCardComponent,
-    NgForOf
+    NgForOf,
+    FormsModule
   ],
   templateUrl: './collection-page.component.html',
   standalone: true,
   styleUrl: './../../../shared/brawl_styles.scss',
 })
 export class CollectionPageComponent implements OnInit {
-  brawlers: BrawlerCardResponse[] = [
-    {
-      id: 16000001,
-      name: 'COlt',
-      model_image: '/images/brawlers/16000001_model.png',
-      rarity_id: 2,
-      rarity_name: 'rare',
-      rarity_color: '#88F738',
-      user_quantity: 0,
-      user_favorite: true
-    },
-    {
-      id: 16000002,
-      name: 'Bull',
-      model_image: '/images/brawlers/16000002_model.png',
-      rarity_id: 2,
-      rarity_name: 'rare',
-      rarity_color: '#88F738',
-      user_quantity: 1,
-      user_favorite: false
-    },
-    {
-      id: 16000000,
-      name: 'Shelly',
-      model_image: '/images/brawlers/16000000_model.png',
-      rarity_id: 1,
-      rarity_name: 'common',
-      rarity_color: '#7eceff',
-      user_quantity: 3,
-      user_favorite: false
-    }
-  ]
+  brawlers: BrawlerCardResponse[] = [];
   blockedBrawlers: BrawlerCardResponse[] = [];
   unlockedBrawlers: BrawlerCardResponse[] = [];
 
-  constructor(private faviconService: FaviconService) {}
+  sortByFavoritesIsActive = false;
+
+  orderBrawlersMethods: {[key in OrderBrawlers]: (a: BrawlerCardResponse, b: BrawlerCardResponse) => number} = {
+    'Nombre': (a: BrawlerCardResponse, b: BrawlerCardResponse) => a.name.localeCompare(b.name),
+    'Calidad': (a: BrawlerCardResponse, b: BrawlerCardResponse) => a.rarity_id - b.rarity_id,
+    'Mas trofeos': (a: BrawlerCardResponse, b: BrawlerCardResponse) => b.user_quantity - a.user_quantity,
+    'Menos trofeos': (a: BrawlerCardResponse, b: BrawlerCardResponse) => a.user_quantity - b.user_quantity,
+  }
+
+  actualSortMethod: OrderBrawlers = 'Nombre';
+
+  constructor(private faviconService: FaviconService,
+              private brawlerService: BrawlerService) {}
 
   ngOnInit() {
     this.faviconService.changeFavicon('/images/favicon/collection-favicon.png');
-    this.classifyBrawlers();
+    this.actualSortMethod = 'Calidad';
+    this.brawlerService.getUserCollection().subscribe(brawlers => {
+      this.brawlers = brawlers;
+      this.sortBrawlers(this.brawlers, this.actualSortMethod);
+    });
   }
 
   classifyBrawlers() {
@@ -66,4 +55,39 @@ export class CollectionPageComponent implements OnInit {
     this.unlockedBrawlers = this.brawlers.filter(brawler => brawler.user_quantity > 0);
   }
 
+  sortByFavoritesChange() {
+    this.sortByFavoritesIsActive = !this.sortByFavoritesIsActive;
+
+    this.sortBrawlers(this.brawlers, this.actualSortMethod);
+  }
+
+  nextSortMethod() {
+    const orderMethods = Object.keys(this.orderBrawlersMethods) as OrderBrawlers[];
+    const actualIndex = orderMethods.indexOf(this.actualSortMethod);
+    const nextIndex = (actualIndex + 1) % orderMethods.length;
+    this.actualSortMethod = orderMethods[nextIndex];
+
+    this.sortBrawlers(this.brawlers, this.actualSortMethod);
+  }
+
+  sortBrawlers(
+    brawlers: BrawlerCardResponse[],
+    orderMethod: OrderBrawlers
+  ) {
+    this.brawlers = brawlers.sort((a, b) => {
+      // Prioridad a los favoritos
+      if (b.user_favorite !== a.user_favorite && this.sortByFavoritesIsActive) {
+        return b.user_favorite ? 1 : -1;
+      }
+
+      // Aplicar el método de ordenación seleccionado
+      const primarySort = this.orderBrawlersMethods[orderMethod](a, b);
+      if (primarySort !== 0) return primarySort; // Si hay diferencia, se usa este orden
+
+      // Si el método seleccionado no afecta, ordenar por calidad (rarity_id)
+      return a.rarity_id - b.rarity_id;
+    });
+
+    this.classifyBrawlers();
+  }
 }
