@@ -172,12 +172,24 @@
 }
 
 /*------------------- Formas geométricas -------------------*/
+.parallelogram_shape-xs {
+  clip-path: polygon(0.3% 0%, 100% 0%, 99.7% 100%, 0% 100%);
+}
+
 .parallelogram_shape-sm {
   clip-path: polygon(2.5% 0%, 100% 0%, 97.5% 100%, 0% 100%);
 }
 
 .parallelogram_shape-md {
   clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+}
+
+.paralelogram_shape_plus-md {
+  transform: skewX(-12deg);
+}
+
+.paralelogram_shape_plus-md > * {
+  transform: skewX(12deg);
 }
 
 .parallelogram_shape-lg {
