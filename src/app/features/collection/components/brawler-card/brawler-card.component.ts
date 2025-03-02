@@ -70,4 +70,16 @@ export class BrawlerCardComponent implements OnInit {
 
     return 'text-2xl';
   }
+  setFavorite(favorite: boolean) {
+    this.brawlerService.setBrawlerFavorite(this.brawler.id, favorite).subscribe({
+      next: () => {
+        this.favoriteChange.emit(favorite);
+      },
+      error: () => {
+        this.brawler.user_favorite = !favorite;
+        this.favoriteChange.emit(!favorite);
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se ha podido actualizar el favorito'});
+      },
+    });
+  }
 }

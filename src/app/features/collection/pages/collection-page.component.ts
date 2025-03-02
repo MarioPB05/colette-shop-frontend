@@ -90,4 +90,8 @@ export class CollectionPageComponent implements OnInit {
 
     this.classifyBrawlers();
   }
+
+  updateFavorite(brawler_id: number, favorite: boolean) {
+    this.brawlers.find(brawler => brawler.id === brawler_id)!.user_favorite = favorite;
+  }
 }
