@@ -50,7 +50,6 @@ export class BrawlImageModalComponent implements OnInit {
   }
 
   saveBrawler() {
-    console.log(this.selectedBrawler);
     this.userService.setBrawlerImage(this.selectedBrawler.id).subscribe({
       next: () => {
         this.isOpen = false;
@@ -58,12 +57,7 @@ export class BrawlImageModalComponent implements OnInit {
       },
       error: (err) => {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se ha podido guardar la imagen'});
-        console.error(err);
-        console.log(this.selectedBrawler);
       }
     });
-
-
   }
-
 }
