@@ -5,13 +5,13 @@
 
 
   <div class="flex gap-10 items-center flex-col p-10 pt-16 justify-center max-w-[850px] mx-auto">
-    <div class="flex justify-between w-full gap-12 mb-4">
+    <div class="flex md:justify-between justify-center flex-wrap w-full gap-12 mb-4">
       <h1 class="text-white m-0 text-3xl text-border-regular">
         BRAWLERS
         <span class="text-brawl-light-blue">({{ unlockedBrawlers.length }} / {{ brawlers.length }})</span>
       </h1>
 
-      <div (click)="nextSortMethod()" class="parallelogram_shape-sm select-none bg-brawl-black uppercase py-0.5 items-center min-w-52 cursor-pointer text-white flex justify-center text-center">
+      <div (click)="nextSortMethod()" class="parallelogram_shape-sm select-none bg-brawl-black uppercase py-2 items-center min-w-52 cursor-pointer text-white flex justify-center text-center">
         {{ actualSortMethod }}
       </div>
 

@@ -47,7 +47,6 @@ export class BrawlerCardComponent implements OnInit {
 
     this.getImageDimensions(this.brawler.model_image).then(({ width, height }) => {
       this.imageType = this.getImageTypeByDimension(width, height);
-      console.log(this.imageType);
     });
   }
 
