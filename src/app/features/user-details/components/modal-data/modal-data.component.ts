@@ -5,8 +5,8 @@ import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {Calendar} from 'primeng/calendar';
 import {UserChangeRequest, UserDetailsResponse} from '@models/user.model';
-import {UserService} from '@dashboard/services/user.service';
 import {MessageService} from 'primeng/api';
+import {UserService} from '@features/user-details/service/user.service';
 
 export interface ErrorInterface {
   type: string;
