@@ -6,6 +6,8 @@ import {BrawlerCardResponse} from '@models/brawler.model';
 import {NgForOf} from '@angular/common';
 import {FaviconService} from '@core/services/favicon.service';
 import {BrawlerService} from '@features/collection/services/brawler.service';
+import {MessageService} from 'primeng/api';
+import {Router} from '@angular/router';
 
 type OrderBrawlers = 'Nombre' | 'Calidad' | 'Mas trofeos' | 'Menos trofeos';
 
@@ -39,14 +41,23 @@ export class CollectionPageComponent implements OnInit {
   actualSortMethod: OrderBrawlers = 'Nombre';
 
   constructor(private faviconService: FaviconService,
-              private brawlerService: BrawlerService) {}
+              private brawlerService: BrawlerService,
+              private messageService: MessageService,
+              private router: Router) {}
 
   ngOnInit() {
     this.faviconService.changeFavicon('/images/favicon/collection-favicon.png');
     this.actualSortMethod = 'Calidad';
-    this.brawlerService.getUserCollection().subscribe(brawlers => {
-      this.brawlers = brawlers;
-      this.sortBrawlers(this.brawlers, this.actualSortMethod);
+    this.brawlerService.getUserCollection().subscribe({
+      next: brawlers => {
+        this.brawlers = brawlers;
+        this.sortBrawlers(this.brawlers, this.actualSortMethod);
+      },
+      error: error => {
+        this.router.navigate(['/']).then(() => {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se ha podido cargar tu colección'});
+        });
+      }
     });
   }
 
