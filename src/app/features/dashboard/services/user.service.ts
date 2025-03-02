@@ -27,8 +27,4 @@ export class UserService {
     return this.http.get<ShowUserResponse>(`${environment.baseUrl}/user/find/${brawlTag}`);
   }
 
-  setUserChanges(user: UserChangeRequest): Observable<UserChangeRequest> {
-    return this.http.put<UserChangeRequest>(`${environment.baseUrl}/user/details/user/change_details`, user);
-  }
-
 }
