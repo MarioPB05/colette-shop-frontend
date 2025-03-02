@@ -4,7 +4,7 @@
     <span class="text-shadow text-base text-border-sm text-brawl-sky-blue">PEDIDO Nº{{ order.invoiceNumber }}</span>
     <span class="text-xs text-brawl-dark-slate">Hace {{ timeOrder() }}</span>
   </div>
-  <div class="flex justify-between pb-3">
+  <div class="flex justify-between max-md:flex-col pb-3">
     <span class="text-shadow text-xl text-border-sm text-brawl-white">{{ order.totalItems }} CAJAS COMPRADAS</span>
     <span class="text-lg text-brawl-white text-shadow text-border-sm"><span
       class="text-shadow text-xl text-border-sm text-brawl-green">{{ numberFormat(order.totalWithDiscount) }}</span> PRECIO TOTAL</span>
