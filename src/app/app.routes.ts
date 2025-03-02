@@ -50,8 +50,6 @@ export const routes: Routes = [
   {
     path: 'collection',
     component: CollectionPageComponent,
-    canActivate: [authGuard],
-    data: { role: 'authenticated' }
   },
   {
     path: 'auth',
