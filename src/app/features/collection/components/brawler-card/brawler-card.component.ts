@@ -1,7 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {NgClass, NgIf} from '@angular/common';
 import {TrophyService} from '@shared/services/trophy.service';
 import {BrawlerCardResponse} from '@models/brawler.model';
+import {BrawlerService} from '@features/collection/services/brawler.service';
+import {MessageService} from 'primeng/api';
+
+type ImageType = 'portrait' | 'landscape';
 
 @Component({
   selector: 'app-brawler-card',
@@ -14,8 +18,8 @@ import {BrawlerCardResponse} from '@models/brawler.model';
   styleUrl: './../../../../shared/brawl_styles.scss',
 })
 export class BrawlerCardComponent implements OnInit {
-  brawlerQuantity = 2;
   actualTier = 1;
+  imageType: ImageType = 'portrait';
 
   actualTrophyCount = 10;
   actualTrophyMax = 20;
@@ -24,8 +28,11 @@ export class BrawlerCardComponent implements OnInit {
   totalTrophyMax = 20;
 
   @Input() brawler!: BrawlerCardResponse;
+  @Output() favoriteChange = new EventEmitter<boolean>();
 
-  constructor(private trophyService: TrophyService) {}
+  constructor(private trophyService: TrophyService,
+              private brawlerService: BrawlerService,
+              private messageService: MessageService) {}
 
   ngOnInit() {
     const totalTrophies = this.trophyService.getTotalTrophies(this.brawler.user_quantity);
@@ -37,6 +44,19 @@ export class BrawlerCardComponent implements OnInit {
 
     this.totalTrophyCount = totalTrophies;
     this.totalTrophyMax = this.trophyService.getTrophyTierCount(tier);
+
+    this.getImageDimensions(this.brawler.model_image).then(({ width, height }) => {
+      this.imageType = this.getImageTypeByDimension(width, height);
+      console.log(this.imageType);
+    });
+  }
+
+  getImageTypeByDimension(width: number, height: number): ImageType {
+    if (width > height) {
+      return 'landscape';
+    }
+
+    return 'portrait';
   }
 
   userUnlockedBrawler() {
@@ -53,6 +73,7 @@ export class BrawlerCardComponent implements OnInit {
 
   triggerUserFavorite() {
     this.brawler.user_favorite = !this.brawler.user_favorite;
+    this.setFavorite(this.brawler.user_favorite);
   }
 
   getBrawlerNameSize() {
@@ -70,6 +91,7 @@ export class BrawlerCardComponent implements OnInit {
 
     return 'text-2xl';
   }
+
   setFavorite(favorite: boolean) {
     this.brawlerService.setBrawlerFavorite(this.brawler.id, favorite).subscribe({
       next: () => {
@@ -80,6 +102,21 @@ export class BrawlerCardComponent implements OnInit {
         this.favoriteChange.emit(!favorite);
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se ha podido actualizar el favorito'});
       },
+    });
+  }
+
+  getImageDimensions(imageUrl: string): Promise<{ width: number; height: number }> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = imageUrl;
+
+      img.onload = () => {
+        resolve({ width: img.width, height: img.height });
+      };
+
+      img.onerror = (error) => {
+        reject(error);
+      };
     });
   }
 }
