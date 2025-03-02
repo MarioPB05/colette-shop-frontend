@@ -18,7 +18,7 @@ export class OrderCardComponent {
       return `${Math.floor(diffInMs / (1000 * 60 * 60 * 24))} días`;
     }
     const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
-    return `${diffInHours}h`;
+    return `${diffInHours} h`;
   }
 
   numberFormat(value: number): string {
