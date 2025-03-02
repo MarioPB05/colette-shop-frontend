@@ -1,20 +1,20 @@
 <header class="p-4 bg-brawl-dark-slate relative border-b brawl-font border-slate-800 gap-10 text-white md:items-center h-full justify-between text-xl flex text-shadow text-border-sm">
   <div class="flex w-full gap-5 md:gap-10 flex-col md:flex-row"> <!-- Este div hace que los elementos ocupen toda la altura del header -->
-    <img src="/logo.png" alt="Colette's Shop" class="w-28 h-auto mx-auto md:mx-0">
+    <img src="/logo.png" alt="Colette's Shop" class="w-28 h-auto mx-auto md:mx-0" routerLink="/">
     <div class="flex gap-3 md:gap-6 justify-center md:justify-start flex-wrap md:flex-nowrap">
-      <a class="flex items-center min-h-10 gap-1 hover:bg-gray-600 cursor-pointer rounded-lg px-4">
+      <a class="flex items-center min-h-10 gap-1 rounded-lg px-4 cursor-pointer" routerLink="/" routerLinkActive="bg-brawl-light-gray bg-opacity-10" [routerLinkActiveOptions]="{ exact: true }" [ngClass]="{ 'hover:bg-gray-600': !isActive('/') }">
         <img src="/images/icons/shop-icon.png" alt="Icono tienda" class="w-10">
-        <h1>Tienda</h1>
+        <h1 class="text-shadow text-border-sm">Tienda</h1>
       </a>
 
-      <a class="flex items-center gap-1 min-h-10 hover:bg-gray-600 cursor-pointer rounded-lg px-4">
+      <a class="flex items-center gap-1 min-h-10 cursor-pointer rounded-lg px-4" routerLink="/collection" routerLinkActive="bg-brawl-light-gray bg-opacity-10" [ngClass]="{ 'hover:bg-gray-600': !isActive('/collection') }">
         <img src="/images/icons/collection-icon.png" alt="Icono colección" class="w-10">
-        <h1>Colección</h1>
+        <h1 class="text-shadow text-border-sm">Colección</h1>
       </a>
 
-      <a class="flex items-center gap-1 hover:bg-gray-600 cursor-pointer rounded-lg px-4">
+      <a class="flex items-center gap-1 cursor-pointer rounded-lg px-4" routerLink="/inventory" routerLinkActive="bg-brawl-light-gray bg-opacity-10" [ngClass]="{ 'hover:bg-gray-600': !isActive('/inventory') }">
         <img src="/images/icons/box-icon.png" alt="Icono caja" class="w-10">
-        <h1>Inventario</h1>
+        <h1 class="text-shadow text-border-sm">Inventario</h1>
       </a>
     </div>
   </div>
