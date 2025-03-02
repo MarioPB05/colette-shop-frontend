@@ -11,7 +11,6 @@ import {SkipLoading} from '@interceptors/loading.interceptor';
 })
 export class UserService {
 
-  private apiUrl = '/api/user';
 
   constructor(private http: HttpClient) {}
 
