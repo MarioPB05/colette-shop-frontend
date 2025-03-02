@@ -1,8 +1,8 @@
 
 <div class="rounded relative group pb-0 border-2 border-brawl-black">
-  <div class="py-3 px-6 relative pb-0 h-36 overflow-hidden " [class.brightness-50]="!userUnlockedBrawler()" [style.background-color]="brawler.rarity_color">
+  <div class="w-44 flex pt-4 select-none justify-center relative pb-0 h-36 overflow-hidden " [class.brightness-50]="!userUnlockedBrawler()" [style.background-color]="brawler.rarity_color">
     <div class="spotlight from-brawl-white via-transparent to-transparent absolute inset-0"></div>
-    <img [src]="brawler.model_image" [alt]="brawler.name" class="w-32 h-52 group-hover:h-32 object-contain transition-all relative z-10 object-top"/>
+    <img [src]="brawler.model_image" [alt]="brawler.name" class="w-44 pointer-events-none h-52 group-hover:h-32 object-contain transition-all relative z-10 object-top"/>
     <span class="absolute bottom-0 right-0 text-white z-30 text-border-regular px-1.5 pt-1 irregular_rectangle_shape bg-gradient-to-b  to-brawl-purple via-brawl-purple from-brawl-pink uppercase {{ getBrawlerNameSize() }}">{{ brawler.name }}</span>
     <span class="absolute bottom-0 right-0 text-white text-2xl z-20 text-border-regular px-[6.5px] pt-[5px] irregular_rectangle_shape uppercase bg-brawl-black {{ getBrawlerNameSize() }}">{{ brawler.name }}</span>
   </div>
