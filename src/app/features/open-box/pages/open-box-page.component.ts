@@ -12,6 +12,8 @@ import {BrawlerService} from '@features/open-box/services/brawler.service';
 import {forkJoin} from 'rxjs';
 import {BoxTypeImages} from '@core/enums/box.enum';
 import {RarityService} from '@features/open-box/services/rarity.service';
+import {AddReviewModalComponent} from '@features/open-box/components/add-review-modal/add-review-modal.component';
+import {ReviewService} from '@features/open-box/services/review.service';
 
 type pageTypes = 'open-box' | 'duplicate-brawler' | 'new-brawler-mystery-spins' | 'new-brawler-unlocked';
 
@@ -20,6 +22,7 @@ type pageTypes = 'open-box' | 'duplicate-brawler' | 'new-brawler-mystery-spins' 
   imports: [
     NgIf,
     NgClass,
+    AddReviewModalComponent,
   ],
   templateUrl: './open-box-page.component.html',
   standalone: true,
@@ -32,6 +35,8 @@ export class OpenBoxPageComponent implements OnInit{
   nextButtonVisible = false;
   changeItemAnimation = false;
   nextBrawlerIsNew = false;
+  reviewModalVisible = false;
+  userHasReviewSameBoxBefore = false;
 
   box!: InventoryBoxResponse;
 
@@ -79,7 +84,8 @@ export class OpenBoxPageComponent implements OnInit{
               private inventoryService: InventoryService,
               private brawlerService: BrawlerService,
               private rarityService: RarityService,
-              private route: ActivatedRoute) {}
+              private route: ActivatedRoute,
+              private reviewService: ReviewService) {}
 
   ngOnInit() {
     this.faviconService.changeFavicon("/images/favicon/box-favicon.png");
@@ -87,14 +93,12 @@ export class OpenBoxPageComponent implements OnInit{
     const item_id = this.route.snapshot.params['item_id'];
     forkJoin({
       box: this.inventoryService.getInventoryBox(item_id),
-      rarities: this.rarityService.getAllRarityDetails(),
+      rarities: this.rarityService.getAllRarityDetails()
     }).subscribe({
       next: ({box, rarities}) => {
         this.box = box;
         this.rarities = rarities;
-        this.loadBrawlersInBox(box.box_id).then(() => {
-          this.onPageLoaded();
-        });
+        this.loadBrawlersInBox(box.box_id).then(() => this.checkUserHasReviewSameBoxBefore(box.box_id)).then(() => this.onPageLoaded());
       },
       error: (error) => {
         this.router.navigate(['/inventory']).then(() => {
@@ -103,6 +107,10 @@ export class OpenBoxPageComponent implements OnInit{
         this.pageLoaded = false;
       }
     })
+  }
+
+  goToBoxResume() {
+    this.router.navigate([`/box/${this.box.id}/resume`]);
   }
 
   loadBrawlersInBox(box_id: number): Promise<void> {
@@ -130,6 +138,28 @@ export class OpenBoxPageComponent implements OnInit{
           });
           this.pageLoaded = false;
         }});
+    });
+  }
+
+  checkUserHasReviewSameBoxBefore(box_id: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.reviewService.userHasReviewSameBoxBefore(box_id).subscribe({
+        next: (response) => {
+          this.userHasReviewSameBoxBefore = response.hasReviewed;
+          resolve();
+        },
+        error: (error) => {
+          this.router.navigate(['/inventory']).then(() => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'No se pudo verificar si el usuario ya ha hecho una reseña de esta caja.'
+            });
+          });
+          reject(error);
+          this.pageLoaded = false;
+        }
+      });
     });
   }
 
@@ -261,15 +291,20 @@ export class OpenBoxPageComponent implements OnInit{
   }
 
   openNextItem() {
+    if (this.box.brawler_quantity === this.brawlersOpened.length) {
+      if (this.userHasReviewSameBoxBefore) {
+        this.goToBoxResume();
+        return;
+      }
+
+      this.reviewModalVisible = true;
+      return;
+    }
+
     const index = this.brawlersOpened.length;
     const brawlerIndex = this.brawlersCanGetInBox.findIndex(brawler => brawler.id === this.brawlersInBox[index]);
     const brawler = this.brawlersCanGetInBox[brawlerIndex];
     this.changeItemAnimation = true;
-
-    if (this.box.brawler_quantity === this.brawlersOpened.length) {
-        this.navigateToBoxResume();
-        return;
-    }
 
     if (index + 1 !== this.brawlersInBox.length) {
       const nextBrawlerIndex = this.brawlersCanGetInBox.findIndex(brawler => brawler.id === this.brawlersInBox[index + 1]);
@@ -284,7 +319,12 @@ export class OpenBoxPageComponent implements OnInit{
 
     if (!brawler) {
       console.warn("No hay más brawlers en la caja.");
-      this.navigateToBoxResume();
+      if (this.userHasReviewSameBoxBefore) {
+        this.goToBoxResume();
+        return;
+      }
+
+      this.reviewModalVisible = true;
       return;
     }
 
@@ -296,10 +336,6 @@ export class OpenBoxPageComponent implements OnInit{
 
     this.brawlersOpened.push(brawler.id);
     this.brawlersCanGetInBox[brawlerIndex].user_quantity++;
-  }
-
-  navigateToBoxResume() {
-    this.router.navigate([`/box/${this.box.id}/resume`]);
   }
 
   isMaxTier(actualTier: number): boolean {
