@@ -47,3 +47,20 @@ export interface InventoryBoxResponse {
   brawler_quantity: number;
   open: boolean;
 }
+
+export interface CreateBoxRequest {
+  name: string;
+  price: number;
+  type: string;
+  quantity: number;
+  brawler_quantity: number;
+  brawler_ids: number[];
+}
+
+export interface CreateDailyBoxRequest {
+  name: string;
+  type: string;
+  repeat_every_hours: number;
+  brawler_quantity: number;
+  brawler_ids: number[];
+}
