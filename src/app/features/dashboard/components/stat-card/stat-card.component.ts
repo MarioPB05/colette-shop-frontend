@@ -35,7 +35,12 @@ export class StatCardComponent {
   getAverageIcon(): string {
     return this.statCard.secondaryValue > this.statCard.tertiaryValue ? 'pi pi-sort-up-fill text-brawl-lime' : (this.statCard.secondaryValue < this.statCard.tertiaryValue ? 'pi pi-sort-down-fill text-brawl-red' : 'pi pi-sort text-brawl-gray');
   }
+
   getAverageTooltip(): string {
     return this.statCard.secondaryValue > this.statCard.tertiaryValue ? 'Superior a la media mensual' : (this.statCard.secondaryValue < this.statCard.tertiaryValue ? 'Inferior a la media mensual' : 'Igual a la media mensual');
+  }
+
+  getAverageColor(): string {
+    return this.statCard.secondaryValue > this.statCard.tertiaryValue ? 'text-brawl-lime' : (this.statCard.secondaryValue < this.statCard.tertiaryValue ? 'text-brawl-red' : 'text-brawl-gray');
   }
 }

@@ -15,7 +15,7 @@
   <ng-template #footer>
       <span class="text-sm text-gray-500 flex items-center gap-1 w-max pb-1" [pTooltip]="getAverageTooltip()" tooltipPosition="bottom">
         <i [class]="getAverageIcon()"></i>
-        <span [ngClass]="{'text-brawl-lime': statCard.secondaryValue > 0, 'text-brawl-red': statCard.secondaryValue <= 0}">
+        <span [class]="getAverageColor()">
           {{ statCard.secondaryValue }}
         </span>
         el día de hoy

@@ -12,7 +12,7 @@
     }
   </div>
 
-  <p-tabs value="boxes" *ngIf="!loadingData">
+  <p-tabs value="boxes" *ngIf="!loadingData" class="overflow-auto">
     <p-tablist>
       @for (statCard of statCards; track statCard.key) {
         <p-tab value="{{statCard.key}}">
@@ -24,7 +24,7 @@
     <p-tabpanels>
       @for (stat of stats; track stat.key) {
         <p-tabpanel value="{{stat.key}}">
-          <p-chart [type]="stat.type" [data]="stat" [options]="options" class="h-[30rem] my-chart"/>
+          <p-chart [type]="stat.type" [data]="stat" [options]="options" height="500px" width="1000px"/>
         </p-tabpanel>
       }
     </p-tabpanels>
