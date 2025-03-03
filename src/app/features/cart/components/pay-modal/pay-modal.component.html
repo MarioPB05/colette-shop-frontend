@@ -1,0 +1,136 @@
+<div class="fixed bg-brawl-black bg-opacity-50 z-50 h-screen w-screen brawl-font top-0 flex justify-center items-center">
+  <div class="bg-brawl-light-blue px-10 py-5 gap-4 justify-center flex flex-col rounded-lg border-4 border-brawl-dark-blue fade-up max-w-[600px] max-md:w-full md:min-w-[600px]">
+    <p-stepper [(value)]="activeStep" [linear]="true">
+      <p-step-list>
+        <p-step [value]="1" class="flex flex-row flex-auto gap-2">
+          <ng-template #content let-activateCallback="activateCallback" let-value="value">
+            <button class="border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+                    <span
+                      class="border-2 w-12 h-12 inline-flex items-center justify-center -skew-x-3"
+                      [ngClass]="{
+                            'bg-brawl-blue text-white border-white': value === activeStep,
+                            'border-brawl-dark-blue': value != activeStep
+                        }"
+                    >
+                        <i class="pi pi-wallet"
+                          [ngClass]="{
+                            'text-white bg-brawl-blue w-full h-full flex items-center justify-center': value <= activeStep,
+                            'text-brawl-dark-blue': value < activeStep
+                          }"></i>
+                    </span>
+            </button>
+          </ng-template>
+        </p-step>
+
+        <p-step [value]="2" class="flex flex-row flex-auto gap-2">
+          <ng-template #content let-activateCallback="activateCallback" let-value="value">
+            <button class="border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+                    <span
+                      class="border-2 w-12 h-12 inline-flex items-center justify-center -skew-x-3"
+                      [ngClass]="{
+                            'bg-brawl-blue text-white': value <= activeStep,
+                            'border-white': value === activeStep,
+                            'border-brawl-dark-blue': value != activeStep
+                        }"
+                    >
+
+                      @switch (selectedPaymentMethod) {
+                        @case ('creditCard') {
+                          <i class="pi pi-credit-card" [ngClass]="{
+                            'text-white bg-brawl-blue w-full h-full flex items-center justify-center': value <= activeStep,
+                            'text-brawl-dark-blue': value != activeStep,
+                          }"></i>
+                        }
+
+                        @case ('paypal') {
+                          <i class="pi pi-paypal" [ngClass]="{
+                            'text-white bg-brawl-blue w-full h-full flex items-center justify-center': value <= activeStep,
+                            'text-brawl-dark-blue': value != activeStep,
+                          }"></i>
+                        }
+
+                        @case ('bizum') {
+                          <i class="pi pi-mobile" [ngClass]="{
+                            'text-white bg-brawl-blue w-full h-full flex items-center justify-center': value <= activeStep,
+                            'text-brawl-dark-blue': value != activeStep,
+                          }"></i>
+                        }
+                      }
+                    </span>
+            </button>
+          </ng-template>
+        </p-step>
+
+        <p-step [value]="3" class="flex flex-row flex-auto gap-2">
+          <ng-template #content let-activateCallback="activateCallback" let-value="value">
+            <button class="border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+                    <span
+                      class="border-2 w-12 h-12 inline-flex items-center justify-center -skew-x-3"
+                      [ngClass]="{
+                            'bg-brawl-blue text-white border-white': value === activeStep,
+                            'border-brawl-dark-blue': value != activeStep
+                        }"
+                    >
+                        <i class="pi pi-receipt"
+                           [ngClass]="{
+                            'text-white bg-brawl-blue w-full h-full flex items-center justify-center': value === activeStep,
+                            'text-brawl-dark-blue': value != activeStep
+                          }"></i>
+                    </span>
+            </button>
+          </ng-template>
+        </p-step>
+      </p-step-list>
+
+      <p-step-panels>
+        <p-step-panel [value]="1">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 20rem">
+              <div class="text-center mb-4 text-3xl text-border-sm text-shadow text-white">Método de Pago</div>
+
+              <div class="flex flex-col gap-4 text-xl">
+                <button class="py-4" [ngClass]="{'brawl-button text-white': selectedPaymentMethod === 'creditCard', 'text-brawl-dark-blue border-brawl-dark-blue border-2 rounded-md': selectedPaymentMethod != 'creditCard'}" (click)="selectPaymentMethod('creditCard')">
+                  Tarjeta de Crédito/Débito
+                </button>
+                <button class="py-4" [ngClass]="{'brawl-button text-white': selectedPaymentMethod === 'paypal', 'text-brawl-dark-blue border-brawl-dark-blue border-2 rounded-md': selectedPaymentMethod != 'paypal'}" (click)="selectPaymentMethod('paypal')">
+                  PayPal
+                </button>
+                <button class="py-4" [ngClass]="{'brawl-button text-white': selectedPaymentMethod === 'bizum', 'text-brawl-dark-blue border-brawl-dark-blue border-2 rounded-md': selectedPaymentMethod != 'bizum'}" (click)="selectPaymentMethod('bizum')">
+                  Bizum
+                </button>
+
+                <input type="hidden" [(ngModel)]="selectedPaymentMethod" />
+              </div>
+            </div>
+            <div class="flex pt-6 justify-end">
+              <p-button (onClick)="activateCallback(2)" label="Continuar" icon="pi pi-arrow-right" iconPos="right" />
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+        <p-step-panel [value]="2">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+              <div class="text-center mt-4 mb-4 text-xl font-semibold">Choose your interests</div>
+            </div>
+            <div class="flex pt-6 justify-between">
+              <p-button (onClick)="activateCallback(1)" label="Cancelar" severity="secondary" icon="pi pi-arrow-left" />
+              <p-button (onClick)="activateCallback(3)" label="Pagar" icon="pi pi-arrow-right" iconPos="right" />
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+        <p-step-panel [value]="3">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+              <div class="text-center mt-4 mb-4 text-xl font-semibold">Account created successfully</div>
+              <div class="text-center">
+                <img alt="logo" src="https://primefaces.org/cdn/primeng/images/stepper/content.svg" />
+              </div>
+            </div>
+          </ng-template>
+        </p-step-panel>
+      </p-step-panels>
+    </p-stepper>
+  </div>
+</div>
