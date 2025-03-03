@@ -215,6 +215,11 @@ export class CartPageComponent implements OnInit {
   }
 
   createOrder() {
+    if (this.boxCartList.length === 0) {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'No hay cajas en tu carrito'});
+      return;
+    }
+
     if (this.orderIsGift && !this.giftUsernameVerified) {
       this.messageService.add({severity: 'error', summary: 'Error', detail: 'Por favor verifica el nombre de usuario'});
       return;
