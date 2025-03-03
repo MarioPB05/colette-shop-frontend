@@ -19,6 +19,12 @@
       </div>
 
       <div class="mt-20 flex flex-col gap-20 lg:gap-12 max-lg:justify-center">
+        @if (boxCartList.length === 0) {
+          <div class="flex flex-col">
+            <img src="/images/animations/colette_lose.gif" alt="Colette perdiendo" class="w-60 mx-auto" />
+            <span class="text-2xl text-brawl-white text-shadow text-border-sm text-center">No hay productos en el carrito</span>
+          </div>
+        }
         <div class="relative flex w-full lg:ps-20 max-lg:justify-center" *ngFor="let item of boxCartList">
           <div class="spotlight size-32 hidden lg:flex items-center justify-center absolute left-0 top-1/2 transform -translate-y-1/2">
             <img [src]="BoxTypeImages[item.type]" alt="{{ item.type }}" class="size-28" />
@@ -90,7 +96,9 @@
             <span class="text-3xl text-brawl-green">{{ totalPrice.toLocaleString("es-ES") }}€</span>
           </div>
 
-          <button class="brawl-button size-12 flex items-center justify-center mt-6 w-full" (click)="createOrder()">PAGAR</button>
+          <button class="brawl-button size-12 flex items-center justify-center mt-6 w-full" (click)="createOrder()">
+            PAGAR
+          </button>
 
           <label for="order-is-gift" class="brawl-checkbox-container text-brawl-white text-base h-[30px] items-center mt-5" style="display: flex;">
             <input type="checkbox" [(ngModel)]="orderIsGift" class="brawl-checkbox" id="order-is-gift"/>
