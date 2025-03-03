@@ -5,9 +5,12 @@ import {InputNumber} from 'primeng/inputnumber';
 import {ListBrawlerResponse} from '@models/brawler.model';
 import {BrawlerService} from '@dashboard/services/brawler.service';
 import {MessageService} from 'primeng/api';
-import {NgClass, NgForOf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {Tooltip} from 'primeng/tooltip';
 import {FormsModule} from '@angular/forms';
+import {ToggleSwitch} from 'primeng/toggleswitch';
+import {BoxTypeImages, BoxTypes} from '@core/enums/box.enum';
+import {Select} from 'primeng/select';
 
 interface ListBrawler extends ListBrawlerResponse {
   probability: number;
@@ -22,13 +25,28 @@ interface ListBrawler extends ListBrawlerResponse {
     NgForOf,
     Tooltip,
     FormsModule,
+    ToggleSwitch,
+    Select,
+    NgIf,
     NgClass
   ],
-  templateUrl: './box-editor-page.component.html'
+  templateUrl: './box-editor-page.component.html',
+  styleUrl: '../../../../shared/brawl_styles.scss'
 })
 export class BoxEditorPageComponent {
+  protected readonly BoxTypeImages = BoxTypeImages;
+  protected readonly BoxTypes = BoxTypes;
+
   boxId!: number;
   editMode = false;
+  previousDefaultProbability = 0;
+
+  name = '';
+  price = 0;
+  type = BoxTypes[0];
+  quantity = 0;
+  brawler_quantity = 0;
+
 
   // Variables para la configuración de la caja
   maxBrawlersQuantity = 30;
@@ -74,15 +92,7 @@ export class BoxEditorPageComponent {
 
     this.brawlerService.getAllBrawlersForBoxEditor().subscribe({
       next: brawlers => {
-        this.brawlersClassified.forEach(classification => {
-          classification.brawlers = brawlers.filter(brawler => brawler.rarity === classification.label).map(brawler => {
-            return {
-              ...brawler,
-              probability: 0,
-              showProbability: false
-            }
-          })
-        });
+        this.brawlersClassified = this.classifyBrawlers(this.convertBrawlerResponseToBrawler(brawlers));
       },
       error: () => router.navigate(['/dashboard/boxes']).then(
         () => this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los brawlers'})
@@ -112,10 +122,75 @@ export class BoxEditorPageComponent {
     });
   }
 
-        brawler.showProbability = true;
-        this.selectedBrawlers.push(brawler);
-      }
-    }
+  getRarities(): string[] {
+    return Object.keys(this.brawlersClassified);
   }
 
+  classifyBrawlers(brawlers: ListBrawler[]): {[key: string]: ListBrawler[]} {
+    return brawlers.reduce((acc, brawler) => {
+      acc[brawler.rarity].push(brawler);
+      return acc;
+    }, this.brawlersClassified);
+  }
+
+  toggleBrawler(brawler: ListBrawler): void {
+    if (this.selectedBrawlers.includes(brawler.id)) {
+      this.selectedBrawlers = this.selectedBrawlers.filter(id => id !== brawler.id);
+      this.brawlersClassified[brawler.rarity].find(b => b.id === brawler.id)!.showProbability = false;
+      return;
+    }
+
+    this.selectedBrawlers.push(brawler.id);
+    this.brawlersClassified[brawler.rarity].find(b => b.id === brawler.id)!.showProbability = true;
+  }
+
+  activateAllBrawlersFromRarity(rarity: string): void {
+    this.brawlersClassified[rarity].forEach(b => {
+      if (this.selectedBrawlers.includes(b.id)) {
+        return;
+      }
+
+      this.selectedBrawlers.push(b.id);
+      b.showProbability = true;
+    });
+  }
+
+  deactivateAllBrawlersFromRarity(rarity: string): void {
+    this.brawlersClassified[rarity].forEach(b => {
+      this.selectedBrawlers = this.selectedBrawlers.filter(id => id !== b.id);
+      b.showProbability = false;
+    });
+  }
+
+  getProbabilityMaxLength(probability: number): number {
+    if (!probability) {
+      return 3;
+    }
+
+    const probabilityString = probability.toString();
+
+    if (probabilityString[0] !== '1') {
+      return 2;
+    }
+
+    if (probabilityString[1] !== '0') {
+      return 2;
+    }
+
+    return 3;
+  }
+
+  defaultProbabilityChange(rarity: string): void {
+    if (this.rarityDefaultProbabilities[rarity] > 100) {
+      this.rarityDefaultProbabilities[rarity] = 100;
+    }
+
+    this.brawlersClassified[rarity].forEach(b => {
+      if (b.probability === this.previousDefaultProbability) {
+        b.probability = this.rarityDefaultProbabilities[rarity];
+      }
+    });
+
+    this.storePreviousValue(rarity);
+  }
 }
