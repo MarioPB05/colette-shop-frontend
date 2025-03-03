@@ -31,18 +31,37 @@ export class BoxEditorPageComponent {
   editMode = false;
 
   // Variables para la configuración de la caja
-  maxBrawlersQuantity = 4;
+  maxBrawlersQuantity = 30;
 
   // Variables para los brawlers
-  brawlersClassified: {label: string, brawlers: ListBrawler[]}[] = [
-    {label: 'Inicial', brawlers: []},
-    {label: 'Raro', brawlers: []},
-    {label: 'Super Raro', brawlers: []},
-    {label: 'Épico', brawlers: []},
-    {label: 'Mítico', brawlers: []},
-    {label: 'Legendario', brawlers: []}
-  ];
-  selectedBrawlers: ListBrawler[] = [];
+  brawlersClassified: {[key: string]: ListBrawler[]} = {
+    'Inicial': [],
+    'Raro': [],
+    'Super Raro': [],
+    'Épico': [],
+    'Mítico': [],
+    'Legendario': []
+  }
+
+  selectedBrawlers: number[] = [];
+
+  rarityColors : {[key: string]: string} = {
+    'Inicial': '#b9eeff',
+    'Raro': '#87ff7a',
+    'Super Raro': '#7abeff',
+    'Épico': '#e070ff',
+    'Mítico': '#fe5e72',
+    'Legendario': '#fff251'
+  }
+
+  rarityDefaultProbabilities : {[key: string]: number} = {
+    'Inicial': 100,
+    'Raro': 70,
+    'Super Raro': 40,
+    'Épico': 20,
+    'Mítico': 10,
+    'Legendario': 5
+  }
 
   constructor(
     private router: Router,
@@ -71,22 +90,27 @@ export class BoxEditorPageComponent {
     });
   }
 
-  toggleBrawler(event: Event, brawler: ListBrawler): void {
-    const brawlerElement = event.currentTarget as HTMLElement;
-    const imageCover = brawlerElement.querySelector('.image-cover');
+  toggleUnlimitedQuantity(): void {
+    if (this.quantity === -1) {
+      this.quantity = 0;
+    } else {
+      this.quantity = -1;
+    }
+  }
 
-    if (imageCover) {
-      if (imageCover.classList.contains('opacity-0')) {
-        // Quitar brawler de la lista
-        imageCover.classList.remove('opacity-0');
-        imageCover.classList.add('opacity-60');
+  storePreviousValue(rarity: string): void {
+    this.previousDefaultProbability = this.rarityDefaultProbabilities[rarity];
+  }
 
-        brawler.showProbability = false;
-        this.selectedBrawlers = this.selectedBrawlers.filter(selectedBrawler => selectedBrawler.id !== brawler.id);
-      }else {
-        // Añadir brawler a la lista
-        imageCover.classList.remove('opacity-60');
-        imageCover.classList.add('opacity-0');
+  convertBrawlerResponseToBrawler(brawler: ListBrawlerResponse[]): ListBrawler[] {
+    return brawler.map(b => {
+      return {
+        ...b,
+        probability: this.rarityDefaultProbabilities[b.rarity],
+        showProbability: false
+      }
+    });
+  }
 
         brawler.showProbability = true;
         this.selectedBrawlers.push(brawler);
