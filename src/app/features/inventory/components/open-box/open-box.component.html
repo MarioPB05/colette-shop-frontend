@@ -1,0 +1,19 @@
+<div class="flex flex-col gap-4 text-shadow text-border-xs px-1 w-full h-full">
+  <div class="flex flex-col gap-4 items-center z-30 relative top-16">
+    <span class="text-shadow text-2xl text-brawl-white">{{ dateFormatted(inventory.collectDate) }}</span>
+    <img src="/images/boxes/common-box.png" alt="open-box" class="w-36 spotlight-blue">
+  </div>
+  <div class="flex flex-col items-center justify-between gap-2 bg-brawl-blue border-2 mt-1 border-brawl-navy p-6 pt-16 rounded-lg h-full">
+    <span class="text-2xl text-brawl-white text-center">{{ inventory.boxName }}</span>
+    <div class="flex flex-col items-center gap-2">
+    <span class="text-brawl-sky-blue">Resumen de la apertura</span>
+    <span class="text-brawl-white"><span class="text-brawl-pink">{{ inventory.totalBrawlers }}</span> ARTÍCULOS ABIERTOS</span>
+    <span class="text-brawl-white"><span class="text-brawl-green">{{ inventory.newBrawlersObtained }}</span> BRAWLERS DESBLOQUEADOS</span>
+    <span class="text-brawl-white"><span class="text-brawl-gold">{{ inventory.totalTrophies }}</span> TROFEOS CONSEGUIDOS</span>
+    </div>
+    <button (click)="seeResume(inventory)"
+      class="bg-brawl-gold border-2 border-b-4 border-[#8C7300] hover:bg-brawl-yellow hover:border-brawl-gold text-shadow text-border-xs text-brawl-white text-lg py-2 w-full rounded-lg mt-2">
+      Ver detalles
+    </button>
+  </div>
+</div>
