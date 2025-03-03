@@ -29,8 +29,8 @@
       <th pSortableColumn="num_favourite">Nº en favoritos
         <p-sortIcon field="num_favourite"/>
       </th>
-      <th pSortableColumn="rarity">Rareza
-        <p-sortIcon field="rarity"/>
+      <th pSortableColumn="rarity_id">Rareza
+        <p-sortIcon field="rarity_id"/>
       </th>
     </tr>
   </ng-template>
@@ -39,7 +39,7 @@
     <tr>
       <td>
         <div class="flex align-middle">
-          <img [src]="brawler.pin_image" alt="brawler_image" width="25" class="mr-2">
+            <img [src]="brawler.pin_image" alt="brawler_image" width="25" class="mr-2 object-contain">
           {{ brawler.name }}
         </div>
       </td>
@@ -47,8 +47,8 @@
       <td>{{ brawler.num_favourite }}</td>
       <td>
         <span class="px-4 py-1 rounded-full bg-[#F3F3F3] flex items-center w-max">
-          <span [ngClass]="[getBadgeClass(brawler.rarity)]"
-                class="rounded-full size-3 inline-block mr-2"></span>{{ brawler.rarity }}
+          <span
+            class="rounded-full size-3 inline-block mr-2 bg-[{{ brawler.rarity_color }}]"></span>{{ brawler.rarity_name }}
         </span>
       </td>
     </tr>
