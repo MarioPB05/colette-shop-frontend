@@ -19,4 +19,11 @@ export class BoxService {
     return this.http.delete<void>(`${environment.baseUrl}/boxes/${id}`)
   }
 
+  createBox(data: any): Observable<void> {
+    return this.http.post<void>(`${environment.baseUrl}/boxes`, data)
+  }
+
+  createDailyBox(data: any): Observable<void> {
+    return this.http.post<void>(`${environment.baseUrl}/boxes/daily`, data)
+  }
 }
