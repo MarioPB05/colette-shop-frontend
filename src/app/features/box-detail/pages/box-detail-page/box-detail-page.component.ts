@@ -157,4 +157,6 @@ export class BoxDetailPageComponent implements OnInit {
     if (!this.box.is_daily && !this.boxHasInfinityStock())
       this.box.boxes_left--;
   }
+
+  protected readonly window = window;
 }

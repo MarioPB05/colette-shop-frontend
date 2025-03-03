@@ -1,0 +1,15 @@
+<div class="flex flex-col items-center gap-4 bg-brawl-blue border-2 border-brawl-navy p-4 w-full rounded-lg relative">
+  <div *ngIf="this.inventory.giftFrom" class="flex items-center absolute -top-6 -left-6">
+    <img src="/images/user-details-icons/gift-icon.png" alt="gift"
+         class="size-12 object-contain rotate-12">
+    <span class="text-shadow text-border-xs text-brawl-white">Regalo de {{ inventory.giftFrom }}</span>
+  </div>
+  <img src="/images/icons/inf-icon.png" alt="info" (click)="seeDetails(inventory)"
+       class="w-12 h-auto absolute -top-6 -right-10 transform -translate-x-1/2 rotate-6 cursor-pointer">
+  <img src="/images/boxes/common-box.png" alt="close-box" class="w-36 h-auto">
+  <span class="text-shadow text-xl text-border-xs text-brawl-white">{{ inventory.boxName }}</span>
+  <button (click)="openBox(inventory)"
+    class="bg-brawl-gold border-2 border-b-4 border-[#8C7300] hover:bg-brawl-yellow hover:border-brawl-gold text-shadow text-border-xs text-brawl-white text-lg py-2 w-full rounded-lg">
+    ABRIR CAJA
+  </button>
+</div>

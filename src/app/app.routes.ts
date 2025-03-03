@@ -7,6 +7,7 @@ import {OpenBoxPageComponent} from '@features/open-box/pages/open-box-page.compo
 import {BoxResumePageComponent} from '@features/box-resume/pages/box-resume-page.component';
 import {UserDetailsPageComponent} from '@features/user-details/pages/user-details-page/user-details-page.component';
 import {VerifyPageComponent} from '@features/auth/pages/verify-page/verify-page.component';
+import {InventoryComponent} from '@features/inventory/pages/inventory/inventory.component';
 import {CollectionPageComponent} from '@features/collection/pages/collection-page.component';
 
 export const routes: Routes = [
@@ -51,6 +52,12 @@ export const routes: Routes = [
   {
     path: 'user/details',
     component: UserDetailsPageComponent,
+    canActivate: [authGuard],
+    data: { role: 'authenticated' }
+  },
+  {
+    path: 'inventory',
+    component: InventoryComponent,
     canActivate: [authGuard],
     data: { role: 'authenticated' }
   },
