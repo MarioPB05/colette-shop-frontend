@@ -25,6 +25,7 @@ export class AddReviewModalComponent {
   comment: string = '';
   userAddedReview: boolean = false;
   @Input() boxId: number = 1;
+  @Input() inventoryId: number = 1;
 
   // VALIDATION
   ratingValid: boolean = true;
@@ -82,6 +83,6 @@ export class AddReviewModalComponent {
   }
 
   goToBoxResume(): void {
-    this.router.navigate([`/box/${this.boxId}/resume`]);
+    this.router.navigate([`/box/${this.inventoryId}/resume`]);
   }
 }
