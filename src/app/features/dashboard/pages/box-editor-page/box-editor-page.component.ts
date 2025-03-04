@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {InputText} from 'primeng/inputtext';
 import {InputNumber} from 'primeng/inputnumber';
-import {ListBrawlerResponse, SelectedBrawler} from '@models/brawler.model';
+import {ListBrawlerResponse, SelectedBrawler, UserBrawlerProbabilityResponse} from '@models/brawler.model';
 import {BrawlerService} from '@dashboard/services/brawler.service';
 import {MessageService, PrimeTemplate} from 'primeng/api';
 import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
@@ -51,10 +51,11 @@ export class BoxEditorPageComponent {
   formGroup: FormGroup = new FormGroup({
     name: new FormControl('', {validators: [Validators.required, Validators.minLength(3), Validators.maxLength(40)]}),
     price: new FormControl(0, {validators: [Validators.required, Validators.min(0)]}),
-    type: new FormControl(0, {validators: [Validators.required]}),
+    type: new FormControl(1, {validators: [Validators.required]}),
     quantity: new FormControl(0, {validators: [Validators.required, Validators.min(0)]}),
     brawler_quantity: new FormControl(1, {validators: [Validators.required, Validators.min(1)]}),
-    repeat_hours: new FormControl(24, {validators: [Validators.required, Validators.min(1)]})
+    repeat_hours: new FormControl(24, {validators: [Validators.required, Validators.min(1)]}),
+    unlimited_quantity: new FormControl(false)
   });
 
 
@@ -120,7 +121,7 @@ export class BoxEditorPageComponent {
     this.selectTypes = BoxTypes.map((key, index) => {
       return {
         label: key,
-        value: index
+        value: index + 1
       }
     });
   }
@@ -137,7 +138,7 @@ export class BoxEditorPageComponent {
       next: (response) => {
         this.isDailyBox = Object.keys(response).includes('repeat_every_hours');
         this.formGroup.get('name')?.setValue(response.name);
-        this.formGroup.get('type')?.setValue(response.type - 1);
+        this.formGroup.get('type')?.setValue(response.type);
         this.formGroup.get('brawler_quantity')?.setValue(response.brawler_quantity);
 
         if (this.isDailyBox) {
@@ -147,6 +148,8 @@ export class BoxEditorPageComponent {
           response = response as CreateBoxRequest;
           this.formGroup.get('price')?.setValue(response?.price);
           this.formGroup.get('quantity')?.setValue(response.quantity);
+          this.formGroup.get('unlimited_quantity')?.setValue(response.quantity === -1);
+          response.quantity === -1 ? this.formGroup.get('quantity')?.disable() : '';
         }
 
         this.selectedBrawlers = response.brawlers_in_box.map(b => b.id);
@@ -163,10 +166,6 @@ export class BoxEditorPageComponent {
     });
   }
 
-  actualizeSelectedBrawlers(): void {
-
-  }
-
   getBoxName(): string {
     return this.formGroup.get('name')?.value;
   }
@@ -176,11 +175,15 @@ export class BoxEditorPageComponent {
   }
 
   getBoxTypeImage(): string {
-    return BoxTypeImages[this.BoxTypes[this.getBoxType()]];
+    return BoxTypeImages[this.BoxTypes[this.getBoxType() - 1]];
   }
 
   getBoxQuantity(): number {
     return this.formGroup.get('quantity')?.value;
+  }
+
+  getBoxBrawlerQuantity(): number {
+    return this.formGroup.get('brawler_quantity')?.value;
   }
 
   getSendButtonText(): string {
@@ -226,12 +229,24 @@ export class BoxEditorPageComponent {
   }
 
   toggleUnlimitedQuantity(): void {
-    if (this.formGroup.get('quantity')?.disabled) {
+
+    if (!this.formGroup.get('unlimited_quantity')?.value) {
       this.formGroup.get('quantity')?.setValue(0);
       this.formGroup.get('quantity')?.enable();
     } else {
       this.formGroup.get('quantity')?.setValue(-1);
       this.formGroup.get('quantity')?.disable();
+    }
+
+    this.checkIfUnlimitedQuantityAndPriceAreValid();
+  }
+
+  checkIfUnlimitedQuantityAndPriceAreValid(): void {
+    if (this.formGroup.get('price')?.value === 0 && this.formGroup.get('quantity')?.value === -1) {
+      this.formGroup.get('quantity')?.setValue(0);
+      this.formGroup.get('quantity')?.enable();
+      this.formGroup.get('unlimited_quantity')?.setValue(false);
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Las cajas gratuitas no pueden tener cantidad ilimitada'});
     }
   }
 
@@ -372,11 +387,11 @@ export class BoxEditorPageComponent {
 
     this.backendIsLoading = true;
 
-    if (this.isDailyBox) {
-      this.createDailyBox();
-    } else {
-      this.createNormalBox();
+    if (this.editMode) {
+      return this.isDailyBox ? this.editDailyBox() : this.editNormalBox();
     }
+
+    return this.isDailyBox ? this.createDailyBox() : this.createNormalBox();
   }
 
   throwCreateBoxError(): void {
@@ -420,4 +435,43 @@ export class BoxEditorPageComponent {
       }
     });
   }
+
+  editNormalBox(): void {
+    this.boxService.editBox(this.boxId, this.convertFormToBoxRequest()).subscribe({
+      next: (response) => {
+        this.backendIsLoading = false;
+
+        if (response.status === 'error') {
+          return this.throwCreateBoxError();
+        }
+
+        this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Caja editada correctamente'});
+        this.router.navigate(['/dashboard/boxes']);
+      },
+      error: () => {
+        this.throwCreateBoxError();
+        this.backendIsLoading = false;
+      }
+    });
+  }
+
+  editDailyBox(): void {
+    this.boxService.editDailyBox(this.boxId, this.convertFormToDailyBoxRequest()).subscribe({
+      next: (response) => {
+        this.backendIsLoading = false;
+
+        if (response.status === 'error') {
+          return this.throwCreateBoxError();
+        }
+
+        this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Caja editada correctamente'});
+        this.router.navigate(['/dashboard/boxes']);
+      },
+      error: () => {
+        this.throwCreateBoxError();
+        this.backendIsLoading = false;
+      }
+    });
+  }
+
 }
