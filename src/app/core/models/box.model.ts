@@ -1,3 +1,4 @@
+import {SelectedBrawler} from '@models/brawler.model';
 
 export interface BoxShopResponse {
   id: number;
@@ -51,16 +52,16 @@ export interface InventoryBoxResponse {
 export interface CreateBoxRequest {
   name: string;
   price: number;
-  type: string;
+  type: number;
   quantity: number;
   brawler_quantity: number;
-  brawler_ids: number[];
+  brawlers_in_box: SelectedBrawler[];
 }
 
 export interface CreateDailyBoxRequest {
   name: string;
-  type: string;
+  type: number;
   repeat_every_hours: number;
   brawler_quantity: number;
-  brawler_ids: number[];
+  brawlers_in_box: SelectedBrawler[];
 }
