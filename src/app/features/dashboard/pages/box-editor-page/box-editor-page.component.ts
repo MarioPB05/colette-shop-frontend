@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {InputText} from 'primeng/inputtext';
 import {InputNumber} from 'primeng/inputnumber';
-import {ListBrawlerResponse} from '@models/brawler.model';
+import {ListBrawlerResponse, SelectedBrawler} from '@models/brawler.model';
 import {BrawlerService} from '@dashboard/services/brawler.service';
 import {MessageService, PrimeTemplate} from 'primeng/api';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {Tooltip} from 'primeng/tooltip';
 import {FormControl, FormGroup, FormGroupDirective, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ToggleSwitch} from 'primeng/toggleswitch';
@@ -13,6 +13,7 @@ import {BoxTypeImages, BoxTypes} from '@core/enums/box.enum';
 import {Select} from 'primeng/select';
 import {CreateBoxRequest, CreateDailyBoxRequest} from '@models/box.model';
 import {BoxService} from '@dashboard/services/box.service';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 
 interface ListBrawler extends ListBrawlerResponse {
   probability: number;
@@ -32,7 +33,7 @@ interface ListBrawler extends ListBrawlerResponse {
     NgIf,
     NgClass,
     ReactiveFormsModule,
-    PrimeTemplate
+    ProgressSpinnerModule
   ],
   templateUrl: './box-editor-page.component.html',
   styleUrl: '../../../../shared/brawl_styles.scss'
@@ -45,13 +46,14 @@ export class BoxEditorPageComponent {
   editMode = false;
   previousDefaultProbability = 0; // Se usa para actualizar la probabilidad de los brawlers
   isDailyBox = false;
+  backendIsLoading = false;
 
   formGroup: FormGroup = new FormGroup({
-    name: new FormControl('', {validators: [Validators.required, Validators.minLength(3)]}),
+    name: new FormControl('', {validators: [Validators.required, Validators.minLength(3), Validators.maxLength(40)]}),
     price: new FormControl(0, {validators: [Validators.required, Validators.min(0)]}),
-    type: new FormControl(BoxTypes[0], {validators: [Validators.required]}),
+    type: new FormControl(0, {validators: [Validators.required]}),
     quantity: new FormControl(0, {validators: [Validators.required, Validators.min(0)]}),
-    brawler_quantity: new FormControl(0, {validators: [Validators.required, Validators.min(0)]}),
+    brawler_quantity: new FormControl(1, {validators: [Validators.required, Validators.min(1)]}),
     repeat_hours: new FormControl(24, {validators: [Validators.required, Validators.min(1)]})
   });
 
@@ -70,6 +72,7 @@ export class BoxEditorPageComponent {
   }
 
   selectedBrawlers: number[] = [];
+  selectTypes: {label: string, value: number}[] = [];
 
   rarityColors : {[key: string]: string} = {
     'Inicial': '#b9eeff',
@@ -102,6 +105,7 @@ export class BoxEditorPageComponent {
     this.brawlerService.getAllBrawlersForBoxEditor().subscribe({
       next: brawlers => {
         this.brawlersClassified = this.classifyBrawlers(this.convertBrawlerResponseToBrawler(brawlers));
+        this.initSelectTypes();
       },
       error: () => router.navigate(['/dashboard/boxes']).then(
         () => this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los brawlers'})
@@ -109,16 +113,25 @@ export class BoxEditorPageComponent {
     });
   }
 
-  getBoxName(): string {
-    return this.formGroup.get('name')?.value.trim();
+  initSelectTypes(): void {
+    this.selectTypes = BoxTypes.map((key, index) => {
+      return {
+        label: key,
+        value: index
+      }
+    });
   }
 
-  getBoxType(): string {
+  getBoxName(): string {
+    return this.formGroup.get('name')?.value;
+  }
+
+  getBoxType(): number {
     return this.formGroup.get('type')?.value;
   }
 
   getBoxTypeImage(): string {
-    return this.BoxTypeImages[this.getBoxType()];
+    return BoxTypeImages[this.BoxTypes[this.getBoxType()]];
   }
 
   getBoxQuantity(): number {
@@ -126,6 +139,10 @@ export class BoxEditorPageComponent {
   }
 
   getSendButtonText(): string {
+    if (this.backendIsLoading) {
+      return this.editMode ? 'Guardando cambios...' : 'Creando caja...';
+    }
+
     return this.editMode ? 'Guardar cambios' : 'Crear caja';
   }
 
@@ -139,7 +156,7 @@ export class BoxEditorPageComponent {
       return false;
     }
 
-    return control.invalid && control.touched;
+    return control.invalid;
   }
 
   changeFormToDailyBox(): void {
@@ -259,6 +276,20 @@ export class BoxEditorPageComponent {
     this.storePreviousValue(rarity);
   }
 
+  findBrawlerById(id: number): ListBrawler | undefined {
+    return Object.values(this.brawlersClassified).flat().find(b => b.id === id);
+  }
+
+  convertSelectedBrawlersToObjects(): SelectedBrawler[] {
+    return this.selectedBrawlers.map(id => {
+      const brawler = this.findBrawlerById(id)!;
+      return {
+        id,
+        probability: brawler.probability
+      }
+    });
+  }
+
   convertFormToBoxRequest(): CreateBoxRequest {
     return {
       name: this.getBoxName(),
@@ -266,7 +297,7 @@ export class BoxEditorPageComponent {
       type: this.getBoxType(),
       quantity: this.formGroup.get('quantity')?.value,
       brawler_quantity: this.formGroup.get('brawler_quantity')?.value,
-      brawler_ids: this.selectedBrawlers
+      brawlers_in_box: this.convertSelectedBrawlersToObjects()
     }
   }
 
@@ -276,7 +307,7 @@ export class BoxEditorPageComponent {
       type: this.getBoxType(),
       repeat_every_hours: this.formGroup.get('repeat_hours')?.value,
       brawler_quantity: this.formGroup.get('brawler_quantity')?.value,
-      brawler_ids: this.selectedBrawlers
+      brawlers_in_box: this.convertSelectedBrawlersToObjects()
     }
   }
 
@@ -285,8 +316,16 @@ export class BoxEditorPageComponent {
     this.formGroup.updateValueAndValidity();
 
     if (this.formGroup.invalid) {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Por favor, rellena los campos correctamente'});
       return;
     }
+
+    if (this.selectedBrawlers.length === 0) {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Selecciona al menos un brawler en la sección de contenido'});
+      return;
+    }
+
+    this.backendIsLoading = true;
 
     if (this.isDailyBox) {
       this.createDailyBox();
@@ -295,23 +334,45 @@ export class BoxEditorPageComponent {
     }
   }
 
+  throwCreateBoxError(): void {
+    this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo crear la caja'});
+  }
+
   createNormalBox(): void {
     this.boxService.createBox(this.convertFormToBoxRequest()).subscribe({
-      next: () => {
+      next: (response) => {
+        this.backendIsLoading = false;
+
+        if (response.status === 'error') {
+          return this.throwCreateBoxError();
+        }
+
         this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Caja creada correctamente'});
         this.router.navigate(['/dashboard/boxes']);
       },
-      error: () => this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo crear la caja'})
+      error: () => {
+        this.throwCreateBoxError();
+        this.backendIsLoading = false;
+      }
     });
   }
 
   createDailyBox(): void {
     this.boxService.createDailyBox(this.convertFormToDailyBoxRequest()).subscribe({
-      next: () => {
+      next: (response) => {
+        this.backendIsLoading = false;
+
+        if (response.status === 'error') {
+          return this.throwCreateBoxError();
+        }
+
         this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Caja creada correctamente'});
         this.router.navigate(['/dashboard/boxes']);
       },
-      error: () => this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo crear la caja'})
+      error: () => {
+        this.throwCreateBoxError();
+        this.backendIsLoading = false;
+      }
     });
   }
 }
