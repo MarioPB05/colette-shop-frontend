@@ -41,3 +41,15 @@ export interface InventoryBrawlerResponse {
   user_quantity_actual: number;
   user_quantity_past: number;
 }
+
+export interface BrawlerCardResponse {
+  id: number;
+  name: string;
+  model_image: string;
+
+  rarity_id: number;
+  rarity_color: string;
+
+  user_quantity: number;
+  user_favorite: boolean;
+}

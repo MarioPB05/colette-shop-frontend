@@ -7,7 +7,7 @@ import {TableOrderComponent} from '@dashboard/components/table-order/table-order
 import {MessageService} from 'primeng/api';
 
 @Component({
-  selector: 'app-user-details-page-page',
+  selector: 'app-user-details-page',
   imports: [
     DatePipe,
     TableOrderComponent,

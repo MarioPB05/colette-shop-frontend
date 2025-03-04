@@ -1,0 +1,41 @@
+
+<div class="min-h-screen overflow-hidden flex-col from-brawl-blue relative brawl-font">
+  <div class="fixed bg-gradient-radial via-brawl-dark-blue top-0 to-brawl-dark-blue w-screen h-screen -z-10"></div>
+  <app-brawl-header/>
+
+
+  <div class="flex gap-10 items-center flex-col p-10 pt-16 justify-center max-w-[850px] mx-auto">
+    <div class="flex md:justify-between justify-center flex-wrap w-full gap-12 mb-4">
+      <h1 class="text-white m-0 text-3xl text-border-regular">
+        BRAWLERS
+        <span class="text-brawl-light-blue">({{ unlockedBrawlers.length }} / {{ brawlers.length }})</span>
+      </h1>
+
+      <div (click)="nextSortMethod()" class="parallelogram_shape-sm select-none bg-brawl-black uppercase py-2 items-center min-w-52 cursor-pointer text-white flex justify-center text-center">
+        {{ actualSortMethod }}
+      </div>
+
+      <div class=" bg-brawl-light-blue bg-opacity-20 rounded-lg px-2 py-1">
+        <label for="only-favorite-brawlers" class="brawl-checkbox-container h-8 justify-center text-brawl-white text-md inline-flex content-center">
+          <input type="checkbox" class="brawl-checkbox" id="only-favorite-brawlers" [ngModel]="sortByFavoritesIsActive" (change)="sortByFavoritesChange()"/>
+          <span class="brawl-checkmark"></span>
+          <img src="/images/icons/heart-icon.png" class="h-6" alt="Heart Icon">
+        </label>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-12">
+      <app-brawler-card *ngFor="let brawler of unlockedBrawlers" [brawler]="brawler" (favoriteChange)="updateFavorite(brawler.id, $event)"/>
+    </div>
+
+    <div class="bg-brawl-black w-full h-2 relative text-white mt-10 text-center">
+      <span class="absolute left-1/2 transform -translate-x-1/2 -top-3">
+        BRAWLERS POR DESBLOQUEAR
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-12">
+      <app-brawler-card *ngFor="let brawler of blockedBrawlers" [brawler]="brawler" (favoriteChange)="updateFavorite(brawler.id, $event)"/>
+    </div>
+  </div>
+</div>

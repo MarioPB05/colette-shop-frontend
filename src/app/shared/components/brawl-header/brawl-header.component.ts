@@ -1,9 +1,15 @@
 import {Component, OnDestroy} from '@angular/core';
 import {LocalStorageService} from '@shared/services/local-storage.service';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
+import {NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-brawl-header',
-  imports: [],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    NgClass
+  ],
   templateUrl: './brawl-header.component.html',
   standalone: true,
   styleUrl: './../../brawl_styles.scss',
@@ -12,7 +18,8 @@ export class BrawlHeaderComponent implements OnDestroy{
   canPlayMusic: boolean = false;
   music = new Audio("/audios/menu/brawl-stars-menu-01.ogg");
 
-  constructor(private localStorageService: LocalStorageService) {
+  constructor(private localStorageService: LocalStorageService,
+              private router: Router) {
     this.canPlayMusic = this.localStorageService.getItem('canPlayMusic') === 'true';
     if (this.canPlayMusic) {
       this.playMenuMusic();
@@ -54,5 +61,13 @@ export class BrawlHeaderComponent implements OnDestroy{
     }
 
     return '/images/icons/music-note-off.svg';
+  }
+
+  isActive(route: string) {
+    if (route === '/') {
+      return this.router.url === route;
+    }
+
+    return this.router.url.includes(route);
   }
 }
