@@ -44,6 +44,7 @@ export class CartPageComponent implements OnInit {
   gemsDiscount: number = 0;
 
   useGems: boolean = true;
+  canUseGems: boolean = true;
 
   requestGift: boolean = false;
   orderIsGift: boolean = false;
@@ -104,10 +105,6 @@ export class CartPageComponent implements OnInit {
         this.totalCartPrice = this.boxCartList.reduce((acc, box) => acc + box.total_price, 0);
         this.totalNetPrice = Math.round((this.totalCartPrice / 1.21) * 100) / 100;
 
-        if (this.totalCartPrice <= 0) {
-          this.useGems = false;
-        }
-
         if (userDetails) {
           this.userGemsAmount = userDetails.gems;
 
@@ -115,7 +112,14 @@ export class CartPageComponent implements OnInit {
             // Calculate gems discount, 100 gems = 1€ only 2 decimals
             this.gemsDiscount = Math.round(this.userGemsAmount * 0.01 * 100) / 100;
 
-            if (this.userGemsAmount > 0) {
+            // If the total price is 0 or if we apply the discount with gems the total price is less than 0
+            if (this.totalCartPrice <= 0 || this.totalNetPrice - this.gemsDiscount <= 0) {
+              this.useGems = false;
+            }
+
+            this.canUseGems = this.totalNetPrice - this.gemsDiscount > 0;
+
+            if (this.userGemsAmount > 0 && this.canUseGems) {
               this.totalNetPrice -= this.gemsDiscount;
             }else {
               this.useGems = false;
@@ -235,7 +239,14 @@ export class CartPageComponent implements OnInit {
 
     this.totalNetPrice = Math.round((this.totalCartPrice / 1.21) * 100) / 100;
 
-    if (this.useGems) {
+    if (this.totalNetPrice - this.gemsDiscount <= 0) {
+      this.useGems = false;
+      this.canUseGems = false;
+    }else {
+      this.canUseGems = true;
+    }
+
+    if (this.useGems && this.userGemsAmount > 0 && this.canUseGems) {
       this.totalNetPrice -= this.gemsDiscount;
     }
 
