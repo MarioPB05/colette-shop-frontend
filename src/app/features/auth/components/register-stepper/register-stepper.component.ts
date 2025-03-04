@@ -211,7 +211,8 @@ export class RegisterStepperComponent {
     if (this.registerForm.valid) {
       const birthdate = this.birthdate?.value as Date;
       const month = String(birthdate.getMonth() + 1).padStart(2, '0');
-      const formattedBirthdate = `${birthdate.getFullYear()}-${month}-${birthdate.getDate()}`;
+      const day = String(birthdate.getDate()).padStart(2, '0');
+      const formattedBirthdate = `${birthdate.getFullYear()}-${month}-${day}`;
       const dni = this.dni?.value as string;
 
       const username = (this.username?.value as string).trim();
@@ -237,7 +238,7 @@ export class RegisterStepperComponent {
         name: name,
         surname: surname,
         birthdate: formattedBirthdate,
-        dni: dni.replace('-', '')
+        dni: dni.replace('-', '').toUpperCase()
       }
 
       this.authService.register(dto).subscribe({

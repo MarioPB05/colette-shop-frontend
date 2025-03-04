@@ -3,6 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {catchError, map, Observable} from 'rxjs';
 import {AuthVerifyResponse} from '@models/auth.model';
 import {environment} from '@environments/environment';
+import {Router} from '@angular/router';
+import {MessageService} from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,7 @@ import {environment} from '@environments/environment';
 export class AuthService {
   private tokenKey = 'api_token';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router, private messageService: MessageService) { }
 
   setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
@@ -22,6 +24,18 @@ export class AuthService {
 
   removeToken(): void {
     localStorage.removeItem(this.tokenKey);
+  }
+
+  logout(): void {
+    this.removeToken();
+
+    this.router.navigate(['/auth']).then(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Hasta pronto!',
+        detail: 'Has cerrado sesión correctamente.'
+      })
+    });
   }
 
   isAuthenticated(): Observable<boolean> {

@@ -65,3 +65,24 @@ export interface CreateDailyBoxRequest {
   brawler_quantity: number;
   brawlers_in_box: SelectedBrawler[];
 }
+
+export interface BoxCartResponse {
+  id: number;
+  name: string;
+  type: string;
+  quantity: number;
+  price: number;
+  total_price: number;
+  boxes_left: number;
+  is_daily: boolean;
+  claimed: boolean;
+}
+
+export interface BoxCartRequest {
+  items: CartItemRequest[];
+}
+
+export interface CartItemRequest {
+  boxId: number;
+  quantity: number;
+}
