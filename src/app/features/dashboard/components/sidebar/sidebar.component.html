@@ -32,14 +32,16 @@
   </ng-template>
 
   <ng-template #end>
-    <button pRipple
-            class="relative overflow-hidden w-full border-0 bg-transparent flex items-center p-2 pl-4 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-none cursor-pointer transition-colors duration-200">
-      <p-avatar image="https://cdn.brawlify.com/brawlers/borderless/16000079.png" class="mr-4"
-                shape="square" size="large"/>
+    <div class="relative overflow-hidden w-full border-0 bg-transparent flex items-center p-2 pl-4 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-none cursor-pointer transition-colors duration-200"
+      *ngIf="userDetailsService.userDetails$ | async as userDetails">
+      <p-avatar [image]="userDetails.brawlerAvatar.image" class="mr-4" shape="square" size="large" (click)="menu.toggle($event)" />
+
       <span class="inline-flex flex-col">
-                <span class="font-bold text-white">Amy Elsner</span>
-                <span class="text-sm text-[#12BEFC]">#DA84ASD3</span>
-            </span>
-    </button>
+          <span class="font-bold text-white">{{ userDetails.username }}</span>
+          <span class="text-sm text-[#12BEFC]">#{{ userDetails.brawlTag }}</span>
+      </span>
+    </div>
   </ng-template>
 </p-menu>
+
+<p-tiered-menu #menu [model]="userItems" [popup]="true" />

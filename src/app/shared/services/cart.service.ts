@@ -1,5 +1,4 @@
-import {effect, signal, WritableSignal} from '@angular/core';
-import {Injectable} from '@angular/core';
+import {effect, Injectable, signal, WritableSignal} from '@angular/core';
 import {LocalStorageService} from '@shared/services/local-storage.service';
 
 @Injectable({
@@ -56,9 +55,9 @@ export class CartService {
   public removeOneFromCart(itemId: number): void {
     const cart = this.cart();
     const itemIndex = cart.findIndex(cartItemId => cartItemId === itemId);
+
     if (itemIndex !== -1) {
-      cart.splice(itemIndex, 1);
-      this.cart.update(() => cart);
+      this.cart.update(() => [...cart.slice(0, itemIndex), ...cart.slice(itemIndex + 1)]);
     }
   }
 
