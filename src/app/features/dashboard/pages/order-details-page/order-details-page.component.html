@@ -1,6 +1,6 @@
 <div *ngIf="!loadingData" class="p-5 pb-0">
   <h1 class="text-2xl font-bold pb-5">Detalles del pedido</h1>
-  <div class="flex flex-row justify-between align-top">
+  <div class="flex flex-col justify-between align-top sm:flex-row">
     <div class="flex flex-wrap justify-start gap-10">
       <div class="border-l-2 border-gray-200 pl-3 flex flex-col gap-2">
         <span class="text-gray-500">Nº de factura: <strong>#{{ orderDetails.invoiceNumber }}</strong></span>
@@ -68,8 +68,7 @@
 
     <div class="flex flex-col justify-top gap-6 mt-5 text-sm lg:pl-10 bg-white mx-6 lg:border-l-2 border-gray-200">
       <div class="flex flex-row justify-between">
-      <span class="text-gray-500">Descuento ({{ orderDetails.gems }} {{ orderDetails.gems === 1 ? 'gema' : 'gemas' }}
-        )</span>
+      <span class="text-gray-500">Descuento ({{ orderDetails.gems }} {{ orderDetails.gems === 1 ? 'gema' : 'gemas' }})</span>
         <span class="font-semibold text-gray-900 text-nowrap">{{ orderDetails.discount }} €</span>
       </div>
       <div class="flex flex-row justify-between">
