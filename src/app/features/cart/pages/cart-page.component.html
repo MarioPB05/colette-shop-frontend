@@ -145,6 +145,6 @@
   </div>
 </div>
 
-<app-pay-modal />
+<app-pay-modal [ngClass]="{'hidden': !showPayModal}" [orderId]="orderId" (updateShowPayModal)="showPayModal = $event" [activeStep]="activeStep" #payModal />
 
 <p-confirm-dialog />
