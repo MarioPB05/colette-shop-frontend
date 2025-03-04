@@ -43,4 +43,8 @@ export class StatCardComponent {
   getAverageColor(): string {
     return this.statCard.secondaryValue > this.statCard.tertiaryValue ? 'text-brawl-lime' : (this.statCard.secondaryValue < this.statCard.tertiaryValue ? 'text-brawl-red' : 'text-brawl-gray');
   }
+
+  numberFormat(value: number): string {
+    return new Intl.NumberFormat('es-ES').format(value);
+  }
 }

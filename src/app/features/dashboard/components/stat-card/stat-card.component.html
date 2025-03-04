@@ -10,13 +10,13 @@
     </div>
   </ng-template>
   <p>
-    <span class="font-semibold">{{ statCard.principalValue }} {{ statCard.unit }}</span>
+    <span class="font-semibold">{{ numberFormat(statCard.principalValue) }} {{ statCard.unit }}</span>
   </p>
   <ng-template #footer>
       <span class="text-sm text-gray-500 flex items-center gap-1 w-max pb-1" [pTooltip]="getAverageTooltip()" tooltipPosition="bottom">
         <i [class]="getAverageIcon()"></i>
         <span [class]="getAverageColor()">
-          {{ statCard.secondaryValue }}
+          {{ numberFormat(statCard.secondaryValue) }} {{ statCard.unit }}
         </span>
         el día de hoy
       </span>

@@ -156,5 +156,4 @@ export class StatsPageComponent implements OnInit {
 
     statCard.tertiaryValue = statCard.principalValue / statCard.rawData.length;
   }
-
 }
