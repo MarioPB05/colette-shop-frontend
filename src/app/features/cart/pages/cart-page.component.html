@@ -61,7 +61,7 @@
 
     <div class="flex flex-col gap-6 max-xl:w-full max-xl:items-center">
       <div class="max-w-[400px] w-full md:w-[400px]">
-        <div class="flex justify-center transition-all duration-500" *ngIf="userGemsAmount > 0">
+        <div class="flex justify-center transition-all duration-500" *ngIf="userGemsAmount > 0 && totalPrice > 0 && canUseGems">
           <div class="w-fit border-brawl-navy border-2 border-b-0 rounded-t-xl px-4 py-2">
             <label for="use-gems" class="brawl-checkbox-container text-brawl-white text-base h-[30px] items-center" style="display: flex;">
               <input type="checkbox" [(ngModel)]="useGems" class="brawl-checkbox" id="use-gems" (change)="recalculatePrices()"/>
@@ -73,22 +73,27 @@
 
         <div class="bg-brawl-blue border-brawl-navy border-2 -skew-x-2 rounded-md text-2xl text-shadow text-border-sm px-10 py-6 flex flex-col items-center">
           <div class="w-full flex justify-between mb-1">
-            <span>Total Neto: </span>
+            <span>Carrito: </span>
+            <span>{{ totalCartPrice.toLocaleString("es-ES") }}€</span>
+          </div>
+
+          <div class="w-full flex justify-between mb-1">
+            <span>Subtotal: </span>
             <span>{{ totalNetPrice.toLocaleString("es-ES") }}€</span>
           </div>
 
-          <div class="w-full flex justify-between mb-2">
-            <span>IVA <span class="text-base">(21%)</span>: </span>
-            <span>{{ totalTaxPrice.toLocaleString("es-ES") }}€</span>
-          </div>
-
-          <div class="w-full bg-[#19165B] bg-opacity-30 p-2 py-3 -skew-x-5 flex justify-between items-center mb-6" *ngIf="useGems">
+          <div class="w-full bg-[#19165B] bg-opacity-30 p-2 py-3 -skew-x-5 flex justify-between items-center my-4" *ngIf="useGems">
             <div class="flex gap-2">
               <img src="/images/icons/brawl-gems-icon.png" alt="Icono de gemas de Brawl Stars" class="w-12" />
               {{ userGemsAmount }} gemas
             </div>
 
             <span>-{{ gemsDiscount }}€</span>
+          </div>
+
+          <div class="w-full flex justify-between mb-6">
+            <span>IVA <span class="text-base">(21%)</span>: </span>
+            <span>{{ totalTaxPrice.toLocaleString("es-ES") }}€</span>
           </div>
 
           <div class="w-full flex justify-between">
@@ -119,7 +124,7 @@
         </style>
 
         <div class="-skew-x-6 bg-white flex mt-4">
-          <input class="border-transparent border-2 outline-none text-lg text-black px-6 py-1 w-full" type="text" placeholder="Usuario" id="gift-username" [(ngModel)]="giftUsername" (keydown.enter)="verifyUsernameForGift()"/>
+          <input class="border-transparent border-2 outline-none text-lg text-black px-6 py-1 w-full" type="text" placeholder="Usuario" id="gift-username" [(ngModel)]="giftUsername" (keydown.enter)="verifyUsernameForGift()" (change)="giftUsernameVerified = false" />
           <button class="bg-brawl-sea-blue border-black border-2 text-base px-4" [disabled]="giftButtonDisabled" (click)="verifyUsernameForGift()">COMPROBAR</button>
         </div>
 
