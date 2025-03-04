@@ -255,8 +255,17 @@
                 }
                 @case ('bizum') {
                   <div class="flex items-center w-full">
-                    <p-inputmask mask="+34 999 99 99 99" class="mx-auto text-center" [(ngModel)]="bizumNumber"
-                                 placeholder="+34 000 00 00 00"/>
+                    <style>
+                      ::ng-deep .p-inputmask {
+                        text-align: center;
+                      }
+                    </style>
+
+                    <div class="w-full flex flex-col gap-2 text-center">
+                      <span class="text-white text-xl text-shadow text-border-sm">Número de teléfono</span>
+                      <p-inputmask mask="+34 999 99 99 99" class="mx-auto text-center" [(ngModel)]="bizumNumber"
+                                   placeholder="+34 000 00 00 00"/>
+                    </div>
                   </div>
                 }
               }
@@ -288,7 +297,7 @@
                 </p>
               </div>
 
-              <a class="brawl-button text-white w-fit mx-auto py-2 px-6 text-xl mt-10" href="/cart">
+              <a class="brawl-button text-white w-fit mx-auto py-2 px-6 text-xl mt-10" href="/">
                 Volver al inicio
               </a>
             </div>
