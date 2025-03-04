@@ -99,13 +99,16 @@ export class BoxEditorPageComponent {
     private messageService: MessageService,
     private boxService: BoxService
   ) {
-    this.editMode = this.router.url.includes('edit') && this.route.snapshot.paramMap.has('id');
-    this.boxId = Number(this.route.snapshot.paramMap.get('id'));
+    this.editMode = this.route.snapshot.paramMap.has('id');
 
     this.brawlerService.getAllBrawlersForBoxEditor().subscribe({
       next: brawlers => {
         this.brawlersClassified = this.classifyBrawlers(this.convertBrawlerResponseToBrawler(brawlers));
         this.initSelectTypes();
+
+        if (this.editMode) {
+          this.initEditMode();
+        }
       },
       error: () => router.navigate(['/dashboard/boxes']).then(
         () => this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los brawlers'})
@@ -120,6 +123,48 @@ export class BoxEditorPageComponent {
         value: index
       }
     });
+  }
+
+  initEditMode(): void {
+    this.boxId = Number(this.route.snapshot.paramMap.get('id'));
+    this.formGroup.get('name')?.disable();
+    this.formGroup.get('type')?.disable();
+    this.getBoxData();
+  }
+
+  getBoxData(): void {
+    this.boxService.getBox(this.boxId).subscribe({
+      next: (response) => {
+        this.isDailyBox = Object.keys(response).includes('repeat_every_hours');
+        this.formGroup.get('name')?.setValue(response.name);
+        this.formGroup.get('type')?.setValue(response.type - 1);
+        this.formGroup.get('brawler_quantity')?.setValue(response.brawler_quantity);
+
+        if (this.isDailyBox) {
+          response = response as CreateDailyBoxRequest;
+          this.formGroup.get('repeat_hours')?.setValue(response.repeat_every_hours);
+        }else {
+          response = response as CreateBoxRequest;
+          this.formGroup.get('price')?.setValue(response?.price);
+          this.formGroup.get('quantity')?.setValue(response.quantity);
+        }
+
+        this.selectedBrawlers = response.brawlers_in_box.map(b => b.id);
+
+        response.brawlers_in_box.forEach(b => {
+          const brawler = this.findBrawlerById(b.id)!;
+          brawler.probability = b.probability;
+          brawler.showProbability = true;
+        });
+      },
+      error: () => this.router.navigate(['/dashboard/boxes']).then(
+        () => this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo cargar la caja'})
+      )
+    });
+  }
+
+  actualizeSelectedBrawlers(): void {
+
   }
 
   getBoxName(): string {
