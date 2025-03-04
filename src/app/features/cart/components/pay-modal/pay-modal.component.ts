@@ -49,6 +49,8 @@ export class PayModalComponent implements AfterViewInit {
 
   paymentSuccess: boolean = false;
 
+  gemsAmount: number = 0;
+
   constructor(
     private cartService: CartService,
     private orderService: OrderService,
@@ -171,6 +173,9 @@ export class PayModalComponent implements AfterViewInit {
           this.updateShowPayModal.emit(true);
 
           if (response.status === 'success') {
+            // In this case, the response message is the amount of gems that the user obtained
+            this.gemsAmount = Number(response.message);
+
             this.cartService.clearCart();
             this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Pago realizado con éxito'});
           }else {
