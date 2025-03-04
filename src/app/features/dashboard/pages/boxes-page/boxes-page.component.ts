@@ -8,6 +8,12 @@ import {ContextMenuModule} from 'primeng/contextmenu';
 import {Menu} from 'primeng/menu';
 import {ConfirmDialogComponent} from '@dashboard/components/confirm-dialog/confirm-dialog.component';
 import {Router} from '@angular/router';
+import {IconField} from 'primeng/iconfield';
+import {InputIcon} from 'primeng/inputicon';
+import {InputText} from 'primeng/inputtext';
+import {BoxTypeImages} from '@core/enums/box.enum';
+import {Chip} from 'primeng/chip';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-boxes-page',
@@ -16,17 +22,27 @@ import {Router} from '@angular/router';
     ContextMenuModule,
     Button,
     Menu,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    IconField,
+    InputIcon,
+    InputText,
+    Chip,
+    NgIf
   ],
   templateUrl: './boxes-page.component.html',
   styles: ``
 })
 export class BoxesPageComponent implements OnInit {
-  boxes!: TableBoxResponse[];
+  boxes: TableBoxResponse[] = [];
+  protected filterBoxes: TableBoxResponse[] = [];
+  protected originalBoxes: TableBoxResponse[] = [];
   selectedBox!: TableBoxResponse | null;
   items!: MenuItem[];
 
+
   @ViewChild('menu') menu!: Menu;
+
+  protected readonly BoxTypeImages = BoxTypeImages;
 
   constructor(
     private router: Router,
@@ -36,15 +52,16 @@ export class BoxesPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.boxService.getTableBoxes().subscribe(boxes => this.boxes = boxes);
+    this.boxService.getTableBoxes().subscribe({
+      next: boxes => {
+        this.boxes = boxes;
+        this.originalBoxes = boxes;
+      }
+    });
     this.items = [
       {
         label: 'Detalles',
         icon: 'pi pi-info-circle'
-      },
-      {
-        label: 'Editar',
-        icon: 'pi pi-pencil'
       },
       {
         label: 'Eliminar',
@@ -52,6 +69,7 @@ export class BoxesPageComponent implements OnInit {
         command: () => this.deleteBox(this.selectedBox)
       }
     ];
+    this.originalBoxes = this.boxes;
   }
 
   openActionsMenu(event: Event, box: TableBoxResponse): void {
@@ -96,6 +114,15 @@ export class BoxesPageComponent implements OnInit {
         });
       }
     });
+  }
+
+  filterOrderForName($event: any) {
+    this.filterBoxes = this.originalBoxes.filter(box => box.name.toLowerCase().includes($event.target.value.toLowerCase().trim()));
+    this.boxes = this.filterBoxes;
+  }
+
+  numberFormat(value: number): string {
+    return new Intl.NumberFormat('es-ES', {style: 'currency', currency: 'EUR'}).format(value);
   }
 
 }
