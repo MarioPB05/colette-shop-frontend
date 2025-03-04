@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {BrawlHeaderComponent} from '@shared/components/brawl-header/brawl-header.component';
 import {FaviconService} from '@core/services/favicon.service';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {Router, RouterLink} from '@angular/router';
 import {BoxCartRequest, BoxCartResponse} from '@models/box.model';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {BoxTypeImages} from '@core/enums/box.enum';
 import {CartService} from '@shared/services/cart.service';
 import {BoxService} from '@features/cart/services/box.service';
@@ -13,6 +13,8 @@ import {AuthService} from '@features/auth/services/auth.service';
 import {UserDetailsService} from '@shared/services/user-details.service';
 import {ConfirmDialog} from 'primeng/confirmdialog';
 import {PayModalComponent} from '@features/cart/components/pay-modal/pay-modal.component';
+import {CreateOrderRequest} from '@models/order.model';
+import {OrderService} from '@features/cart/services/order.service';
 
 @Component({
   selector: 'app-cart-page',
@@ -23,7 +25,8 @@ import {PayModalComponent} from '@features/cart/components/pay-modal/pay-modal.c
     FormsModule,
     NgIf,
     ConfirmDialog,
-    PayModalComponent
+    PayModalComponent,
+    NgClass
   ],
   templateUrl: './cart-page.component.html',
   styleUrls: ['./../../../shared/brawl_styles.scss'],
@@ -47,6 +50,12 @@ export class CartPageComponent implements OnInit {
   giftUsernameVerified: boolean = false;
   notAvailableUsername: string = '';
 
+  orderId: number = 0;
+  showPayModal: boolean = false;
+
+  @ViewChild('payModal') payModal!: PayModalComponent;
+  activeStep: number = 1;
+
   protected readonly BoxTypeImages = BoxTypeImages;
 
   constructor(
@@ -54,6 +63,7 @@ export class CartPageComponent implements OnInit {
     private boxService: BoxService,
     private cartService: CartService,
     private authService: AuthService,
+    private orderService: OrderService,
     private faviconService: FaviconService,
     private messageService: MessageService,
     private userDetailsService: UserDetailsService,
@@ -225,6 +235,63 @@ export class CartPageComponent implements OnInit {
       return;
     }
 
+    const itemsInCart = this.cartService.getCartItemDictionary();
+    const items: CreateOrderRequest['items'] = [];
+
+    for (const key in itemsInCart) {
+      items.push({
+        boxId: parseInt(key),
+        quantity: itemsInCart[key]
+      });
+    }
+
+    const request: CreateOrderRequest = {
+      items: items,
+      useGems: this.useGems,
+      isGift: this.orderIsGift,
+    }
+
+    if (this.orderIsGift) {
+      request.giftUsername = this.giftUsername.trim();
+    }
+
+    this.orderService.createOrder(request).subscribe({
+      next: (response) => {
+        if (response.status === 'success') {
+          if (isNaN(Number(response.message))) {
+            if (response.message?.split('//')[1] === 'skipPayment') {
+              console.log('Skip payment');
+              console.log(response.message);
+              console.log(response.message.split('//'));
+              console.log(response.message.split('//')[0]);
+              console.log(Number(response.message.split('//')[0]));
+
+              this.payModal.setOrder(Number(response.message.split('//')[0]));
+
+              this.payModal.payOrder(
+                () => { this.activeStep = 3; },
+                0,
+                () => { this.showPayModal = true; }
+              );
+
+              return;
+            }
+          }
+
+          // In this case, the response message is the order id
+          this.orderId = Number(response.message);
+
+          this.showPayModal = true;
+
+          return;
+        }
+
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo crear el pedido'});
+      },
+      error: () => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo crear el pedido'});
+      }
+    });
   }
 
 }
