@@ -53,3 +53,8 @@ export interface BrawlerCardResponse {
   user_quantity: number;
   user_favorite: boolean;
 }
+
+export interface SelectedBrawler {
+  id: number;
+  probability: number;
+}

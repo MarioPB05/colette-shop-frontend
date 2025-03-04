@@ -1,56 +1,126 @@
-<style>
-  .image-cover {
-    transition: opacity 0.3s ease-in-out;
-  }
+<div class="flex justify-center mt-4 gap-y-20 flex-wrap lg:flex-nowrap">
+  <div class="w-full flex flex-col gap-y-20 px-10 sm:px-20 items-center">
+    <form class="flex flex-col gap-4 py-4 items-center" [formGroup]="formGroup">
+      <img [src]="getBoxTypeImage()" [alt]="getBoxType()" class="w-full h-[150px] object-contain rounded-lg" />
 
-  :host ::ng-deep .custom-inputnumber>.p-inputnumber-input {
-    @apply w-[60px] text-center text-sm mb-4;
-  }
+      <div class="flex flex-col gap-1 w-full items-center overflow-hidden">
+        <h1 class="text-2xl w-full text-center font-bold" *ngIf="!getBoxName()">Nueva caja</h1>
+        <h1 class="text-2xl w-full text-center font-bold max-w-[200px]" *ngIf="getBoxName()">{{ getBoxName() }}</h1>
+        <h3 class="text-center text-gray-500 fade-up animation-delay-05s" *ngIf="isDailyBox">Caja recurrente</h3>
+      </div>
 
-  :host ::ng-deep .custom-inputnumber-hidden>.p-inputnumber-input {
-    @apply hidden;
-  }
-</style>
+      <div class="flex flex-col gap-1 mt-3 w-full">
+        <label for="name">Nombre: </label>
+        <input pInputText id="name" formControlName="name" maxlength="40" [ngClass]="{'ng-invalid ng-dirty ng-touched': formFieldHasError('name')}" />
+      </div>
 
-<h1 class="text-2xl font-bold">Nueva caja</h1>
+      <div class="flex flex-col gap-1 w-full">
+        <label for="type">Tipo: </label>
+        <p-select id="type" [options]="selectTypes" [style]="{'width': '100%'}" formControlName="type" optionLabel="label" optionValue="value" [ngClass]="{'ng-invalid ng-dirty ng-touched': formFieldHasError('type')}" />
+      </div>
 
-<div class="grid grid-cols-[auto_1fr] mt-4 gap-10">
-  <div class="flex flex-col gap-4">
-    <div class="flex flex-col gap-2">
-      <label for="name">Nombre: </label>
-      <input pInputText id="name" />
-    </div>
+      <div class="flex flex-col gap-1 w-full">
+        <label for="price">Precio: </label>
+        <p-input-number (onBlur)="checkIfUnlimitedQuantityAndPriceAreValid()"  id="price" mode="currency" currency="EUR" locale="es-ES" min="0" max="100" formControlName="price" [ngClass]="{'ng-invalid ng-dirty ng-touched': formFieldHasError('price')}" />
+      </div>
 
-    <div class="flex flex-col gap-2">
-      <label for="price">Precio: </label>
-      <p-input-number id="price" mode="currency" currency="EUR" locale="es-ES" min="0" max="100" />
-    </div>
+      <div class="flex flex-col gap-1 w-full" *ngIf="!isDailyBox">
+        <label for="unlimitedQuantity">Tiene unidades ilimitadas: </label>
+        <p-toggle-switch id="unlimitedQuantity" (onChange)="toggleUnlimitedQuantity()" formControlName="unlimited_quantity" />
+      </div>
 
-    <div class="flex flex-col gap-2">
-      <label for="quantity">Cantidad: </label>
-      <p-input-number id="quantity" min="0" />
-    </div>
+      <div class="flex flex-col gap-1 w-full" *ngIf="!isDailyBox">
+        <label for="quantity">Unidades: </label>
+        <p-input-number id="quantity" min="0" [max]="1000000" formControlName="quantity" [ngClass]="{'ng-invalid ng-dirty ng-touched': formFieldHasError('quantity')}" />
+        <div class="flex items-center gap-3 mb-2 mt-1 bg-orange-100 text-orange-500 py-1 px-3 rounded" *ngIf="getBoxQuantity() === 0">
+          <i class="pi pi-exclamation-triangle "></i>
+          <p class=" text-sm" >Si el campo es 0, nadie podrá comprar la caja</p>
+        </div>
+      </div>
 
-    <div class="flex flex-col gap-2">
-      <label for="brawlerQuantity">Cantidad de brawlers: </label>
-      <p-input-number id="brawlerQuantity" min="0" [max]="maxBrawlersQuantity" />
+      <div class="flex flex-col gap-1 w-full" *ngIf="isDailyBox">
+        <label for="repeat_hours">Dar caja cada: </label>
+        <p-input-number id="repeat_hours" min="1" [max]="1000" formControlName="repeat_hours" suffix=" horas" [ngClass]="{'ng-invalid ng-dirty ng-touched': formFieldHasError('repeat_hours')}" />
+      </div>
+
+      <div class="flex flex-col gap-1 w-full">
+        <label for="brawlerQuantity">Cantidad de brawlers: </label>
+        <p-input-number (blur)="resetBox()" id="brawlerQuantity" min="1" (onBlur)="resetBox()" [max]="maxBrawlersQuantity" formControlName="brawler_quantity" [ngClass]="{'ng-invalid ng-dirty ng-touched': formFieldHasError('brawler_quantity')}" />
+      </div>
+
+      <div class="flex flex-col gap-1 w-full pt-6">
+        <button class="brawl-button text-xl text-white brawl-font py-2 px-5 flex gap-4 items-center justify-center" (click)="saveBox()" [disabled]="backendIsLoading">
+          <p-progressSpinner *ngIf="backendIsLoading" class="flex items-center stroke-gray-700" strokeWidth="4" [style]="{'width': '20px', 'height': '20px'}"></p-progressSpinner>
+          {{ getSendButtonText() }}
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-1 w-full" *ngIf="!editMode">
+        <button class="brawl-button-primary text-white brawl-font py-1.5 px-5 transition-all" (click)="toggleDailyBox()">
+          Convertir a {{ getDailyBoxButtonText() }}
+        </button>
+
+        <hr class="border border-gray-300 mb-1.5 mt-5" />
+
+        <p class="text-sm text-gray-500">
+          Las cajas recurrentes son gratis y el usuario puede abrir <b>una</b> cada ciertas horas
+        </p>
+      </div>
+    </form>
+
+    <div class="flex flex-col gap-7 w-full items-center">
+      <h1 class="text-2xl text-center font-bold">Simular apertura</h1>
+      <img *ngIf="!brawlersOpened.length" [src]="getBoxTypeImage()" [alt]="getBoxType()" class="w-full h-[150px] object-contain rounded-lg" />
+      <button *ngIf="!brawlersOpened.length" class="brawl-button-primary text-white w-full brawl-font py-1.5 px-5 transition-all max-w-52" (click)="openBox()">
+        Abrir caja
+      </button>
+
+      <div class="flex flex-col gap-3 w-full items-center" *ngIf="brawlersOpened.length > 0">
+        <span class="text-center text-gray-500 text-xl font-semibold">Te habría salido:</span>
+        <div class="flex flex-row flex-wrap gap-x-4 gap-y-5 w-full items-center justify-center">
+          <img *ngFor="let brawler of brawlersOpened" [src]="brawler.image" [alt]="brawler.name" class="fade-up border-4 border-black size-[60px]" pTooltip="{{ brawler.name }}" tooltipPosition="bottom" />
+        </div>
+      </div>
+
+      <button *ngIf="brawlersOpened.length > 0" class="brawl-button-primary mt-1 text-white w-full brawl-font py-1.5 px-5 transition-all max-w-52" (click)="openBox()" [disabled]="isOpeningBox">
+        Volver a abrir
+      </button>
     </div>
   </div>
 
-  <div class="px-10 flex flex-col">
-    <div *ngFor="let rarity of brawlersClassified">
-      <h2 class="text-sm text-brawl-dark-slate font-bold mb-2 mt-2">{{ rarity.label }}</h2>
 
-      <div class="flex flex-wrap gap-4">
-        <div class="flex flex-col gap-4" *ngFor="let brawler of rarity.brawlers">
-          <div (click)="toggleBrawler($event, brawler)" class="relative size-[60px] cursor-pointer"
+  <div class="flex flex-col gap-5">
+    <h1 class="text-2xl text-center font-bold">Contenido</h1>
+    <div *ngFor="let rarity of getRarities()" class="flex flex-col gap-4 bg-gray-100 rounded-lg p-4">
+      <div class="flex justify-between flex-wrap gap-y-3 gap-x-10">
+        <div class="flex items-center gap-4">
+          <p-input-number min="0" max="100" mode="decimal" minFractionDigits="0" suffix="%" (onFocus)="storePreviousValue(rarity)" (onInput)="defaultProbabilityChange(rarity)"
+                          [maxlength]="getProbabilityMaxLength(rarityDefaultProbabilities[rarity])"
+                          maxFractionDigits="0" size="small" inputStyleClass="w-[60px] text-center" [(ngModel)]="rarityDefaultProbabilities[rarity]"
+                          pTooltip="% Aparición predeterminado" tooltipPosition="bottom"/>
+          <h2 class="text-xl text-border-sm text-shadow brawl-font mb-0" [style.color]="rarityColors[rarity]">{{ rarity }}</h2>
+        </div>
+
+        <div class="flex gap-4">
+          <button class="brawl-button text-white brawl-font py-1 px-3" (click)="activateAllBrawlersFromRarity(rarity)">
+            Activar todos
+          </button>
+
+          <button class="brawl-button text-white brawl-font py-1 px-3" (click)="deactivateAllBrawlersFromRarity(rarity)">
+            Desactivar todos
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap justify-center sm:justify-start gap-x-4 gap-y-6">
+        <div class="flex flex-col gap-2" *ngFor="let brawler of brawlersClassified[rarity]">
+          <div (click)="toggleBrawler(brawler)" class="relative size-[60px] cursor-pointer transition-all duration-[0.3s]" [ngClass]="{'brightness-50': !brawler.showProbability, 'brightness-100': brawler.showProbability}"
                [pTooltip]="brawler.name" tooltipPosition="bottom">
-            <div class="absolute size-full bg-black z-10 opacity-60 image-cover"></div>
             <img [src]="brawler.image" [alt]="brawler.name" class="absolute border-4 border-black" />
           </div>
 
-          <p-input-number [(ngModel)]="brawler.probability" min="0" max="100" mode="decimal" minFractionDigits="0"
-                          maxFractionDigits="2" [ngClass]="brawler.showProbability ? 'custom-inputnumber' : 'custom-inputnumber-hidden'"
+          <p-input-number [(ngModel)]="brawler.probability" min="0" max="100" mode="decimal" minFractionDigits="0" [maxlength]="getProbabilityMaxLength(brawler.probability)"
+                          maxFractionDigits="0" size="small" inputStyleClass="w-[60px] text-center" suffix="%" [style.display]="brawler.showProbability ? 'block' : 'none'"
                           pTooltip="% Aparición" tooltipPosition="bottom"/>
         </div>
       </div>
