@@ -40,11 +40,13 @@ export class BoxesPageComponent implements OnInit {
     this.items = [
       {
         label: 'Detalles',
-        icon: 'pi pi-info-circle'
+        icon: 'pi pi-info-circle',
+        command: () => this.seeBoxDetails(this.selectedBox)
       },
       {
         label: 'Editar',
-        icon: 'pi pi-pencil'
+        icon: 'pi pi-pencil',
+        command: () => this.editBox(this.selectedBox)
       },
       {
         label: 'Eliminar',
@@ -66,7 +68,13 @@ export class BoxesPageComponent implements OnInit {
   editBox(box: TableBoxResponse | null): void {
     if (!box) return;
 
-    this.router.navigate(['/dashboard/boxes', box.id]);
+    this.router.navigate(['/dashboard/box', box.id, 'edit']);
+  }
+
+  seeBoxDetails(box: TableBoxResponse | null): void {
+    if (!box) return;
+
+    this.router.navigate(['/box', box.id]);
   }
 
   deleteBox(box: TableBoxResponse | null): void {

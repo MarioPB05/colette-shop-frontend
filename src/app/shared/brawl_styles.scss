@@ -57,6 +57,14 @@
   @apply bg-brawl-white;
 }
 
+.brawl-button.disabled {
+  @apply bg-brawl-dark-slate text-brawl-white;
+}
+
+.brawl-button[disabled] {
+  @apply bg-brawl-light-gray text-brawl-white;
+}
+
 .brawl-danger-button {
   @apply bg-brawl-red rounded-lg text-shadow text-border-sm border-b-2 border-brawl-dark-red;
 }
@@ -72,6 +80,31 @@
 .brawl-danger-button:active {
   @apply bg-brawl-white;
 }
+
+.brawl-button-primary {
+  @apply bg-brawl-blue rounded-lg text-shadow text-border-sm border-b-2 border-brawl-dark-blue;
+}
+
+.brawl-button-primary:hover {
+  @apply brightness-125;
+}
+
+.brawl-button-primary:focus {
+  @apply outline-none;
+}
+
+.brawl-button-primary:active {
+  @apply bg-brawl-white;
+}
+
+.brawl-button-primary[disabled] {
+  @apply bg-brawl-light-gray text-brawl-white;
+}
+
+.brawl-button-primary.disabled {
+  @apply bg-brawl-dark-slate text-brawl-white;
+}
+
 
 /*------------------- Estilos de los checkboxes -------------------*/
 .brawl-checkbox-container {
@@ -490,6 +523,7 @@
 
 /*-------------- animacion de fade up --------------*/
 .fade-up {
+  opacity: 0;
   animation: fadeUp 0.5s ease-in-out forwards;
 }
 
@@ -647,4 +681,8 @@
   100% {
     transform: translateX(-15vmax);
   }
+}
+
+.animation-delay-05s {
+  animation-delay: 0.5s;
 }
