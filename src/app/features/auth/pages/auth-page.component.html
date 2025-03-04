@@ -5,7 +5,7 @@
     <span class="text-white">SHOP</span>
   </h1>
 
-  <p-card *ngIf="loginVisible">
+  <p-card *ngIf="loginVisible" (keydown)="$event.key === 'Enter' ? login() : null">
     <div class="flex flex-col w-[300px]">
       <h2 class="text-center text-2xl mb-6">Iniciar Sesión</h2>
 
