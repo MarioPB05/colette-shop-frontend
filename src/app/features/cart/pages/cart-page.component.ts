@@ -15,6 +15,7 @@ import {ConfirmDialog} from 'primeng/confirmdialog';
 import {PayModalComponent} from '@features/cart/components/pay-modal/pay-modal.component';
 import {CreateOrderRequest} from '@models/order.model';
 import {OrderService} from '@features/cart/services/order.service';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-cart-page',
@@ -37,6 +38,7 @@ export class CartPageComponent implements OnInit {
   totalNetPrice: number = 0;
   totalTaxPrice: number = 0;
   totalPrice: number = 0;
+  totalCartPrice: number = 0;
   totalItems: number = 0;
   userGemsAmount: number = 0;
   gemsDiscount: number = 0;
@@ -83,9 +85,12 @@ export class CartPageComponent implements OnInit {
       });
     }
 
-    this.boxService.getCartBoxes(request).subscribe({
-      next: (response) => {
-        this.boxCartList = response;
+    forkJoin({
+      boxesResponse: this.boxService.getCartBoxes(request),
+      userDetails: this.userDetailsService.getUserDetails()
+    }).subscribe({
+      next: ({boxesResponse, userDetails}) => {
+        this.boxCartList = boxesResponse;
 
         this.cartService.clearCart();
 
@@ -96,34 +101,37 @@ export class CartPageComponent implements OnInit {
         });
 
         this.totalItems = this.boxCartList.reduce((acc, box) => acc + box.quantity, 0);
-        this.totalPrice = this.boxCartList.reduce((acc, box) => acc + box.total_price, 0);
-        this.totalNetPrice = Math.round((this.totalPrice / 1.21) * 100) / 100;
-        this.totalTaxPrice = this.totalPrice - this.totalNetPrice;
+        this.totalCartPrice = this.boxCartList.reduce((acc, box) => acc + box.total_price, 0);
+        this.totalNetPrice = Math.round((this.totalCartPrice / 1.21) * 100) / 100;
+
+        if (this.totalCartPrice <= 0) {
+          this.useGems = false;
+        }
+
+        if (userDetails) {
+          this.userGemsAmount = userDetails.gems;
+
+          if (this.useGems) {
+            // Calculate gems discount, 100 gems = 1€ only 2 decimals
+            this.gemsDiscount = Math.round(this.userGemsAmount * 0.01 * 100) / 100;
+
+            if (this.userGemsAmount > 0) {
+              this.totalNetPrice -= this.gemsDiscount;
+            }else {
+              this.useGems = false;
+            }
+          }
+
+          this.notAvailableUsername = userDetails.username;
+        }
+
+        this.totalTaxPrice = Math.round((this.totalNetPrice * 0.21) * 100) / 100;
+        this.totalPrice = this.totalNetPrice + this.totalTaxPrice;
       },
       error: () => {
         this.router.navigate(['/']).then(() => {
           this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo obtener la información de tu carrito'});
         });
-      }
-    });
-
-    this.userDetailsService.updateUserDetails(); // Must be called to get last user details
-    this.userDetailsService.userDetails$.subscribe({
-      next: (userDetails) => {
-        if (userDetails) {
-          this.userGemsAmount = userDetails.gems;
-
-          // Calculate gems discount, 100 gems = 1€ only 2 decimals
-          this.gemsDiscount = Math.round(this.userGemsAmount * 0.01 * 100) / 100;
-
-          if (this.userGemsAmount > 0) {
-            this.totalPrice -= this.gemsDiscount;
-          }else {
-            this.useGems = false;
-          }
-
-          this.notAvailableUsername = userDetails.username;
-        }
       }
     });
   }
@@ -137,6 +145,7 @@ export class CartPageComponent implements OnInit {
     box.quantity++;
     box.total_price = box.quantity * box.price;
 
+    this.totalItems++;
     this.recalculatePrices();
     this.cartService.addToCart(box.id);
   }
@@ -145,6 +154,8 @@ export class CartPageComponent implements OnInit {
     if (box.quantity > 1) {
       box.quantity--;
       box.total_price = box.quantity * box.price;
+
+      this.totalItems--;
 
       this.cartService.removeOneFromCart(box.id);
 
@@ -169,9 +180,11 @@ export class CartPageComponent implements OnInit {
         severity: 'danger',
       },
       accept: () => {
-        this.recalculatePrices();
         this.cartService.removeOneFromCart(box.id);
         this.boxCartList = this.boxCartList.filter((b) => b.id !== box.id);
+        this.totalItems--;
+        this.recalculatePrices();
+
         this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: 'La caja ha sido eliminada de tu carrito' });
       }
     });
@@ -214,14 +227,20 @@ export class CartPageComponent implements OnInit {
   }
 
   recalculatePrices() {
-    if (this.useGems) {
-      this.totalPrice = this.boxCartList.reduce((acc, box) => acc + box.total_price, 0) - this.gemsDiscount;
-    }else {
-      this.totalPrice = this.boxCartList.reduce((acc, box) => acc + box.total_price, 0);
+    this.totalCartPrice = this.boxCartList.reduce((acc, box) => acc + box.total_price, 0);
+
+    if (this.totalCartPrice <= 0) {
+      this.useGems = false;
     }
 
-    this.totalNetPrice = Math.round((this.totalPrice / 1.21) * 100) / 100;
-    this.totalTaxPrice = this.totalPrice - this.totalNetPrice;
+    this.totalNetPrice = Math.round((this.totalCartPrice / 1.21) * 100) / 100;
+
+    if (this.useGems) {
+      this.totalNetPrice -= this.gemsDiscount;
+    }
+
+    this.totalTaxPrice = Math.round((this.totalNetPrice * 0.21) * 100) / 100;
+    this.totalPrice = this.totalNetPrice + this.totalTaxPrice;
   }
 
   createOrder() {
@@ -260,12 +279,6 @@ export class CartPageComponent implements OnInit {
         if (response.status === 'success') {
           if (isNaN(Number(response.message))) {
             if (response.message?.split('//')[1] === 'skipPayment') {
-              console.log('Skip payment');
-              console.log(response.message);
-              console.log(response.message.split('//'));
-              console.log(response.message.split('//')[0]);
-              console.log(Number(response.message.split('//')[0]));
-
               this.payModal.setOrder(Number(response.message.split('//')[0]));
 
               this.payModal.payOrder(
