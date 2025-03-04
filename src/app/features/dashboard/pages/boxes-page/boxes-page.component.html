@@ -37,7 +37,7 @@
       <th pSortableColumn="type">Tipo
         <p-sortIcon field="type"/>
       </th>
-      <th pSortableColumn="pinned">Fiajado
+      <th pSortableColumn="pinned" class="flex justify-center">Fijado
         <p-sortIcon field="pinned"/>
       </th>
       <th style="text-align: center; width: 4rem"></th>
@@ -53,7 +53,7 @@
       <td>{{ box.quantity === -1 ? 'Sin límite' : box.quantity }}</td>
       <td>{{ box.type }}</td>
       <td>
-        <i class="pi pi-thumbtack text-center w-full" *ngIf="box.pinned"></i>
+        <i [ngClass]="box.pinned ? 'pi pi-thumbtack' : 'pi pi-times'" class="text-center w-full"></i>
       </td>
       <td style="text-align: center;">
         <p-button severity="secondary" label="Acciones" iconPos="right" (click)="openActionsMenu($event, box)"

@@ -13,7 +13,7 @@ import {InputIcon} from 'primeng/inputicon';
 import {InputText} from 'primeng/inputtext';
 import {BoxTypeImages} from '@core/enums/box.enum';
 import {Chip} from 'primeng/chip';
-import {NgIf} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-boxes-page',
@@ -27,7 +27,8 @@ import {NgIf} from '@angular/common';
     InputIcon,
     InputText,
     Chip,
-    NgIf
+    NgIf,
+    NgClass
   ],
   templateUrl: './boxes-page.component.html',
   styles: ``
