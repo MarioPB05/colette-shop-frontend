@@ -46,8 +46,8 @@
   <ng-template #body let-box>
     <tr [pContextMenuRow]="box">
       <td class="flex items-center gap-2 py-2">
-        <img [src]="BoxTypeImages[box.type]" alt="box_image" width="50" class="mr-2">
-        <span>{{ box.name }}</span>
+        <img [src]="BoxTypeImages[box.type]" (click)="console.log(box.type)" alt="box_image" width="50" class="mr-2">
+        <span>{{ box.name }}</span><i pTooltip="Caja recurrente" *ngIf="box.isDaily" class="pi pi-gift text-brawl-blue"></i>
       </td>
       <td>{{ numberFormat(box.price) }}</td>
       <td>{{ box.quantity === -1 ? 'Sin límite' : box.quantity }}</td>

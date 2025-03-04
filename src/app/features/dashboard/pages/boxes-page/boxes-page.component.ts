@@ -12,8 +12,8 @@ import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
 import {InputText} from 'primeng/inputtext';
 import {BoxTypeImages} from '@core/enums/box.enum';
-import {Chip} from 'primeng/chip';
 import {NgClass, NgIf} from '@angular/common';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-boxes-page',
@@ -26,9 +26,9 @@ import {NgClass, NgIf} from '@angular/common';
     IconField,
     InputIcon,
     InputText,
-    Chip,
+    NgClass,
     NgIf,
-    NgClass
+    Tooltip
   ],
   templateUrl: './boxes-page.component.html',
   styles: ``
@@ -82,12 +82,6 @@ export class BoxesPageComponent implements OnInit {
     this.router.navigate(['/dashboard/box/create']);
   }
 
-  editBox(box: TableBoxResponse | null): void {
-    if (!box) return;
-
-    this.router.navigate(['/dashboard/boxes', box.id]);
-  }
-
   deleteBox(box: TableBoxResponse | null): void {
     if (!box) return;
 
@@ -126,4 +120,5 @@ export class BoxesPageComponent implements OnInit {
     return new Intl.NumberFormat('es-ES', {style: 'currency', currency: 'EUR'}).format(value);
   }
 
+  protected readonly console = console;
 }
