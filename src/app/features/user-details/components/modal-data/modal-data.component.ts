@@ -114,11 +114,26 @@ export class ModalDataComponent implements OnInit {
   }
 
   validateDNI(dni: string): boolean {
-    const dniPattern = /^\d{8}[a-zA-Z]$/;
-    if (!dniPattern.test(dni)) {
-      this.addError('dni', 'El dni no es válido');
+    if (!dni) return false;
+
+    dni = dni.replace('-', '');
+
+    const dniRegex = /^\d{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/;
+    const letterMap = "TRWAGMYFPDXBNJZSQVHLCKE";
+
+    if (!dniRegex.test(dni)) {
+      this.addError('dni', 'El DNI no es válido');
       return false;
     }
+
+    const numberPart = parseInt(dni.slice(0, 8), 10);
+    const letter = dni[8];
+
+    if (letter !== letterMap[numberPart % 23]) {
+      this.addError('dni', 'El DNI no es válido');
+      return false;
+    }
+
     return true;
   }
 
