@@ -146,6 +146,11 @@ export class CartPageComponent implements OnInit {
       return;
     }
 
+    if (box.quantity >= 1000) {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'No puedes tener más de 1000 cajas de un mismo tipo'});
+      return;
+    }
+
     box.quantity++;
     box.total_price = box.quantity * box.price;
 
