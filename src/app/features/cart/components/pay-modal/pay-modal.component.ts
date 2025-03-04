@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {StepperModule} from 'primeng/stepper';
 import {ButtonModule} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
@@ -9,6 +9,8 @@ import VanillaTilt from 'vanilla-tilt';
 import {InputMask} from 'primeng/inputmask';
 import {FloatLabel} from 'primeng/floatlabel';
 import {Password} from 'primeng/password';
+import {OrderService} from '@features/cart/services/order.service';
+import {CartService} from '@shared/services/cart.service';
 
 @Component({
   selector: 'app-pay-modal',
@@ -28,7 +30,10 @@ import {Password} from 'primeng/password';
   standalone: true
 })
 export class PayModalComponent implements AfterViewInit {
-  activeStep: number = 1;
+  @Input() activeStep: number = 1;
+  @Input() orderId: number = 0;
+  @Output() updateShowPayModal: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   observer!: MutationObserver;
   selectedPaymentMethod: string = 'creditCard';
 
@@ -44,7 +49,11 @@ export class PayModalComponent implements AfterViewInit {
 
   paymentSuccess: boolean = false;
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private cartService: CartService,
+    private orderService: OrderService,
+    private messageService: MessageService
+  ) {}
 
   ngAfterViewInit() {
     const targetNode = document.body; // Observa cambios en todo el body o en un contenedor específico
@@ -60,7 +69,6 @@ export class PayModalComponent implements AfterViewInit {
               glare: true,
               'max-glare': 1
             });
-            this.observer.disconnect(); // Deja de observar después de encontrar el elemento
           }
         }
       }
@@ -128,24 +136,65 @@ export class PayModalComponent implements AfterViewInit {
   }
 
   checkBizumPayment(activateCallback: any) {
+    // And check if the number has 9 digits, remove the spaces and the +34
+    if (!this.bizumNumber || this.bizumNumber.toString().split(' ').join('').split('+34').join('').length !== 9) {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Por favor completa todos los campos'});
+      return;
+    }
+
     this.payOrder(activateCallback);
   }
 
-  payOrder(activateCallback: any) {
+  payOrder(activateCallback: any, errorRateCondition: number = 15, orderPromiseCallback: any = null) {
     const errorRate = Math.random() * 100;
 
-    if (errorRate < 15) {
+    if (errorRate < errorRateCondition) {
       this.messageService.add({severity: 'error', summary: 'Error', detail: 'Hubo un error al procesar el pago'});
       activateCallback(3);
       return;
     }
 
     this.paymentSuccess = true;
+    this.updateShowPayModal.emit(false);
 
+    this.payOrderPromise(activateCallback).then(() => {
+      if (orderPromiseCallback !== null) {
+        orderPromiseCallback();
+      }
+    });
+  }
 
-    // TODO: CALL BACKEND TO UPDATE ORDER STATUS
+  payOrderPromise(activateCallback: any) {
+    return new Promise((resolve, reject) => {
+      this.orderService.payOrder(this.orderId).subscribe({
+        next: (response) => {
+          this.updateShowPayModal.emit(true);
 
-    activateCallback(3);
+          if (response.status === 'success') {
+            this.cartService.clearCart();
+            this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Pago realizado con éxito'});
+          }else {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: 'Hubo un error al procesar el pago'});
+            this.paymentSuccess = false;
+          }
+
+          resolve(true);
+          activateCallback(3);
+        },
+        error: () => {
+          this.updateShowPayModal.emit(true);
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Hubo un error al procesar el pago'});
+          this.paymentSuccess = false;
+          activateCallback(3);
+
+          reject();
+        }
+      });
+    });
+  }
+
+  setOrder(orderId: number) {
+    this.orderId = orderId;
   }
 
   getPinImage(): string {
