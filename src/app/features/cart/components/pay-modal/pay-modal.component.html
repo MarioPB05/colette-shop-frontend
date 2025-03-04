@@ -282,7 +282,7 @@
           <ng-template #content let-activateCallback="activateCallback">
             <div class="flex flex-col justify-between gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
               <div>
-                <div class="text-center mb-4 text-3xl text-border-sm text-shadow text-white">Resumen de la Compra</div>
+                <div class="text-center mb-4 text-3xl text-border-sm text-shadow text-white">Estado de la Compra</div>
               </div>
 
               <div class="flex flex-col gap-2">
@@ -295,6 +295,10 @@
                     ¡Ha habido un error al realizar el pago!
                   }
                 </p>
+
+                <span class="text-center text-xl text-white text-shadow text-border-sm" *ngIf="paymentSuccess && gemsAmount > 0">
+                  ¡Has obtenido <span class="text-brawl-gold">{{ gemsAmount }} gemas</span>!
+                </span>
               </div>
 
               <a class="brawl-button text-white w-fit mx-auto py-2 px-6 text-xl mt-10" href="/">
