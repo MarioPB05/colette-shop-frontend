@@ -56,7 +56,7 @@ export class UserPageComponent  implements OnInit {
   }
 
   filterUserForName(event: any): void {
-    this.userFilter = this.userOriginal.filter(user => user.username.toLowerCase().includes(event.target.value.toLowerCase()));
+    this.userFilter = this.userOriginal.filter(user => user.username.toLowerCase().includes(event.target.value.toLowerCase().trim()));
     this.users = this.userFilter;
   }
 

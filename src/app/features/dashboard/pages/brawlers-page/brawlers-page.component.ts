@@ -44,7 +44,7 @@ export class BrawlersPageComponent implements OnInit {
   }
 
   filterBrawlersForName(event: any): void {
-    this.brawlersFilter = this.brawlersOriginal.filter(brawler => brawler.name.toLowerCase().includes(event.target.value.toLowerCase()));
+    this.brawlersFilter = this.brawlersOriginal.filter(brawler => brawler.name.toLowerCase().includes(event.target.value.toLowerCase().trim()));
     this.brawlers = this.brawlersFilter;
   }
 

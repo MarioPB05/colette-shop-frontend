@@ -68,7 +68,7 @@ export class TableOrderComponent implements OnInit {
   }
 
   filterOrderForInvoiceNumber(event: any): void {
-    this.orderFilter = this.orderOriginal.filter(order => order.invoice_number.toLowerCase().includes(event.target.value.toLowerCase()));
+    this.orderFilter = this.orderOriginal.filter(order => order.invoice_number.toLowerCase().includes(event.target.value.toLowerCase().trim()));
     this.orders = this.orderFilter;
   }
 
