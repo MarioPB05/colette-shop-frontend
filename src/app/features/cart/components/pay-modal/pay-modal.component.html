@@ -301,9 +301,15 @@
                 </span>
               </div>
 
-              <a class="brawl-button text-white w-fit mx-auto py-2 px-6 text-xl mt-10" href="/">
-                Volver al inicio
-              </a>
+              @if (paymentSuccess) {
+                <a class="brawl-button text-white w-fit mx-auto py-2 px-6 text-xl mt-10" href="/inventory">
+                  Ver inventario
+                </a>
+              } @else {
+                <a class="brawl-button text-white w-fit mx-auto py-2 px-6 text-xl mt-10" href="/">
+                  Volver al inicio
+                </a>
+              }
             </div>
           </ng-template>
         </p-step-panel>
