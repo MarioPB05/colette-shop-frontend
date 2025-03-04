@@ -65,23 +65,30 @@ export class ModalDataComponent implements OnInit {
       return;
     }
 
+    this.isOpen = false;
+
+    const adjustedBirthDate = new Date(this.newBirthDate.getTime() - this.newBirthDate.getTimezoneOffset() * 60000);
+    this.userChange.birthDate = adjustedBirthDate.toISOString();
+
     let newUser: UserChangeRequest = {
       name: this.userChange.name.trim(),
       surname: this.userChange.surname.trim(),
-      birthDate: this.newBirthDate.toISOString(),
+      birthDate: this.userChange.birthDate, // Asegurar que se usa la fecha correcta
       dni: this.userChange.dni.trim(),
       email: this.userChange.email.trim()
     }
 
     this.userService.setUserChanges(newUser).subscribe({
       next: () => {
-        this.isOpen = false;
+        this.user.birthDate = this.newBirthDate.toISOString(); // Actualizar la fecha en la vista
+        this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Datos guardados correctamente'});
       },
       error: () => {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se han podido guardar los cambios'});
       }
     });
   }
+
 
   resetUserData() {
     this.defaultBirthDate = new Date(this.user.birthDate);
