@@ -57,6 +57,14 @@
   @apply bg-brawl-white;
 }
 
+.brawl-button.disabled {
+  @apply bg-brawl-dark-slate text-brawl-white;
+}
+
+.brawl-button[disabled] {
+  @apply bg-brawl-light-gray text-brawl-white;
+}
+
 .brawl-danger-button {
   @apply bg-brawl-red rounded-lg text-shadow text-border-sm border-b-2 border-brawl-dark-red;
 }
