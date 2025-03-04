@@ -31,4 +31,8 @@ export class BoxService {
       context: new HttpContext().set(SkipLoading, true)
     })
   }
+
+  getBox(id: number): Observable<CreateBoxRequest|CreateDailyBoxRequest> {
+    return this.http.get<CreateBoxRequest|CreateDailyBoxRequest>(`${environment.baseUrl}/boxes/get/${id}`)
+  }
 }
