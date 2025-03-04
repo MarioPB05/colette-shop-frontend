@@ -25,10 +25,6 @@ export class StatsPageComponent implements OnInit {
 
   loadingData: boolean = true;
   protected statCards: StatCard[] = [];
-
-  protected dataPedidos: any;
-  protected dataCajas: any;
-  protected dataGemas: any;
   protected options: any;
   protected stats: any;
 
@@ -160,5 +156,4 @@ export class StatsPageComponent implements OnInit {
 
     statCard.tertiaryValue = statCard.principalValue / statCard.rawData.length;
   }
-
 }

@@ -29,6 +29,11 @@ export class OrderDetailsPageComponent implements OnInit {
   private orderService = inject(OrderService);
   private route: ActivatedRoute = inject(ActivatedRoute);
 
+  protected subtotal: number = 0;
+  protected iva: number = 0;
+  protected total: number = 0;
+  protected cartTotal: number = 0;
+
   protected readonly BoxTypeImages = BoxTypeImages;
   isPrint: boolean = false;
 
@@ -53,6 +58,11 @@ export class OrderDetailsPageComponent implements OnInit {
         this.orderDetailsItems.forEach((item) => {
           item.totalPrice = item.price * item.quantity;
         });
+
+        this.cartTotal = this.orderDetailsItems.reduce((acc, item) => acc + item.totalPrice, 0);
+        this.subtotal = Math.round(((this.cartTotal/1.21) - this.orderDetails.discount)*100)/100;
+        this.iva = Math.round((this.subtotal*0.21)*100)/100;
+        this.total = this.subtotal + this.iva;
       },
       error: (error) => {
         console.error('Error getting order details:', error);
@@ -61,17 +71,13 @@ export class OrderDetailsPageComponent implements OnInit {
     });
   }
 
-  subtotal(num:number): number {
-    return Math.round((num/1.21)*100)/100;
-  }
-
-  iva(num:number): number {
-    return Math.round((num*0.21)*100)/100;
-  }
-
   printOrder() {
     this.isPrint = true;
     setTimeout(() => window.print(), 1000);
     setTimeout(() => this.isPrint = false, 1000);
+  }
+
+  numberFormat(value: number): string {
+    return new Intl.NumberFormat('es-ES', {style: 'currency', currency: 'EUR'}).format(value);
   }
 }

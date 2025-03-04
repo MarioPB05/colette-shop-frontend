@@ -28,6 +28,7 @@ export interface TableBoxResponse {
   quantity: number;
   type: string;
   pinned: boolean;
+  isDaily: boolean;
 }
 
 export interface BoxDetailResponse {

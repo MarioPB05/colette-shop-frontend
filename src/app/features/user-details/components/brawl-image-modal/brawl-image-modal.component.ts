@@ -50,9 +50,10 @@ export class BrawlImageModalComponent implements OnInit {
   }
 
   saveBrawler() {
+    this.isOpen = false;
     this.userService.setBrawlerImage(this.selectedBrawler.id).subscribe({
       next: () => {
-        this.isOpen = false;
+        this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Imagen guardada correctamente'});
         this.userBrawlerChange.emit(this.selectedBrawler);
       },
       error: (err) => {

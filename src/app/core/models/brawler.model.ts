@@ -4,7 +4,9 @@ export interface TableBrawlerResponse {
   num_people: number;
   num_favourite: number;
   pin_image: string;
-  rarity: string;
+  rarity_name: string;
+  rarity_id: number;
+  rarity_color: string;
 }
 
 export interface ListBrawlerResponse {

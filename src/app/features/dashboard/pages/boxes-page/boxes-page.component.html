@@ -1,27 +1,63 @@
 <div class="flex justify-between mb-6">
   <h1 class="text-2xl font-bold">Cajas</h1>
-  <p-button (click)="createBox()" label="Crear Caja" icon="pi pi-plus" />
+  <p-button (click)="createBox()" label="Crear Caja" icon="pi pi-plus"/>
 </div>
 
-<p-contextMenu #cm [model]="items" (onHide)="selectedBox = null" />
-<p-table [value]="boxes" [tableStyle]="{ 'min-width': '50rem' }" [(contextMenuSelection)]="selectedBox" [contextMenu]="cm" dataKey="id">
+<p-iconfield class="mb-6">
+  <p-inputicon styleClass="pi pi-search"/>
+  <input
+    type="text"
+    id="search"
+    pInputText
+    placeholder="Buscar por nombre"
+    (input)="filterOrderForName($event)"
+  />
+</p-iconfield>
+<p-contextMenu #cm [model]="items" (onHide)="selectedBox = null"/>
+<p-table
+  [value]="boxes"
+  dataKey="id"
+  [paginator]="true"
+  [rows]="10"
+  [rowsPerPageOptions]="[5, 10, 20]"
+  [(contextMenuSelection)]="selectedBox"
+  [contextMenu]="cm"
+>
   <ng-template #header>
     <tr>
-      <th>Nombre</th>
-      <th>Precio</th>
-      <th>Cantidad</th>
-      <th>Tipo</th>
+      <th pSortableColumn="name">Nombre
+        <p-sortIcon field="name"/>
+      </th>
+      <th pSortableColumn="price">Precio
+        <p-sortIcon field="price"/>
+      </th>
+      <th pSortableColumn="quantity">Cantidad
+        <p-sortIcon field="quantity"/>
+      </th>
+      <th pSortableColumn="type">Tipo
+        <p-sortIcon field="type"/>
+      </th>
+      <th pSortableColumn="pinned" class="flex justify-center">Fijado
+        <p-sortIcon field="pinned"/>
+      </th>
       <th style="text-align: center; width: 4rem"></th>
     </tr>
   </ng-template>
   <ng-template #body let-box>
     <tr [pContextMenuRow]="box">
-      <td>{{ box.name }}</td>
-      <td>{{ box.price }} €</td>
-      <td>{{ box.quantity === -1 ? 'Sin límite' : box.quantity  }}</td>
+      <td class="flex items-center gap-2 py-2">
+        <img [src]="BoxTypeImages[box.type]" (click)="console.log(box.type)" alt="box_image" width="50" class="mr-2">
+        <span>{{ box.name }}</span><i pTooltip="Caja recurrente" *ngIf="box.isDaily" class="pi pi-gift text-brawl-blue"></i>
+      </td>
+      <td>{{ numberFormat(box.price) }}</td>
+      <td>{{ box.quantity === -1 ? 'Sin límite' : box.quantity }}</td>
       <td>{{ box.type }}</td>
+      <td>
+        <i [ngClass]="box.pinned ? 'pi pi-thumbtack' : 'pi pi-times'" class="text-center w-full"></i>
+      </td>
       <td style="text-align: center;">
-        <p-button severity="secondary" label="Acciones" iconPos="right" (click)="openActionsMenu($event, box)" icon="pi pi-angle-down"/>
+        <p-button severity="secondary" label="Acciones" iconPos="right" (click)="openActionsMenu($event, box)"
+                  icon="pi pi-angle-down"/>
       </td>
     </tr>
   </ng-template>
@@ -32,6 +68,7 @@
   </ng-template>
 </p-table>
 
-<p-menu #menu [model]="items" [popup]="true" />
+<p-menu #menu [model]="items" [popup]="true"/>
 
-<app-confirm-dialog acceptButtonLabel="Aceptar" rejectButtonLabel="Cancelar" acceptButtonSeverity="danger" rejectButtonSeverity="secondary" iconTextColor="text-red-500" />
+<app-confirm-dialog acceptButtonLabel="Aceptar" rejectButtonLabel="Cancelar" acceptButtonSeverity="danger"
+                    rejectButtonSeverity="secondary" iconTextColor="text-red-500"/>
