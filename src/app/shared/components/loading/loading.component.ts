@@ -13,7 +13,7 @@ import {AsyncPipe} from '@angular/common';
   standalone: true
 })
 export class LoadingComponent implements OnInit {
-  @HostBinding('class') class = 'absolute z-50 bg-brawl-blue overflow-hidden';
+  @HostBinding('class') class = 'fixed z-50 bg-brawl-blue overflow-hidden';
 
   loading$: Observable<boolean>;
 

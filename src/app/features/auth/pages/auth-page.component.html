@@ -1,4 +1,6 @@
-<div class="bg-[url(/images/backgrounds/auth-bg.png)] bg-no-repeat bg-cover w-screen h-screen flex flex-col gap-12 justify-center items-center relative overflow-hidden brawl-font">
+<div class="w-screen min-h-screen flex flex-col gap-12 justify-center items-center relative brawl-font">
+  <img src="/images/backgrounds/auth-bg.png" alt="Colette's Shop Logo" class="fixed w-screen h-screen object-cover -z-50">
+
   <h1 class="text-9xl text-center text-shadow spotlight"
       [ngClass]="{'text-grow': !cardVisible(), 'text-shrink': cardVisible(), 'text-border-lg': !cardVisible(), 'text-border-md': cardVisible()}">
     Colette's <br>
@@ -38,7 +40,7 @@
     <app-register-stepper (stepperClosed)="registerVisible = false" />
   </p-card>
 
-  <div class="absolute bottom-10 flex flex-col md:flex-row gap-6" [ngClass]="{'button-hide': cardVisible(), 'button-show': !cardVisible()}">
+  <div class="absolute bottom-10 flex flex-col md:flex-row gap-6" [ngClass]="{'button-hide hidden': cardVisible(), 'fade-up': !cardVisible()}">
     <button (click)="loginVisible = true" class="btn-yellow-hover text-shadow text-border-sm">
       INICIAR SESIÓN
     </button>

@@ -1,3 +1,4 @@
+import {SelectedBrawler} from '@models/brawler.model';
 
 export interface BoxShopResponse {
   id: number;
@@ -47,4 +48,42 @@ export interface InventoryBoxResponse {
   type: string;
   brawler_quantity: number;
   open: boolean;
+}
+
+export interface CreateBoxRequest {
+  name: string;
+  price: number;
+  type: number;
+  quantity: number;
+  brawler_quantity: number;
+  brawlers_in_box: SelectedBrawler[];
+}
+
+export interface CreateDailyBoxRequest {
+  name: string;
+  type: number;
+  repeat_every_hours: number;
+  brawler_quantity: number;
+  brawlers_in_box: SelectedBrawler[];
+}
+
+export interface BoxCartResponse {
+  id: number;
+  name: string;
+  type: string;
+  quantity: number;
+  price: number;
+  total_price: number;
+  boxes_left: number;
+  is_daily: boolean;
+  claimed: boolean;
+}
+
+export interface BoxCartRequest {
+  items: CartItemRequest[];
+}
+
+export interface CartItemRequest {
+  boxId: number;
+  quantity: number;
 }

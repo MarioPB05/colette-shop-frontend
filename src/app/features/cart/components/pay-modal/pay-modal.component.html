@@ -1,0 +1,319 @@
+<div
+  class="fixed bg-brawl-black bg-opacity-50 z-50 h-screen w-screen brawl-font top-0 flex justify-center items-center">
+  <div
+    class="bg-brawl-light-blue px-10 py-5 gap-4 justify-center flex flex-col rounded-lg border-4 border-brawl-dark-blue fade-up max-w-[600px] max-md:w-full md:min-w-[600px]">
+    <p-stepper [(value)]="activeStep" [linear]="true">
+      <p-step-list>
+        <p-step [value]="1" class="flex flex-row flex-auto gap-2">
+          <ng-template #content let-activateCallback="activateCallback" let-value="value">
+            <button class="border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+              <span
+                class="border-2 w-12 h-12 inline-flex items-center justify-center -skew-x-3"
+                [ngClass]="{
+                      'bg-brawl-blue text-white border-white': value === activeStep,
+                      'border-brawl-dark-blue': value != activeStep
+                  }"
+              >
+                  <i class="pi pi-wallet"
+                     [ngClass]="{
+                      'text-white bg-brawl-blue w-full h-full flex items-center justify-center': value <= activeStep,
+                      'text-brawl-dark-blue': value < activeStep
+                    }"></i>
+              </span>
+            </button>
+          </ng-template>
+        </p-step>
+
+        <p-step [value]="2" class="flex flex-row flex-auto gap-2">
+          <ng-template #content let-activateCallback="activateCallback" let-value="value">
+            <button class="border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+              <span
+                class="border-2 w-12 h-12 inline-flex items-center justify-center -skew-x-3"
+                [ngClass]="{
+                      'bg-brawl-blue text-white': value <= activeStep,
+                      'border-white': value === activeStep,
+                      'border-brawl-dark-blue': value != activeStep
+                  }"
+              >
+
+                @switch (selectedPaymentMethod) {
+                  @case ('creditCard') {
+                    <i class="pi pi-credit-card" [ngClass]="{
+                      'text-white bg-brawl-blue w-full h-full flex items-center justify-center': value <= activeStep,
+                      'text-brawl-dark-blue': value != activeStep,
+                    }"></i>
+                  }
+                  @case ('paypal') {
+                    <i class="pi pi-paypal" [ngClass]="{
+                      'text-white bg-brawl-blue w-full h-full flex items-center justify-center': value <= activeStep,
+                      'text-brawl-dark-blue': value != activeStep,
+                    }"></i>
+                  }
+                  @case ('bizum') {
+                    <i class="pi pi-mobile" [ngClass]="{
+                      'text-white bg-brawl-blue w-full h-full flex items-center justify-center': value <= activeStep,
+                      'text-brawl-dark-blue': value != activeStep,
+                    }"></i>
+                  }
+                }
+              </span>
+            </button>
+          </ng-template>
+        </p-step>
+
+        <p-step [value]="3" class="flex flex-row flex-auto gap-2">
+          <ng-template #content let-activateCallback="activateCallback" let-value="value">
+            <button class="border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+              <span
+                class="border-2 w-12 h-12 inline-flex items-center justify-center -skew-x-3"
+                [ngClass]="{
+                      'bg-brawl-blue text-white border-white': value === activeStep,
+                      'border-brawl-dark-blue': value != activeStep
+                  }"
+              >
+                  <i class="pi pi-receipt"
+                     [ngClass]="{
+                      'text-white bg-brawl-blue w-full h-full flex items-center justify-center': value === activeStep,
+                      'text-brawl-dark-blue': value != activeStep
+                    }"></i>
+              </span>
+            </button>
+          </ng-template>
+        </p-step>
+      </p-step-list>
+
+      <p-step-panels>
+        <p-step-panel [value]="1">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 20rem">
+              <div class="text-center mb-4 text-3xl text-border-sm text-shadow text-white">Método de Pago</div>
+
+              <div class="flex flex-col gap-4 text-xl">
+                <button class="py-4"
+                        [ngClass]="{'brawl-button text-white': selectedPaymentMethod === 'creditCard', 'text-brawl-dark-blue border-brawl-dark-blue border-2 rounded-md': selectedPaymentMethod != 'creditCard'}"
+                        (click)="selectPaymentMethod('creditCard')">
+                  Tarjeta de Crédito/Débito
+                </button>
+                <button class="py-4"
+                        [ngClass]="{'brawl-button text-white': selectedPaymentMethod === 'paypal', 'text-brawl-dark-blue border-brawl-dark-blue border-2 rounded-md': selectedPaymentMethod != 'paypal'}"
+                        (click)="selectPaymentMethod('paypal')">
+                  PayPal
+                </button>
+                <button class="py-4"
+                        [ngClass]="{'brawl-button text-white': selectedPaymentMethod === 'bizum', 'text-brawl-dark-blue border-brawl-dark-blue border-2 rounded-md': selectedPaymentMethod != 'bizum'}"
+                        (click)="selectPaymentMethod('bizum')">
+                  Bizum
+                </button>
+
+                <input type="hidden" [(ngModel)]="selectedPaymentMethod"/>
+              </div>
+            </div>
+
+            <div class="flex pt-6 justify-end">
+              <p-button (onClick)="toSecondStep(activateCallback)" label="Continuar" icon="pi pi-arrow-right"
+                        iconPos="right"/>
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+        <p-step-panel [value]="2">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+              <div class="text-center mb-4 text-3xl text-border-sm text-shadow text-white">{{ getPaymentTitle() }}</div>
+
+              @switch (selectedPaymentMethod) {
+                @case ('creditCard') {
+                  <style>
+                    .debit-card-wrapper {
+                      display: flex;
+                      gap: 30px;
+                      flex-wrap: wrap;
+                      justify-content: center;
+                    }
+
+                    .debit-card {
+                      position: relative;
+                      overflow: hidden;
+                      box-shadow: 20px 30px 50px rgba(0, 0, 0, 0.3);
+                      background-color: rgba(255, 255, 255, 0.1);
+                      border-radius: 15px;
+                      height: 250px;
+                      width: 400px;
+
+                      border-top: 1px solid rgba(255, 255, 255, 0.5);
+                      border-left: 1px solid rgba(255, 255, 255, 0.5);
+                      backdrop-filter: blur(5px);
+                      z-index: 1;
+                    }
+
+                    .card-header {
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      flex-wrap: wrap;
+                      gap: 15px;
+                      margin-bottom: 15px;
+                      padding: 9px 18px 0;
+                    }
+
+                    .card-header .card-title,
+                    .card-header {
+                      font-size: 16px;
+                      -webkit-text-stroke: 0.01px black;
+                      font-weight: bolder;
+                      color: #fff;
+                    }
+
+                    .card-content {
+                      position: absolute;
+                      padding: 9px 18px;
+                      left: 0;
+                      bottom: 0;
+                      width: 100%;
+                    }
+
+                    .card-number {
+                      color: #fff;
+                      word-spacing: 9px;
+                      letter-spacing: 3px;
+                    }
+
+                    .card-validity {
+                      display: flex;
+                      font-size: 14px;
+                      color: #fff;
+                      gap: 9px;
+                      padding-top: 10px;
+                      align-items: center;
+                      justify-content: center;
+                    }
+
+                    .card-validity span {
+                      font-size: 7px;
+                      font-weight: 400;
+                      max-width: 30px;
+                      line-height: 10px;
+                      letter-spacing: 2px;
+                    }
+
+                    .card-validity-date {
+                      font-size: 22px;
+                      font-weight: 700;
+                    }
+
+                    .card-user-name {
+                      color: #fff;
+                      padding-top: 11px;
+                      letter-spacing: 3px;
+                      word-spacing: 9px;
+                      font-size: 16px;
+                    }
+                  </style>
+
+                  <div class="debit-card-wrapper mb-10">
+                    <div #debitCard
+                         class="debit-card debit-card-front bg-gradient-to-br from-brawl-gold via-brawl-orange to-brawl-red">
+                      <div class="card-header">
+                        <h2 class="card-title text-shadow text-border-xs">Colette's Shop</h2>
+                      </div>
+                      <div class="card-content">
+                        <div class="card-chip-image">
+                          <span class="card-chip-image"></span>
+                        </div>
+                        <h2 class="card-number">
+                          <p-inputmask styleClass="w-full" mask="9 999 99 99 9999 999 9"
+                                       placeholder="0 000 00 00 0000 000 0" [(ngModel)]="cardNumber"/>
+                        </h2>
+                        <div class="card-validity">
+                          <span>
+                            FECHA EXP.
+                          </span>
+                          <h4 class="card-validity-date">
+                            <p-inputmask styleClass="w-[80px] text-center" mask="99/99" placeholder="00/12"
+                                         [(ngModel)]="cardExpiration"/>
+                          </h4>
+                        </div>
+                        <h2 class="card-user-name">
+                          <input pInputText id="client_name" placeholder="Titular" autocomplete="off"
+                                 [(ngModel)]="cardClient"/>
+                        </h2>
+                      </div>
+                    </div>
+                  </div>
+                }
+                @case ('paypal') {
+                  <p-floatlabel variant="in">
+                    <input pInputText id="paypal_email" class="w-full" [(ngModel)]="paypalEmail"/>
+                    <label for="paypal_email">Correo Electrónico</label>
+                  </p-floatlabel>
+
+                  <p-floatlabel variant="in">
+                    <p-password class="w-full" id="paypal_password" [(ngModel)]="paypalPassword" [toggleMask]="true"
+                                [fluid]="true" [feedback]="false"/>
+                    <label for="paypal_password">Contraseña</label>
+                  </p-floatlabel>
+                }
+                @case ('bizum') {
+                  <div class="flex items-center w-full">
+                    <style>
+                      ::ng-deep .p-inputmask {
+                        text-align: center;
+                      }
+                    </style>
+
+                    <div class="w-full flex flex-col gap-2 text-center">
+                      <span class="text-white text-xl text-shadow text-border-sm">Número de teléfono</span>
+                      <p-inputmask mask="+34 999 99 99 99" class="mx-auto text-center" [(ngModel)]="bizumNumber"
+                                   placeholder="+34 000 00 00 00"/>
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+
+            <div class="flex pt-6 justify-between">
+              <p-button (onClick)="activateCallback(1)" label="Cancelar" severity="secondary" icon="pi pi-arrow-left"/>
+              <p-button (onClick)="pay(activateCallback)" label="Pagar" icon="pi pi-arrow-right" iconPos="right"/>
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+        <p-step-panel [value]="3">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="flex flex-col justify-between gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+              <div>
+                <div class="text-center mb-4 text-3xl text-border-sm text-shadow text-white">Estado de la Compra</div>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <img [src]="getPinImage()" alt="Estado del pago" class="mx-auto size-32"/>
+                <p class="text-center text-xl"
+                   [ngClass]="{'text-brawl-green text-border-xs text-shadow': paymentSuccess, 'text-brawl-red': !paymentSuccess}">
+                  @if (paymentSuccess) {
+                    !Pago realizado con éxito!
+                  } @else {
+                    ¡Ha habido un error al realizar el pago!
+                  }
+                </p>
+
+                <span class="text-center text-xl text-white text-shadow text-border-sm" *ngIf="paymentSuccess && gemsAmount > 0">
+                  ¡Has obtenido <span class="text-brawl-gold">{{ gemsAmount }} gemas</span>!
+                </span>
+              </div>
+
+              @if (paymentSuccess) {
+                <a class="brawl-button text-white w-fit mx-auto py-2 px-6 text-xl mt-10" href="/inventory">
+                  Ver inventario
+                </a>
+              } @else {
+                <a class="brawl-button text-white w-fit mx-auto py-2 px-6 text-xl mt-10" href="/">
+                  Volver al inicio
+                </a>
+              }
+            </div>
+          </ng-template>
+        </p-step-panel>
+      </p-step-panels>
+    </p-stepper>
+  </div>
+</div>

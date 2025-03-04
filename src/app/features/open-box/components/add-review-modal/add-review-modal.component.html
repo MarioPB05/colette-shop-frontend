@@ -1,0 +1,42 @@
+<div class="fixed bg-brawl-black bg-opacity-50 z-50 h-screen w-screen brawl-font top-0 flex justify-center items-center">
+  <div *ngIf="!userAddedReview" class="bg-brawl-light-blue px-10 py-5 gap-4 justify-center flex flex-col rounded-lg border-4 border-brawl-dark-blue fade-up">
+    <span class="text-2xl text-border-sm text-shadow text-white">
+      Añade una reseña y gana <span class="text-brawl-green">15 gemas</span>
+    </span>
+    <p-rating [(ngModel)]="rating" stars="5" class="flex justify-center mt-3 rounded-lg">
+      <ng-template #onicon>
+        <img src="/images/stars/star-full.svg" height="36" width="36" class="hover:brightness-75 cursor-pointer" />
+      </ng-template>
+      <ng-template #officon>
+        <img src="/images/stars/star-empty.svg" height="36" width="36" class="hover:brightness-200 cursor-pointer" [ngClass]="{'drop-shadow-[0_0_4px_rgba(255,0,0,1)]': !ratingValid && !isRatingValid()}" />
+      </ng-template>
+    </p-rating>
+
+    <textarea rows="2" pTextarea [autoResize]="true" class="" [(ngModel)]="comment" maxlength="2000" placeholder="Escribe un comentario..." [ngClass]="{'ng-invalid ng-dirty ng-touched': !commentValid && !isRatingValid()}"></textarea>
+
+    <div class="flex justify-center gap-4 mt-3">
+      <button class="py-1.5 px-5 text-xl text-brawl-white hover:underline" (click)="goToBoxResume()">
+        Cancelar
+      </button>
+
+      <button class="brawl-button text-white py-1.5 px-5 text-xl" (click)="addReview()">
+        Enviar
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="userAddedReview" class="bg-brawl-light-blue px-10 py-5 gap-4 justify-center flex flex-col rounded-lg border-4 border-brawl-dark-blue fade-up">
+    <span class="text-3xl text-border-sm text-shadow text-white text-center">
+      ¡Gracias por tu reseña!
+    </span>
+    <span class="text-lg text-border-xs text-shadow text-white text-center">
+      Recibirás tus <span class="text-brawl-green">15 gemas</span> en tu cuenta
+    </span>
+
+    <div class="flex justify-center gap-4 mt-3">
+      <button class="brawl-button text-white py-1.5 px-5 text-xl" (click)="goToBoxResume()">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>

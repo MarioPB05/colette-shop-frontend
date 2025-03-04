@@ -1,0 +1,155 @@
+<div class="w-full bg-brawl-sea-blue brawl-font h-full min-h-screen flex flex-col text-white">
+  <app-brawl-header></app-brawl-header>
+
+  <div class="grid xl:grid-cols-[1fr_auto] gap-5 xl:gap-24 p-8 py-20 h-full">
+    <div class="h-full bg-brawl-dark-blue rounded-xl p-6 max-xl:h-fit max-xl:pb-16">
+      <div class="flex items-center w-full">
+        <a routerLink="/" class="brawl-button size-12 flex items-center justify-center me-6">
+          <img class="size-10" src="/images/icons/left-arrow.png" alt="Flecha para volver atrás"/>
+        </a>
+
+        <div class="flex justify-between w-full">
+          <h1 class="text-3xl text-brawl-white text-center">
+            <i class="pi pi-shopping-cart me-2 text-brawl-gold" style="font-size: 30px;"></i>
+            <span class="text-border-sm text-shadow">CARRITO</span>
+          </h1>
+
+          <span>{{ totalItems }} unidades</span>
+        </div>
+      </div>
+
+      <div class="mt-20 flex flex-col gap-20 lg:gap-12 max-lg:justify-center">
+        @if (boxCartList.length === 0) {
+          <div class="flex flex-col">
+            <img src="/images/animations/colette_lose.gif" alt="Colette perdiendo" class="w-60 mx-auto" />
+            <span class="text-2xl text-brawl-white text-shadow text-border-sm text-center">No hay productos en el carrito</span>
+          </div>
+        }
+        <div class="relative flex w-full lg:ps-20 max-lg:justify-center" *ngFor="let item of boxCartList">
+          <div class="spotlight size-32 hidden lg:flex items-center justify-center absolute left-0 top-1/2 transform -translate-y-1/2">
+            <img [src]="BoxTypeImages[item.type]" alt="{{ item.type }}" class="size-28" />
+          </div>
+
+          <div class="spotlight size-32 flex lg:hidden items-center justify-center absolute -top-16 left-1/2 transform -translate-x-1/2">
+            <img [src]="BoxTypeImages[item.type]" alt="{{ item.type }}" class="size-28" />
+          </div>
+
+          <div class="bg-brawl-sea-blue lg:w-full min-h-[90px] rounded-md flex items-center justify-between flex-col lg:flex-row ps-20 pe-10 text-center lg:text-start max-md:px-6 max-lg:px-12 max-lg:py-8 max-lg:pt-16 gap-8 lg:gap-0">
+            <h3 class="text-2xl text-brawl-white text-shadow text-border-sm max-w-60 w-60">
+              {{ item.name }}
+            </h3>
+
+            <div class="flex items-center gap-5">
+              <button class="brawl-button size-12 flex items-center justify-center text-4xl" (click)="increaseQuantity(item)">
+                +
+              </button>
+
+              <span class="text-2xl text-brawl-white text-shadow text-border-sm w-6 text-center">{{ item.quantity }}</span>
+
+              <button class="brawl-button size-12 flex items-center justify-center text-4xl pb-1" (click)="decreaseQuantity($event, item)">
+                -
+              </button>
+            </div>
+
+            <div class="max-w-32 w-32 lg:text-end">
+              <span class="text-3xl text-brawl-white text-shadow text-border-sm">€{{ item.total_price.toLocaleString("es-ES") }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-6 max-xl:w-full max-xl:items-center">
+      <div class="max-w-[400px] w-full md:w-[400px]">
+        <div class="flex justify-center transition-all duration-500" *ngIf="userGemsAmount > 0 && totalPrice > 0 && canUseGems">
+          <div class="w-fit border-brawl-navy border-2 border-b-0 rounded-t-xl px-4 py-2">
+            <label for="use-gems" class="brawl-checkbox-container text-brawl-white text-base h-[30px] items-center" style="display: flex;">
+              <input type="checkbox" [(ngModel)]="useGems" class="brawl-checkbox" id="use-gems" (change)="recalculatePrices()"/>
+              USAR GEMAS COMO DESCUENTO
+              <span class="brawl-checkmark"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="bg-brawl-blue border-brawl-navy border-2 -skew-x-2 rounded-md text-2xl text-shadow text-border-sm px-10 py-6 flex flex-col items-center">
+          <div class="w-full flex justify-between mb-1">
+            <span>Carrito: </span>
+            <span>{{ totalCartPrice.toLocaleString("es-ES") }}€</span>
+          </div>
+
+          <div class="w-full flex justify-between mb-1">
+            <span>Subtotal: </span>
+            <span>{{ totalNetPrice.toLocaleString("es-ES") }}€</span>
+          </div>
+
+          <div class="w-full bg-[#19165B] bg-opacity-30 p-2 py-3 -skew-x-5 flex justify-between items-center my-4" *ngIf="useGems">
+            <div class="flex gap-2">
+              <img src="/images/icons/brawl-gems-icon.png" alt="Icono de gemas de Brawl Stars" class="w-12" />
+              {{ userGemsAmount }} gemas
+            </div>
+
+            <span>-{{ gemsDiscount }}€</span>
+          </div>
+
+          <div class="w-full flex justify-between mb-6">
+            <span>IVA <span class="text-base">(21%)</span>: </span>
+            <span>{{ totalTaxPrice.toLocaleString("es-ES") }}€</span>
+          </div>
+
+          <div class="w-full flex justify-between">
+            <span>Total: </span>
+            <span class="text-3xl text-brawl-green">{{ totalPrice.toLocaleString("es-ES") }}€</span>
+          </div>
+
+          <button class="brawl-button size-12 flex items-center justify-center mt-6 w-full" (click)="createOrder()">
+            PAGAR
+          </button>
+
+          <label for="order-is-gift" class="brawl-checkbox-container text-brawl-white text-base h-[30px] items-center mt-5" style="display: flex;">
+            <input type="checkbox" [(ngModel)]="orderIsGift" class="brawl-checkbox" id="order-is-gift"/>
+            ESTA COMPRA ES UN REGALO
+            <span class="brawl-checkmark"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="bg-brawl-blue border-brawl-navy border-2 rounded-md text-2xl px-6 py-6 max-w-[400px] -translate-x-1" *ngIf="orderIsGift">
+        <span class="text-shadow text-border-sm">REGALAR A:</span>
+
+        <style>
+          #gift-username::placeholder {
+            color: black;
+            border: none;
+          }
+        </style>
+
+        <div class="-skew-x-6 bg-white flex mt-4">
+          <input class="border-transparent border-2 outline-none text-lg text-black px-6 py-1 w-full" type="text" placeholder="Usuario" id="gift-username" [(ngModel)]="giftUsername" (keydown.enter)="verifyUsernameForGift()" (change)="giftUsernameVerified = false" />
+          <button class="bg-brawl-sea-blue border-black border-2 text-base px-4" [disabled]="giftButtonDisabled" (click)="verifyUsernameForGift()">COMPROBAR</button>
+        </div>
+
+        @if (giftButtonDisabled) {
+          <div class="mt-4">
+            <i class="pi pi-spinner pi-spin me-2 text-white border-none outline-none shadow-none"></i>
+            <span class="text-shadow text-border-xs text-lg">Verificando...</span>
+          </div>
+        } @else if (giftUsernameVerified && !giftButtonDisabled && giftUsername) {
+          <div class="mt-4">
+            <i class="pi pi-check me-2 font-bold text-brawl-green"></i>
+            <span class="text-shadow text-border-xs text-lg">Usuario verificado</span>
+          </div>
+        } @else if (!giftUsernameVerified && !giftButtonDisabled && giftUsername && requestGift) {
+          <div class="mt-4">
+            <i class="pi pi-times me-2 font-bold text-brawl-red"></i>
+            <span class="text-shadow text-border-xs text-lg">Usuario no encontrado</span>
+          </div>
+        }
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-pay-modal [ngClass]="{'hidden': !showPayModal}" [orderId]="orderId" (updateShowPayModal)="showPayModal = $event" [activeStep]="activeStep" #payModal />
+
+<p-confirm-dialog />
