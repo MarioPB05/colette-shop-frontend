@@ -4,10 +4,10 @@ import {InputText} from 'primeng/inputtext';
 import {InputNumber} from 'primeng/inputnumber';
 import {ListBrawlerResponse, SelectedBrawler, UserBrawlerProbabilityResponse} from '@models/brawler.model';
 import {BrawlerService} from '@dashboard/services/brawler.service';
-import {MessageService, PrimeTemplate} from 'primeng/api';
-import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
+import {MessageService} from 'primeng/api';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {Tooltip} from 'primeng/tooltip';
-import {FormControl, FormGroup, FormGroupDirective, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ToggleSwitch} from 'primeng/toggleswitch';
 import {BoxTypeImages, BoxTypes} from '@core/enums/box.enum';
 import {Select} from 'primeng/select';
@@ -47,6 +47,10 @@ export class BoxEditorPageComponent {
   previousDefaultProbability = 0; // Se usa para actualizar la probabilidad de los brawlers
   isDailyBox = false;
   backendIsLoading = false;
+
+  // Simulate obox opening
+  brawlersOpened: ListBrawler[] = [];
+  isOpeningBox = false;
 
   formGroup: FormGroup = new FormGroup({
     name: new FormControl('', {validators: [Validators.required, Validators.minLength(3), Validators.maxLength(40)]}),
@@ -229,7 +233,6 @@ export class BoxEditorPageComponent {
   }
 
   toggleUnlimitedQuantity(): void {
-
     if (!this.formGroup.get('unlimited_quantity')?.value) {
       this.formGroup.get('quantity')?.setValue(0);
       this.formGroup.get('quantity')?.enable();
@@ -276,6 +279,7 @@ export class BoxEditorPageComponent {
   }
 
   toggleBrawler(brawler: ListBrawler): void {
+    this.resetBox();
     if (this.selectedBrawlers.includes(brawler.id)) {
       this.selectedBrawlers = this.selectedBrawlers.filter(id => id !== brawler.id);
       this.brawlersClassified[brawler.rarity].find(b => b.id === brawler.id)!.showProbability = false;
@@ -474,4 +478,70 @@ export class BoxEditorPageComponent {
     });
   }
 
+  decideNextBrawlerInBox(): ListBrawler | null {
+    if (!this.selectedBrawlers.length) {
+      console.warn("No hay brawlers disponibles en la caja.");
+      return null;
+    }
+
+    // Calcular la suma total de probabilidades
+    const totalProbability = this.selectedBrawlers.reduce(
+      (sum, brawler) => sum + Number(this.findBrawlerById(brawler)!.probability),
+      0
+    );
+
+    // Generar un número aleatorio dentro del rango de probabilidades
+    const randomThreshold = Math.random() * totalProbability;
+
+    let accumulatedProbability = 0;
+
+    // Seleccionar el brawler en función de la probabilidad acumulativa
+    for (const brawlerId of this.selectedBrawlers) {
+      const brawler = this.findBrawlerById(brawlerId)!;
+      accumulatedProbability += Number(brawler.probability);
+
+      if (accumulatedProbability >= randomThreshold) {
+        return brawler;
+      }
+    }
+
+    console.warn("No se pudo seleccionar un brawler. Verifica las probabilidades.");
+    return null;
+  }
+
+  resetBox(): void {
+    this.brawlersOpened = [];
+    this.isOpeningBox = false;
+  }
+
+  openBox() {
+    if (this.brawlersOpened.length > 0) {
+      this.resetBox();
+      return;
+    }
+
+    if (this.selectedBrawlers.length === 0) {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Selecciona al menos un brawler en la sección de contenido'});
+      return;
+    }
+
+    this.isOpeningBox = true;
+
+    for (let i = 0; i < this.getBoxBrawlerQuantity(); i++) {
+      setTimeout(() => {
+        if (!this.isOpeningBox) {
+          return;
+        }
+
+        const nextBrawler = this.decideNextBrawlerInBox();
+        if (nextBrawler) {
+          this.brawlersOpened.push(nextBrawler);
+        }
+
+        if (this.brawlersOpened.length === this.getBoxBrawlerQuantity()) {
+          this.isOpeningBox = false;
+        }
+      }, 500 * i);
+    }
+  }
 }
