@@ -35,4 +35,16 @@ export class BoxService {
   getBox(id: number): Observable<CreateBoxRequest|CreateDailyBoxRequest> {
     return this.http.get<CreateBoxRequest|CreateDailyBoxRequest>(`${environment.baseUrl}/boxes/get/${id}`)
   }
+
+  editBox(id: number, data: CreateBoxRequest): Observable<any> {
+    return this.http.put<any>(`${environment.baseUrl}/boxes/${id}`, data, {
+      context: new HttpContext().set(SkipLoading, true)
+    });
+  }
+
+  editDailyBox(id: number, data: CreateDailyBoxRequest): Observable<any> {
+    return this.http.put<any>(`${environment.baseUrl}/boxes/daily/${id}`, data, {
+      context: new HttpContext().set(SkipLoading, true)
+    });
+  }
 }
