@@ -3,11 +3,11 @@ import {BrawlHeaderComponent} from '@shared/components/brawl-header/brawl-header
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrawlerCardComponent} from '@features/collection/components/brawler-card/brawler-card.component';
 import {BrawlerCardResponse} from '@models/brawler.model';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {FaviconService} from '@core/services/favicon.service';
 import {BrawlerService} from '@features/collection/services/brawler.service';
 import {MessageService} from 'primeng/api';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 
 type OrderBrawlers = 'Nombre' | 'Calidad' | 'Mas trofeos' | 'Menos trofeos';
 
@@ -18,7 +18,9 @@ type OrderBrawlers = 'Nombre' | 'Calidad' | 'Mas trofeos' | 'Menos trofeos';
     ReactiveFormsModule,
     BrawlerCardComponent,
     NgForOf,
-    FormsModule
+    FormsModule,
+    NgIf,
+    RouterLink
   ],
   templateUrl: './collection-page.component.html',
   standalone: true,
