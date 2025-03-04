@@ -97,6 +97,15 @@
   @apply bg-brawl-white;
 }
 
+.brawl-button-primary[disabled] {
+  @apply bg-brawl-light-gray text-brawl-white;
+}
+
+.brawl-button-primary.disabled {
+  @apply bg-brawl-dark-slate text-brawl-white;
+}
+
+
 /*------------------- Estilos de los checkboxes -------------------*/
 .brawl-checkbox-container {
   display: block;
