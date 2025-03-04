@@ -1,3 +1,5 @@
+import {CartItemRequest} from '@models/box.model';
+
 export interface TableOrderResponse {
   id: number;
   invoice_number: string;
@@ -50,5 +52,12 @@ export interface OrderUserDetailsResponse {
   discount: number;
   totalPrice: number;
   totalWithDiscount: number;
+  giftUsername?: string;
+}
+
+export interface CreateOrderRequest {
+  items: CartItemRequest[];
+  useGems: boolean;
+  isGift: boolean;
   giftUsername?: string;
 }
