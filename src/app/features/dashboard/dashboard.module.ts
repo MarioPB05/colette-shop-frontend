@@ -9,6 +9,7 @@ import {OrderPageComponent} from '@dashboard/pages/orders-page/order-page.compon
 import {BoxEditorPageComponent} from '@dashboard/pages/box-editor-page/box-editor-page.component';
 import {UserDetailsPageComponent} from '@dashboard/pages/user-details-page/user-details-page.component';
 import {OrderDetailsPageComponent} from '@dashboard/pages/order-details-page/order-details-page.component';
+import {FaviconService} from '@core/services/favicon.service';
 
 @NgModule({
   declarations: [],
@@ -25,4 +26,10 @@ import {OrderDetailsPageComponent} from '@dashboard/pages/order-details-page/ord
     DashboardRoutesModule,
   ]
 })
-export class DashboardModule { }
+export class DashboardModule {
+
+  constructor(private faviconService: FaviconService) {
+    this.faviconService.changeFavicon('/images/user-details-icons/brawl-icon.png');
+  }
+
+}
