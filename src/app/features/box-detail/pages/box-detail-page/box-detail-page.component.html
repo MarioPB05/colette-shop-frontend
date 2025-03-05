@@ -17,7 +17,9 @@
 
       <div class="flex flex-col justify-center gap-5 text-shadow text-border-xs">
         <h1 class="{{ box.name.length > 20 ? 'text-3xl' : 'text-5xl' }} text-border-sm font-bold text-center">
-          {{ box.name }} <h2 class="text-lg text-border-xs text-brawl-gold">{{ box.price }} €</h2>
+          {{ box.name }}
+          <h2 class="text-lg text-border-xs text-brawl-gold" *ngIf="box.price > 0">{{ box.price }} €</h2>
+          <h2 class="text-lg text-border-xs text-brawl-gold" *ngIf="box.price === 0">GRATIS</h2>
         </h1>
         <div class="text-center items-center text-xl flex flex-col gap-2 justify-center">
           <span *ngIf="box.boxes_left != -1">
@@ -73,7 +75,7 @@
 
         <span *ngIf="showReviews.length === 0" class="text-2xl text-shadow text-border-sm text-brawl-yellow">No hay opiniones</span>
 
-        <button class="brawl-button" (click)="showMoreReviews()" *ngIf="showReviews.length < allReviews.length">VER MÁS</button>
+        <button class="brawl-button py-1 px-6 text-lg" (click)="showMoreReviews()" *ngIf="showReviews.length < allReviews.length">VER MÁS</button>
       </div>
 
     </div>
