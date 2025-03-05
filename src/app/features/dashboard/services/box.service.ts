@@ -47,4 +47,16 @@ export class BoxService {
       context: new HttpContext().set(SkipLoading, true)
     });
   }
+
+  pinBox(id: number): Observable<any> {
+    return this.http.post<any>(`${environment.baseUrl}/boxes/${id}/pin`, null, {
+      context: new HttpContext().set(SkipLoading, true)
+    });
+  }
+
+  unpinBox(id: number): Observable<any> {
+    return this.http.post<any>(`${environment.baseUrl}/boxes/${id}/unpin`, null, {
+      context: new HttpContext().set(SkipLoading, true)
+    });
+  }
 }
