@@ -1,6 +1,5 @@
-import {Component, HostBinding, HostListener, Input} from '@angular/core';
+import {Component, HostBinding, Input} from '@angular/core';
 import {Card} from 'primeng/card';
-import {NgClass} from '@angular/common';
 import {Tooltip} from 'primeng/tooltip';
 
 export interface StatCard {
@@ -22,7 +21,6 @@ export interface StatCard {
   selector: 'app-stat-card',
   imports: [
     Card,
-    NgClass,
     Tooltip
   ],
   templateUrl: './stat-card.component.html',
