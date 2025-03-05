@@ -61,7 +61,7 @@ export class OrderDetailsPageComponent implements OnInit {
 
         this.cartTotal = this.orderDetailsItems.reduce((acc, item) => acc + item.totalPrice, 0);
         this.subtotal = Math.round(((this.cartTotal/1.21) - this.orderDetails.discount)*100)/100;
-        this.iva = Math.round((this.subtotal*0.21)*100)/100;
+        this.iva = Math.floor((this.subtotal*0.21)*100)/100;
         this.total = this.subtotal + this.iva;
       },
       error: (error) => {

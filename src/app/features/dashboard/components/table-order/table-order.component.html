@@ -54,8 +54,8 @@
       <td>
         @if (order.discount > 0) {
           <span class="text-brawl-purple" pTooltip=" Se descuentan {{ numberFormat(order.discount) }} y
-            el precio total es {{ numberFormat(order.total_price) }}" tooltipPosition="top">
-            {{ numberFormat(order.total_with_discount) }}
+            el precio total es {{ numberFormat(calSubtotal(order)) }}" tooltipPosition="top">
+            {{ numberFormat(calTotal(order)) }}
           </span>
         }@else {
           {{ numberFormat(order.total_price) }}

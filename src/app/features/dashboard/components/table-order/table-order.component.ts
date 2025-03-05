@@ -105,4 +105,16 @@ export class TableOrderComponent implements OnInit {
     ];
   }
 
+  calSubtotal(order: TableOrderResponse): number {
+    return Math.round(((order.total_price/1.21) - order.discount)*100)/100;
+  }
+
+  calIva(order: TableOrderResponse): number {
+    return Math.floor((this.calSubtotal(order)*0.21)*100)/100;
+  }
+
+  calTotal(order: TableOrderResponse): number {
+    return this.calSubtotal(order) + this.calIva(order);
+  }
+
 }
