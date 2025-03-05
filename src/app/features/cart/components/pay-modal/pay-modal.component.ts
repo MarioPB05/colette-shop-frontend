@@ -11,6 +11,7 @@ import {FloatLabel} from 'primeng/floatlabel';
 import {Password} from 'primeng/password';
 import {OrderService} from '@features/cart/services/order.service';
 import {CartService} from '@shared/services/cart.service';
+import {UserDetailsService} from '@shared/services/user-details.service';
 
 @Component({
   selector: 'app-pay-modal',
@@ -54,7 +55,8 @@ export class PayModalComponent implements AfterViewInit {
   constructor(
     private cartService: CartService,
     private orderService: OrderService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private userDetailsService: UserDetailsService
   ) {}
 
   ngAfterViewInit() {
@@ -175,6 +177,8 @@ export class PayModalComponent implements AfterViewInit {
           if (response.status === 'success') {
             // In this case, the response message is the amount of gems that the user obtained
             this.gemsAmount = Number(response.message);
+
+            this.userDetailsService.updateUserDetails(true);
 
             this.cartService.clearCart();
             this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Pago realizado con éxito'});
