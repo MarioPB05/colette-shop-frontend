@@ -2,7 +2,6 @@ import {Component, inject, OnInit} from '@angular/core';
 import {TableModule} from 'primeng/table';
 import {BrawlerService} from '@dashboard/services/brawler.service';
 import {TableBrawlerResponse} from '@core/models/brawler.model';
-import {NgClass} from '@angular/common';
 import {InputText} from 'primeng/inputtext';
 import {FormsModule} from '@angular/forms';
 import {IconField} from 'primeng/iconfield';
@@ -13,7 +12,6 @@ import {MessageService} from 'primeng/api';
   selector: 'app-brawlers-page',
   imports: [
     TableModule,
-    NgClass,
     InputText,
     FormsModule,
     IconField,
