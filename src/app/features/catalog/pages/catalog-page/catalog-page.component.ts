@@ -5,9 +5,8 @@ import {Slider} from 'primeng/slider';
 import {FormsModule} from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import {BoxShopResponse, DailyBoxShopResponse} from '@models/box.model';
-import {NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import {BoxService} from '@features/catalog/services/box.service';
-import {Tooltip} from 'primeng/tooltip';
 import {FaviconService} from '@core/services/favicon.service';
 import {
   BoxFreeDailyBuyCardComponent
@@ -16,10 +15,11 @@ import {MessageService} from 'primeng/api';
 import {CartBtnComponent} from '@shared/components/cart-btn/cart-btn.component';
 import {BoxTypes} from '@core/enums/box.enum';
 import {GemsIndicatorComponent} from '@shared/components/gems-indicator/gems-indicator.component';
+import {UserDetailsService} from '@shared/services/user-details.service';
 
 @Component({
   selector: 'app-shop-page',
-  imports: [BrawlHeaderComponent, Slider, FormsModule, InputNumberModule, BoxBuyCardComponent, NgForOf, NgIf, BoxFreeDailyBuyCardComponent, CartBtnComponent, GemsIndicatorComponent],
+  imports: [BrawlHeaderComponent, Slider, FormsModule, InputNumberModule, BoxBuyCardComponent, NgForOf, NgIf, BoxFreeDailyBuyCardComponent, CartBtnComponent, GemsIndicatorComponent, AsyncPipe],
   templateUrl: './catalog-page.component.html',
   styleUrls: ['./../../../../shared/brawl_styles.scss'],
   standalone: true
@@ -44,7 +44,8 @@ export class CatalogPageComponent implements OnInit {
   constructor(
     private boxService: BoxService,
     private faviconService: FaviconService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    protected userDetailsService: UserDetailsService
   ) {}
 
   ngOnInit() {

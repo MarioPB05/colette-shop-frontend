@@ -19,8 +19,10 @@
     </div>
   </div>
 
-  <div class="gap-6 flex-col-reverse md:flex-row md:ps-10 items-center justify-center absolute flex md:relative right-5">
+  <div class="gap-6 flex-col-reverse md:flex-row md:ps-10 items-center justify-center absolute flex md:relative right-5" *ngIf="userDetailsService.userDetails$ | async as userDetails">
     <img [src]="getNoteImage()" (click)="triggerMusic()" alt="Icono de música" class="w-8 h-8 cursor-pointer">
-    <img src="https://cdn.brawlify.com/brawlers/borderless/16000000.png" alt="profile picture" class="w-14 h-14 border-4 border-black">
+    <img [src]="userDetails.brawlerAvatar.image" alt="profile picture" class="w-14 h-14 border-4 border-black" (click)="toggleMenu($event)">
   </div>
 </header>
+
+<p-tiered-menu #menu [model]="userItems" [popup]="true" *ngIf="loadUserItems" />

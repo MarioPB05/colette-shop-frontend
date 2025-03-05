@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Tooltip} from "primeng/tooltip";
 
 @Component({
@@ -11,5 +11,5 @@ import {Tooltip} from "primeng/tooltip";
   styleUrl: '../../brawl_styles.scss'
 })
 export class GemsIndicatorComponent {
-  gems: number = 0;
+  @Input() gems: number = 0;
 }

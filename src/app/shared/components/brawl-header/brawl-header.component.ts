@@ -1,14 +1,21 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, ViewChild} from '@angular/core';
 import {LocalStorageService} from '@shared/services/local-storage.service';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
-import {NgClass} from '@angular/common';
+import {AsyncPipe, NgClass, NgIf} from '@angular/common';
+import {UserDetailsService} from '@shared/services/user-details.service';
+import {AuthService} from '@core/services/auth.service';
+import {MenuItem} from 'primeng/api';
+import {TieredMenu} from 'primeng/tieredmenu';
 
 @Component({
   selector: 'app-brawl-header',
   imports: [
     RouterLink,
     RouterLinkActive,
-    NgClass
+    NgClass,
+    NgIf,
+    AsyncPipe,
+    TieredMenu
   ],
   templateUrl: './brawl-header.component.html',
   standalone: true,
@@ -17,13 +24,46 @@ import {NgClass} from '@angular/common';
 export class BrawlHeaderComponent implements OnDestroy{
   canPlayMusic: boolean = false;
   music = new Audio("/audios/menu/brawl-stars-menu-01.ogg");
+  userItems: MenuItem[] = [
+    {
+      label: 'Mi perfil',
+      icon: 'pi pi-fw pi-user',
+      routerLink: '/user/details'
+    }
+  ];
 
-  constructor(private localStorageService: LocalStorageService,
-              private router: Router) {
+  loadUserItems: boolean = false;
+
+  @ViewChild('menu') tieredMenu!: TieredMenu;
+
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    protected userDetailsService: UserDetailsService,
+    private localStorageService: LocalStorageService,
+  ) {
     this.canPlayMusic = this.localStorageService.getItem('canPlayMusic') === 'true';
     if (this.canPlayMusic) {
       this.playMenuMusic();
     }
+
+    this.authService.isAdministrator().subscribe((isAdmin) => {
+      if (isAdmin) {
+        this.userItems.push({
+          label: 'Administración',
+          icon: 'pi pi-fw pi-cog',
+          routerLink: '/dashboard'
+        });
+      }
+
+      this.userItems.push({
+        label: 'Cerrar sesión',
+        icon: 'pi pi-fw pi-power-off',
+        command: () => this.authService.logout()
+      });
+
+      this.loadUserItems = true;
+    });
   }
 
   ngOnDestroy() {
@@ -70,4 +110,9 @@ export class BrawlHeaderComponent implements OnDestroy{
 
     return this.router.url.includes(route);
   }
+
+  toggleMenu($event: any) {
+    this.tieredMenu.toggle($event);
+  }
+
 }
