@@ -54,6 +54,12 @@ export class UserDetailsPageComponent implements OnInit {
           next: (brawlers) => {
             this.brawlers = brawlers;
 
+            // Remove duplicate brawlers
+            this.brawlers = this.brawlers.filter((brawler, index, self) =>
+              index === self.findIndex((t) => (
+                t.id === brawler.id
+              ))
+            );
           },
           error: (err) => {
             this.messageService.add({severity: 'error', summary: 'Error', detail: 'Failed to load brawlers'});

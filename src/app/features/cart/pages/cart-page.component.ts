@@ -129,7 +129,7 @@ export class CartPageComponent implements OnInit {
           this.notAvailableUsername = userDetails.username;
         }
 
-        this.totalTaxPrice = Math.round((this.totalNetPrice * 0.21) * 100) / 100;
+        this.totalTaxPrice = Math.floor((this.totalNetPrice * 0.21) * 100) / 100;
         this.totalPrice = this.totalNetPrice + this.totalTaxPrice;
       },
       error: () => {
@@ -255,7 +255,7 @@ export class CartPageComponent implements OnInit {
       this.totalNetPrice -= this.gemsDiscount;
     }
 
-    this.totalTaxPrice = Math.round((this.totalNetPrice * 0.21) * 100) / 100;
+    this.totalTaxPrice = Math.floor((this.totalNetPrice * 0.21) * 100) / 100;
     this.totalPrice = this.totalNetPrice + this.totalTaxPrice;
   }
 

@@ -6,6 +6,7 @@ import {ReviewService} from '@features/open-box/services/review.service';
 import {Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {NgClass, NgIf} from '@angular/common';
+import {UserDetailsService} from '@shared/services/user-details.service';
 
 @Component({
   selector: 'app-add-review-modal',
@@ -31,9 +32,12 @@ export class AddReviewModalComponent {
   ratingValid: boolean = true;
   commentValid: boolean = true;
 
-  constructor(private reviewService: ReviewService,
-              private router: Router,
-              private messageService: MessageService) {}
+  constructor(
+    private reviewService: ReviewService,
+    private router: Router,
+    private messageService: MessageService,
+    private userDetailsService: UserDetailsService
+  ) {}
 
   isRatingValid(): boolean {
     return this.rating > 0;
@@ -71,6 +75,8 @@ export class AddReviewModalComponent {
         }
 
         this.userAddedReview = true;
+
+        this.userDetailsService.updateUserDetails(true);
       },
       error: (err) => {
         this.throwReviewError();
