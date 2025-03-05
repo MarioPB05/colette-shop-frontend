@@ -1,23 +1,23 @@
 
 <div class="w-full bg-brawl-dark-blue brawl-font h-full min-h-screen flex flex-col">
   <app-brawl-header></app-brawl-header>
-  <div class="relative">
+  <div class="relative" *ngIf="userDetailsService.userDetails$ | async as userDetails">
     <img src="/images/backgrounds/brawl-gift-shop.jpg" class="w-full h-52 object-cover opacity-70 border-b-4 border-slate-800" alt="Brawl Gift Shop">
     <img src="/images/brawlers/16000039_model.png" (click)="reproduceColetteVoiceLine()" class="absolute cursor-pointer bottom-1 object-top left-5 w-32 h-44 object-cover" alt="Colette">
-    <div class="absolute left-32 bottom-10 w-[246px] h-[70px] lg:h-auto lg:w-auto object-top object-cover">
+    <div class="absolute left-32 bottom-10 w-fit h-[70px] lg:h-auto lg:w-auto object-top object-cover">
       <img src="/images/resources/speech-bubble.png" class="right-5  hidden xs:block w-full h-full lg:w-[1000px] lg:h-24" alt="Speech Bubble">
       <span class="hidden lg:block object-top ps-20 absolute right-5 p-3 object-cover text-black font-bold top-0">
-        ¡HOLA, HOLA, PEPITO! ¡Soy Colette, tu NUEVA MEJOR AMIGA! Bienvenido a mi TIENDA, donde hay <span class="text-brawl-blue">CAJAS</span>, <span class="text-brawl-lime">BRAWLERS</span> y más <span class="text-brawl-blue">CAJAS</span>!
+        ¡HOLA, HOLA, {{ userDetails.username.toUpperCase() }}! ¡Soy Colette, tu NUEVA MEJOR AMIGA! Bienvenido a mi TIENDA, donde hay <span class="text-brawl-blue">CAJAS</span>, <span class="text-brawl-lime">BRAWLERS</span> y más <span class="text-brawl-blue">CAJAS</span>!
         ¡Rápido, recoge tu recompensa diaria! O mejor aún… ¡COMPRA MÁS <span class="text-brawl-blue">CAJAS</span>! ¡Muchísimas! ¡Así tendras más <span class="text-brawl-lime">BRAWLERS</span> para tu <span class="text-brawl-pink">COLECCION</span>!
         ¡Vamos, NO ME HAGAS ESPERAR! 💕
       </span>
 
-      <span class=" hidden xs:block lg:hidden object-top ps-6 left-0 absolute right-5 p-3 object-cover text-black font-bold top-0">
-        HOLA, HOLA, PEPITO! Bienvenido a mi TIENDA 💕
+      <span class="hidden xs:block lg:hidden object-top ps-6 left-0 absolute right-5 p-3 object-cover text-black font-bold top-0">
+        HOLA, HOLA, {{ userDetails.username.toUpperCase() }}! Bienvenido a mi TIENDA 💕
       </span>
     </div>
 
-    <app-gems-indicator class="absolute right-1 top-0 m-5"/>
+    <app-gems-indicator class="absolute right-1 top-0 m-5" [gems]="userDetails.gems" />
   </div>
 
   <div class="bg-brawl-blue p-8 justify-center flex flex-wrap border-b-2 border-brawl-navy items-center px-16 lg:justify-between gap-x-5 gap-y-10 md:gap-y-5">
