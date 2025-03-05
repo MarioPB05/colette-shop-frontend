@@ -59,23 +59,9 @@ export class BoxesPageComponent implements OnInit {
         this.originalBoxes = boxes;
       }
     });
-    this.items = [
-      {
-        label: 'Detalles',
-        icon: 'pi pi-info-circle',
-        command: () => this.seeBoxDetails(this.selectedBox)
-      },
-      {
-        label: 'Editar',
-        icon: 'pi pi-pencil',
-        command: () => this.editBox(this.selectedBox)
-      },
-      {
-        label: 'Eliminar',
-        icon: 'pi pi-trash',
-        command: () => this.deleteBox(this.selectedBox)
-      }
-    ];
+
+    this.actualizeItems();
+
     this.originalBoxes = this.boxes;
   }
 
@@ -139,4 +125,75 @@ export class BoxesPageComponent implements OnInit {
   }
 
   protected readonly console = console;
+
+  actualizeItems(): void {
+    this.items = [
+      {
+        label: 'Detalles',
+        icon: 'pi pi-info-circle',
+        command: () => this.seeBoxDetails(this.selectedBox)
+      },
+      {
+        label: 'Editar',
+        icon: 'pi pi-pencil',
+        command: () => this.editBox(this.selectedBox)
+      },
+      {
+        label: !this.selectedBox?.pinned ? 'Fijar' : 'Desfijar',
+        icon: !this.selectedBox?.pinned ? 'pi pi-thumbtack' : 'pi pi-times',
+        command: () => this.togglePinBox(this.selectedBox)
+      },
+      {
+        label: 'Eliminar',
+        icon: 'pi pi-trash',
+        command: () => this.deleteBox(this.selectedBox)
+      }
+    ];
+    console.log(this.items)
+    console.log(this.selectedBox)
+  }
+
+  private togglePinBox(selectedBox: TableBoxResponse | null) {
+    if (!selectedBox) return;
+
+    if (selectedBox.pinned) {
+      this.boxService.unpinBox(selectedBox.id).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Caja desfijada',
+            detail: `La caja "${selectedBox.name}" ha sido desfijada`
+          });
+          selectedBox.pinned = false;
+          this.actualizeItems();
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: `No se ha podido desfijar la caja "${selectedBox.name}"`
+          });
+        }
+      });
+    } else {
+      this.boxService.pinBox(selectedBox.id).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Caja fijada',
+            detail: `La caja "${selectedBox.name}" ha sido fijada`
+          });
+          selectedBox.pinned = true;
+          this.actualizeItems();
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: `No se ha podido fijar la caja "${selectedBox.name}"`
+          });
+        }
+      });
+    }
+  }
 }
