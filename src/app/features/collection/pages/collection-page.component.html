@@ -24,8 +24,14 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-12">
+    <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-12" *ngIf="unlockedBrawlers.length > 0">
       <app-brawler-card *ngFor="let brawler of unlockedBrawlers" [brawler]="brawler" (favoriteChange)="updateFavorite(brawler.id, $event)"/>
+    </div>
+
+    <div class="text-brawl-white flex flex-col items-center gap-3 text-2xl text-border-sm" *ngIf="unlockedBrawlers.length === 0">
+      No tienes brawlers desbloqueados
+
+      <a [routerLink]="['/']" class="text-white brawl-button py-1.5 px-6 text-xl">Ir a la tienda</a>
     </div>
 
     <div class="bg-brawl-black w-full h-2 relative text-white mt-10 text-center">
