@@ -1,18 +1,20 @@
-<div class="flex flex-col gap-4 text-shadow text-border-xs px-1 w-full h-full">
-  <div class="flex flex-col gap-4 items-center z-30 relative top-16">
+<div class="flex flex-col gap-4 relative text-shadow text-border-xs mt-52 w-full h-full">
+  <div class="flex flex-col gap-4 items-center w-full z-30 absolute -top-36">
     <span class="text-shadow text-2xl text-brawl-white">{{ dateFormatted(inventory.collectDate) }}</span>
-    <img [src]="BoxTypeImages[inventory.boxType]" alt="open-box" class="w-36 spotlight-blue">
+    <div class="p-4 spotlight">
+      <img [src]="BoxTypeImages[inventory.boxType]" alt="open-box" class="h-36 spotlight-blue">
+    </div>
   </div>
-  <div class="flex flex-col items-center justify-between gap-2 bg-brawl-blue border-2 mt-1 border-brawl-navy p-6 pt-16 rounded-lg h-full">
+  <div class="flex flex-col h-full justify-between items-stretch gap-4 bg-brawl-blue border-2 border-brawl-dark-blue p-6 pt-16 mt-1 rounded-lg">
     <span class="text-2xl text-brawl-white text-center">{{ inventory.boxName }}</span>
-    <div class="flex flex-col items-center gap-2">
-    <span class="text-brawl-sky-blue">Resumen de la apertura</span>
-    <span class="text-brawl-white"><span class="text-brawl-pink">{{ inventory.totalBrawlers }}</span> ARTÍCULOS ABIERTOS</span>
-    <span class="text-brawl-white"><span class="text-brawl-green">{{ inventory.newBrawlersObtained }}</span> BRAWLERS DESBLOQUEADOS</span>
-    <span class="text-brawl-white"><span class="text-brawl-gold">{{ inventory.totalTrophies * 25 }}</span> TROFEOS CONSEGUIDOS</span>
+    <div class="flex flex-col items-center gap-2 mb-2">
+      <span class="text-brawl-sky-blue">Resumen de la apertura</span>
+      <span class="text-brawl-white"><span class="text-brawl-pink">{{ inventory.totalBrawlers }}</span> ARTÍCULOS ABIERTOS</span>
+      <span class="text-brawl-white"><span class="text-brawl-green">{{ inventory.newBrawlersObtained }}</span> BRAWLERS DESBLOQUEADOS</span>
+      <span class="text-brawl-white"><span class="text-brawl-gold">{{ inventory.totalTrophies  * 25 }}</span> TROFEOS CONSEGUIDOS</span>
     </div>
     <button (click)="seeResume(inventory)"
-      class="brawl-button text-shadow text-border-xs text-brawl-white text-lg py-2 w-full rounded-lg mt-2">
+      class="brawl-button text-brawl-white text-lg py-2 w-full rounded-lg">
       Ver detalles
     </button>
   </div>

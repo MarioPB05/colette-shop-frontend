@@ -7,7 +7,8 @@ import {BoxTypeImages} from '@core/enums/box.enum';
   selector: 'app-open-box',
   imports: [],
   templateUrl: './open-box.component.html',
-  styleUrls: ['./../../../../shared/brawl_styles.scss']
+  styleUrls: ['./../../../../shared/brawl_styles.scss'],
+  standalone: true
 })
 export class OpenBoxComponent {
 
