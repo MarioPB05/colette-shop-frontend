@@ -39,8 +39,8 @@ export class UserDetailsService {
     this.updateUserDetails();
   }
 
-  updateUserDetails(): void {
-    if (this.requestMade) return;
+  updateUserDetails(force: boolean = false): void {
+    if (this.requestMade && !force) return;
 
     this.getUserDetails().subscribe(response => {
       this.userDetailsSubject.next(response);
