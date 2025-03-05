@@ -1,59 +1,71 @@
-# ColetteShopFrontend
+# Colette's Shop - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.4.
+Colette's Shop es una tienda online donde los usuarios pueden completar su colección de brawlers comprando cajas aleatorias. Además, permite dejar reseñas, gestionar pedidos y utilizar un sistema de fidelización con gemas que pueden canjearse por descuentos.
 
-## Development server
+Este repositorio contiene el código fuente del frontend de la aplicación, desarrollado con **Angular** y utilizando una arquitectura modular basada en características (*Feature-Based Architecture*).
 
-To start a local development server, run:
+## 🌐 Enlaces
+- [Frontend](https://colette-shop.onrender.com/)
+- [Backend](https://colette-shop-backend.onrender.com)
 
+## 🚀 Tecnologías utilizadas
+- **Angular** - Framework frontend
+- **PrimeNG** - Librería de componentes UI
+- **Tailwind CSS** - Framework CSS para diseño responsive
+- **Chart.js** - Librería de visualización de datos
+- **PostgreSQL** - Base de datos utilizada en el backend
+
+## 📂 Estructura del proyecto
+```plaintext
+src/
+├── app/                   # Lógica y funcionalidades principales
+│   ├── core/              # Elementos transversales (enums, guards, interceptors, models, services)
+│   ├── features/          # Módulos organizados por características
+│   ├── shared/            # Componentes y servicios reutilizables
+├── environments/          # Configuraciones de entorno
+```
+
+## ⚙️ Instalación y configuración
+### 1️⃣ Requisitos previos
+Asegúrate de tener instalados:
+- Node.js (versión 16 o superior)
+- Angular CLI (`npm install -g @angular/cli`)
+
+### 2️⃣ Clonar el repositorio
+```bash
+git clone https://github.com/tu-usuario/colette-shop-frontend.git
+cd colette-shop-frontend
+```
+
+### 3️⃣ Instalar dependencias
+```bash
+npm install
+```
+
+### 4️⃣ Configurar variables de entorno
+En el archivo `src/environments/environment.ts`, ajusta las variables de entorno necesarias:
+```typescript
+export const environment = {
+  baseUrl: 'https://colette-shop-backend.onrender.com/api'
+};
+```
+
+### 5️⃣ Ejecutar en modo desarrollo
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Luego, abre http://localhost:4200 en el navegador.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+## 📦 Despliegue
+Para generar una versión lista para producción:
 ```bash
-ng generate component component-name
+ng build --configuration=render
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Los archivos generados estarán en la carpeta `dist/`, listos para ser servidos en un hosting.
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 🧑‍💻 Autores
+- [Mario Perdiguero Barrera](https://github.com/MarioPB05)
+- [David Pérez Fernández](https://github.com/david-perez-2357)
+- [David Zamora Martínez](https://github.com/TicoticoSAFA)
