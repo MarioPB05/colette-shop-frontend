@@ -55,4 +55,10 @@ export class UserDetailsService {
     return this.http.get<UserDetailsResponse>(`${environment.baseUrl}/user/details`);
   }
 
+  emitNewUserDetails(userDetails: UserDetailsResponse): void {
+    this.userDetailsSubject.next(userDetails);
+    this.localStorageService.setItem('userDetails', userDetails);
+    this.localStorageService.setItem('userDetailsLastUpdate', new Date());
+  }
+
 }
