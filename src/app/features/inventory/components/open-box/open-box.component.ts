@@ -1,6 +1,7 @@
 import {Component, inject, Input} from '@angular/core';
 import {InventoryModel} from '@models/inventory.model';
 import {Router} from '@angular/router';
+import {BoxTypeImages} from '@core/enums/box.enum';
 
 @Component({
   selector: 'app-open-box',
@@ -13,6 +14,7 @@ export class OpenBoxComponent {
   @Input() inventory!: InventoryModel;
 
   private router = inject(Router);
+  protected readonly BoxTypeImages = BoxTypeImages;
 
   dateFormatted(date: string): string {
     const givenDate = new Date(date);

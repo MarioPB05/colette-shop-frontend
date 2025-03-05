@@ -6,10 +6,10 @@
   </div>
   <img src="/images/icons/inf-icon.png" alt="info" (click)="seeDetails(inventory)"
        class="w-12 h-auto absolute -top-6 -right-10 transform -translate-x-1/2 rotate-6 cursor-pointer">
-  <img src="/images/boxes/common-box.png" alt="close-box" class="w-36 h-auto">
+  <img [src]="BoxTypeImages[inventory.boxType]" alt="close-box" class="w-36 h-auto">
   <span class="text-shadow text-xl text-border-xs text-brawl-white">{{ inventory.boxName }}</span>
   <button (click)="openBox(inventory)"
-    class="bg-brawl-gold border-2 border-b-4 border-[#8C7300] hover:bg-brawl-yellow hover:border-brawl-gold text-shadow text-border-xs text-brawl-white text-lg py-2 w-full rounded-lg">
+    class="brawl-button text-shadow text-border-xs text-brawl-white text-lg py-2 w-full rounded-lg">
     ABRIR CAJA
   </button>
 </div>

@@ -9,4 +9,5 @@ export interface InventoryModel {
   newBrawlersObtained: number;
   totalTrophies: number;
   giftFrom?: string;
+  boxType: string;
 }
