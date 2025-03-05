@@ -10,6 +10,8 @@ import {Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {RegisterStepperComponent} from '@features/auth/components/register-stepper/register-stepper.component';
 import {Password} from 'primeng/password';
+import {UserDetailsService} from '@shared/services/user-details.service';
+import {CartService} from '@shared/services/cart.service';
 
 @Component({
   selector: 'app-auth-page',
@@ -39,6 +41,8 @@ export class AuthPageComponent {
   constructor(
     private authService: AuthService,
     private globalAuthService: GlobalAuthService,
+    private userDetailsService: UserDetailsService,
+    private cartService: CartService,
     private router: Router,
     private messageService: MessageService
   ) {}
@@ -68,13 +72,23 @@ export class AuthPageComponent {
         }
 
         this.globalAuthService.setToken(response.token);
+        this.userDetailsService.getUserDetails().subscribe({
+          next: (response) => {
+            this.userDetailsService.emitNewUserDetails(response);
 
-        this.router.navigate(['/']).then(() => {
-          this.messageService.add({
-            severity: 'success',
-            summary: '¡Bienvenido!',
-            detail: 'Has iniciado sesión correctamente'
-          });
+            this.cartService.clearCart();
+
+            this.router.navigate(['/']).then(() => {
+              this.messageService.add({
+                severity: 'success',
+                summary: '¡Bienvenido!',
+                detail: 'Has iniciado sesión correctamente'
+              });
+            });
+          },
+          error: () => {
+            loginError();
+          }
         });
       },
       error: () => {
