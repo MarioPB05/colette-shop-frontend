@@ -5,7 +5,7 @@ import {OpenBoxComponent} from '@features/inventory/components/open-box/open-box
 import {InventoryService} from '@features/inventory/service/inventory.service';
 import {InventoryModel} from '@models/inventory.model';
 import {NgForOf, NgIf} from '@angular/common';
-import {Router} from '@angular/router';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-inventory',
@@ -14,16 +14,19 @@ import {Router} from '@angular/router';
     CloseBoxComponent,
     OpenBoxComponent,
     NgForOf,
-    NgIf
+    NgIf,
+    RouterLink
   ],
   templateUrl: './inventory.component.html',
-  styleUrls: ['./../../../../shared/brawl_styles.scss']
+  styleUrls: ['./../../../../shared/brawl_styles.scss'],
+  standalone: true
 })
 export class InventoryComponent implements OnInit {
 
   protected inventories!: InventoryModel[];
   protected openBoxes!: InventoryModel[];
   protected closedBoxes!: InventoryModel[];
+  pageLoaded = false;
 
   private inventoryService: InventoryService = inject(InventoryService);
 
@@ -35,6 +38,7 @@ export class InventoryComponent implements OnInit {
           .filter(inventory => inventory.open && inventory.openDate)
           .sort((a, b) => new Date(b.openDate!).getTime() - new Date(a.openDate!).getTime());
         this.closedBoxes = this.inventories.filter(inventory => !inventory.open).sort((a, b) => new Date(b.collectDate).getTime() - new Date(a.collectDate).getTime());
+        this.pageLoaded = true;
       }
     );
   }

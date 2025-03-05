@@ -1,15 +1,20 @@
-<div class="flex flex-col items-center gap-4 bg-brawl-blue border-2 border-brawl-navy p-4 w-full rounded-lg relative">
-  <div *ngIf="this.inventory.giftFrom" class="flex items-center absolute -top-6 -left-6">
+<div class="flex flex-col items-center bg-brawl-blue border-2 border-brawl-dark-blue w-full rounded-lg relative">
+  <div *ngIf="this.inventory.giftFrom" class="flex items-center absolute -top-6 -left-6 gap-1">
     <img src="/images/user-details-icons/gift-icon.png" alt="gift"
          class="size-12 object-contain rotate-12">
     <span class="text-shadow text-border-xs text-brawl-white">Regalo de {{ inventory.giftFrom }}</span>
   </div>
   <img src="/images/icons/inf-icon.png" alt="info" (click)="seeDetails(inventory)"
-       class="w-12 h-auto absolute -top-6 -right-10 transform -translate-x-1/2 rotate-6 cursor-pointer">
-  <img [src]="BoxTypeImages[inventory.boxType]" alt="close-box" class="w-36 h-auto">
-  <span class="text-shadow text-xl text-border-xs text-brawl-white">{{ inventory.boxName }}</span>
-  <button (click)="openBox(inventory)"
-    class="brawl-button text-shadow text-border-xs text-brawl-white text-lg py-2 w-full rounded-lg">
-    ABRIR CAJA
-  </button>
+       class="w-12 object-contain absolute -top-6 -right-10 transform -translate-x-1/2 rotate-6 cursor-pointer hover:brightness-150 transition-all">
+  <div class="px-8 w-full flex justify-center py-6 rounded-t-lg h-full bg-gradient-radial {{ gradientByBoxType[inventory.boxType] }}">
+    <img [src]="BoxTypeImages[inventory.boxType]" alt="close-box" class="h-36 w-36 object-contain hover:scale-110 transition-all hover:rotate-12">
+  </div>
+
+  <div class="flex w-full flex-col items-center gap-4 p-4 border-t-2 border-brawl-dark-blue">
+    <span class="text-shadow text-center text-xl text-border-xs text-brawl-white">{{ inventory.boxName }}</span>
+    <button (click)="openBox(inventory)"
+            class="brawl-button text-brawl-white text-lg py-2 w-full rounded-lg">
+      ABRIR CAJA
+    </button>
+  </div>
 </div>

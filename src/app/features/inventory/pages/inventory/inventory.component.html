@@ -1,22 +1,28 @@
-<app-brawl-header></app-brawl-header>
-<div class="w-full min-h-screen bg-brawl-sea-blue flex flex-col p-20 brawl-font">
-  <div class="text-shadow text-border-xs text-brawl-white mb-16">
-    <span class="text-4xl text-border-sm">INVENTARIO</span>
-    <p class="text-lg">TIENES <span class="text-brawl-yellow">{{ closedBoxes.length }} {{ closedBoxes.length === 1 ? 'CAJA' : 'CAJAS' }}</span> SIN ABRIR</p>
-  </div>
-  <span *ngIf="closedBoxes.length == 0" class="text-center text-shadow text-3xl text-border-xs text-brawl-gold mb-16">No tienes cajas por abrir</span>
-  <div class="grid gap-x-20 gap-y-10 mb-16" style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
-    <app-close-box *ngFor="let closeBox of closedBoxes" [inventory]="closeBox"></app-close-box>
-  </div>
-  <div class="relative h-1.5">
-    <div class="bg-brawl-dark-slate w-full parallelogram_shape-xs h-full"></div>
-    <span
-      class="absolute text-shadow text-lg text-border-xs text-brawl-white transform -top-[1.1rem] left-1/2 -translate-x-1/2">
+<div class="w-full h-full bg-brawl-sea-blue min-h-screen flex flex-col" *ngIf="pageLoaded">
+  <app-brawl-header></app-brawl-header>
+  <div class="w-full h-full flex flex-col p-5 sm:p-10 md:p-20 brawl-font">
+    <div class="text-shadow text-border-xs text-brawl-white mb-16">
+      <span class="text-4xl text-border-sm">INVENTARIO</span>
+      <p class="text-lg">TIENES <span class="text-brawl-yellow">{{ closedBoxes.length }} {{ closedBoxes.length === 1 ? 'CAJA' : 'CAJAS' }}</span> SIN ABRIR</p>
+    </div>
+    <div class="text-brawl-white flex flex-col items-center mb-5 gap-3 text-2xl text-border-sm" *ngIf="closedBoxes.length === 0">
+      No tienes cajas sin abrir
+
+      <a [routerLink]="['/']" class="text-white brawl-button py-1.5 px-6 text-xl">Ir a la tienda</a>
+    </div>
+    <div class="grid gap-x-20 gap-y-10 mb-16 grid-cols-auto-fit" style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
+      <app-close-box *ngFor="let closeBox of closedBoxes" [inventory]="closeBox"></app-close-box>
+    </div>
+    <div class="relative h-1.5">
+      <div class="bg-brawl-dark-slate w-full parallelogram_shape-xs h-full"></div>
+      <span
+        class="absolute text-shadow text-center text-lg text-border-xs text-brawl-white transform -top-[1.1rem] left-1/2 -translate-x-1/2">
         CAJAS ABIERTAS
       </span>
-  </div>
-  <span *ngIf="openBoxes.length == 0" class="text-center text-shadow text-3xl text-border-xs text-brawl-gold mt-16">No tienes cajas abiertas</span>
-  <div class="grid gap-x-20 gap-y-10 mb-16" style="grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));">
-    <app-open-box *ngFor="let openBox of openBoxes" [inventory]="openBox"></app-open-box>
+    </div>
+    <span *ngIf="openBoxes.length == 0" class="text-center items-start text-shadow text-3xl text-border-xs text-brawl-white mt-16">No tienes cajas abiertas</span>
+    <div class="grid items-start gap-x-20 gap-y-10 w-full h-full" style="grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));">
+      <app-open-box *ngFor="let openBox of openBoxes" [inventory]="openBox"/>
+    </div>
   </div>
 </div>
