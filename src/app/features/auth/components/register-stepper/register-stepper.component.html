@@ -1,5 +1,5 @@
-<form [formGroup]="registerForm">
-  <p-stepper [(value)]="activeStep" [linear]="true" class="basis-[40rem]">
+<form [formGroup]="registerForm" class="h-full">
+  <p-stepper [(value)]="activeStep" [linear]="true" class="basis-[40rem] h-full">
     <p-step-list>
       <p-step [value]="1" class="flex flex-row flex-auto gap-2">
         <ng-template pTemplate="content" let-activateCallback="activateCallback" let-value="value">

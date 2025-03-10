@@ -27,7 +27,8 @@ import {CartService} from '@shared/services/cart.service';
     Password
   ],
   templateUrl: './auth-page.component.html',
-  styleUrls: ['../../../shared/brawl_styles.scss', 'auth-page.styles.scss']
+  styleUrls: ['../../../shared/brawl_styles.scss', 'auth-page.styles.scss'],
+  standalone: true
 })
 export class AuthPageComponent {
   loginVisible: boolean = false;

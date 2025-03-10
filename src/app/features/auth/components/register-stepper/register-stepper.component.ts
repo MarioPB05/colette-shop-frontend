@@ -46,7 +46,8 @@ const passwordsMatchValidator: ValidatorFn = (control: AbstractControl): Validat
     InputIcon
   ],
   templateUrl: './register-stepper.component.html',
-  styles: ``
+  styles: ``,
+  standalone: true
 })
 export class RegisterStepperComponent {
   stepperClosed = output<void>();

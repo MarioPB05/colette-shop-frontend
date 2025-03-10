@@ -1,14 +1,15 @@
-<div class="w-screen min-h-screen flex flex-col gap-12 justify-center items-center relative brawl-font">
-  <img src="/images/backgrounds/auth-bg.png" alt="Colette's Shop Logo" class="fixed w-screen h-screen object-cover -z-50">
+<img src="/images/backgrounds/auth-bg.png" alt="Colette's Shop Logo" class="fixed w-screen h-screen object-cover -z-50">
 
-  <h1 class="text-9xl text-center text-shadow spotlight"
-      [ngClass]="{'text-grow': !cardVisible(), 'text-shrink': cardVisible(), 'text-border-lg': !cardVisible(), 'text-border-md': cardVisible()}">
+<div class="w-screen min-h-screen h-full p-2 md:p-10 pt-10 flex flex-col gap-6 sm:gap-12 justify-center items-center relative brawl-font">
+
+  <h1 class="text-9xl text-center text-shadow spotlight text-border-sm"
+      [ngClass]="{'text-grow': !cardVisible(), 'text-shrink': cardVisible(), 'md:text-border-lg': !cardVisible(), 'md:text-border-md': cardVisible()}">
     Colette's <br>
     <span class="text-white">SHOP</span>
   </h1>
 
-  <p-card *ngIf="loginVisible" (keydown)="$event.key === 'Enter' ? login() : null">
-    <div class="flex flex-col w-[300px]">
+  <p-card *ngIf="loginVisible" (keydown)="$event.key === 'Enter' ? login() : null"  class="w-full sm:w-auto">
+    <div class="flex flex-col w-full sm:w-[300px]">
       <h2 class="text-center text-2xl mb-6">Iniciar Sesión</h2>
 
       <div class="flex items-center w-full gap-4 mb-4">
@@ -31,12 +32,14 @@
         </p-floatlabel>
       </div>
 
-      <button (click)="login()" [disabled]="loginSubmitted" class="btn-yellow text-shadow text-border-sm mt-6">Entrar</button>
-      <button (click)="loginVisible = false" class="btn-link mt-4">Volver</button>
+      <div class="flex gap-4 flex-wrap justify-center mt-5 sm:pt-0">
+        <button (click)="login()" [disabled]="loginSubmitted" class="btn-yellow text-shadow text-border-sm">Entrar</button>
+        <button (click)="loginVisible = false" class="btn-link">Volver</button>
+      </div>
     </div>
   </p-card>
 
-  <p-card *ngIf="registerVisible" class="min-w-full sm:min-w-[600px]">
+  <p-card *ngIf="registerVisible" class="w-full sm:w-auto">
     <app-register-stepper (stepperClosed)="registerVisible = false" />
   </p-card>
 
